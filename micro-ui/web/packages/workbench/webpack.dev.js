@@ -41,7 +41,8 @@ module.exports = () => {
         name: "workbench",
         filename: "remoteEntry.js",
         exposes: {
-          "./WorkbenchModule": "./src/bootstrap",
+          // "./WorkbenchModule": "./src/bootstrap",
+          "./WorkbenchModule": "./src/workbenchWrapper",
         },
         shared: packageJson.dependencies,
       }),

@@ -5,7 +5,8 @@
     "packages/dss",
     "packages/hrms",
     "packages/core",
-    "packages/workbench"
+    "packages/workbench",
+    "packages/ui-core"
   ],
   "npmClient": "yarn",
   "stream": true
