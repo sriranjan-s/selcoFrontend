@@ -376,7 +376,7 @@ const SetupCampaign = () => {
     setParams({ ...restructureFormData });
   }, [params, draftData, isLoading, projectType]);
 
-  const facilityId = Digit.Hooks.campaign.useGenerateIdCampaign({
+  const { data: facilityId, isLoading: isFacilityLoading, refetch: refetchFacility } = Digit.Hooks.campaign.useGenerateIdCampaign({
     type: "facilityWithBoundary",
     hierarchyType: hierarchyType,
     campaignId: id,
@@ -385,17 +385,23 @@ const SetupCampaign = () => {
     },
   });
 
-  const boundaryId = Digit.Hooks.campaign.useGenerateIdCampaign({
+  useEffect(() => {
+    if (filteredBoundaryData) {
+      refetchBoundary();
+    }
+  }, [filteredBoundaryData]);
+
+  const { data: boundaryId, isLoading: isBoundaryLoading, refetch: refetchBoundary } = Digit.Hooks.campaign.useGenerateIdCampaign({
     type: "boundary",
     hierarchyType: hierarchyType,
-    filters: filteredBoundaryData,
+    // filters: filteredBoundaryData,
     campaignId: id,
     config: {
       enabled: fetchUpload || (fetchBoundary && currentKey > 6),
     },
   });
 
-  const userId = Digit.Hooks.campaign.useGenerateIdCampaign({
+  const { data: userId, isLoading: isUserLoading, refetch: refetchUser } = Digit.Hooks.campaign.useGenerateIdCampaign({
     type: "userWithBoundary",
     hierarchyType: hierarchyType,
     campaignId: id,
@@ -413,16 +419,23 @@ const SetupCampaign = () => {
         userId: userId,
         hierarchyType: hierarchyType,
         hierarchy: hierarchyDefinition?.BoundaryHierarchy?.[0],
+        isBoundaryLoading,
+        isFacilityLoading,
+        isUserLoading,
       });
     }
-  }, [facilityId, boundaryId, userId, hierarchyDefinition?.BoundaryHierarchy?.[0]]); // Only run if dataParams changes
+  }, [isBoundaryLoading, isFacilityLoading, isUserLoading, facilityId, boundaryId, userId, hierarchyDefinition?.BoundaryHierarchy?.[0]]); // Only run if dataParams changes
 
   useEffect(() => {
     setCampaignConfig(CampaignConfig(totalFormData, dataParams));
   }, [totalFormData, dataParams]);
 
   useEffect(() => {
-    updateUrlParams({ key: currentKey });
+    if (currentKey === 10 && isPreview !== "true") {
+      updateUrlParams({ key: currentKey, preview: true });
+    } else {
+      updateUrlParams({ key: currentKey });
+    }
   }, [currentKey]);
 
   function restructureData(data) {

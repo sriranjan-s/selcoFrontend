@@ -110,7 +110,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       setSheetHeaders(headers);
       setTranslatedSchema(schema);
     }
-  }, [Schemas?.["HCM-ADMIN-CONSOLE"]]);
+  }, [Schemas?.["HCM-ADMIN-CONSOLE"], type]);
 
   useEffect(async () => {
     if (readMe?.["HCM-ADMIN-CONSOLE"]) {
@@ -130,7 +130,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
       setReadMeInfo(readMeText);
     }
-  }, [readMe?.["HCM-ADMIN-CONSOLE"]]);
+  }, [readMe?.["HCM-ADMIN-CONSOLE"], type]);
 
   useEffect(() => {
     if (executionCount < 5) {
@@ -149,12 +149,24 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     switch (type) {
       case "boundary":
         setUploadedFile(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile || []);
+        setApiError(null);
+        setIsValidation(false);
+        setDownloadError(false);
+        setIsError(false);
         break;
       case "facilityWithBoundary":
         setUploadedFile(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile || []);
+        setApiError(null);
+        setIsValidation(false);
+        setDownloadError(false);
+        setIsError(false);
         break;
       default:
         setUploadedFile(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile || []);
+        setApiError(null);
+        setIsValidation(false);
+        setDownloadError(false);
+        setIsError(false);
         break;
     }
   }, [type, props?.props?.sessionData]);
@@ -501,14 +513,15 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     setIsError(false);
     setIsValidation(false);
     setApiError(null);
+    setShowToast(null);
   };
 
   const onFileDownload = (file) => {
     if (file && file?.url) {
-      // window.location.href = file?.url;
+      window.location.href = file?.url;
       // Splitting filename before .xlsx or .xls
-      const fileNameWithoutExtension = file?.filename.split(/\.(xlsx|xls)/)[0];
-      downloadExcel(new Blob([file], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }), fileNameWithoutExtension);
+      // const fileNameWithoutExtension = file?.filename.split(/\.(xlsx|xls)/)[0];
+      // downloadExcel(new Blob([file], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }), fileNameWithoutExtension);
     }
   };
   useEffect(() => {
@@ -630,6 +643,21 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const mutation = Digit.Hooks.useCustomAPIMutationHook(Template);
 
   const downloadTemplate = async () => {
+    if (type === "boundary" && params?.isBoundaryLoading) {
+      setDownloadError(true);
+      setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+      return;
+    }
+    if (type === "facilityWithBoundary" && params?.isFacilityLoading) {
+      setDownloadError(true);
+      setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+      return;
+    }
+    if (type === "userWithBoundary" && params?.isUserLoading) {
+      setDownloadError(true);
+      setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+      return;
+    }
     await mutation.mutate(
       {
         params: {
@@ -666,12 +694,12 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           if (fileData && fileData?.[0]?.url) {
             setDownloadError(false);
             // downloadExcel(fileData[0].blob, fileData[0].fileName);
-            // window.location.href = fileData?.[0]?.url;
+            window.location.href = fileData?.[0]?.url;
             // handleFileDownload(fileData?.[0]);
-            downloadExcel(
-              new Blob([fileData], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }),
-              fileData?.[0]?.filename
-            );
+            // downloadExcel(
+            // new Blob([fileData], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }),
+            // fileData?.[0]?.filename
+            // );
           } else {
             setDownloadError(true);
             setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT") });

@@ -1,24 +1,25 @@
-import createAndSearch from "../../config/createAndSearch";
-import config from "../../config";
-import { logger } from "../logger";
-import { httpRequest } from "../request";
-import { getHeadersOfBoundarySheet, getHierarchy, handleResouceDetailsError } from "../../api/campaignApis";
-import { campaignDetailsSchema } from "../../config/models/campaignDetails";
+import createAndSearch from "../config/createAndSearch";
+import config from "../config";
+import { logger } from "../utils/logger";
+import { httpRequest } from "../utils/request";
+import { getHeadersOfBoundarySheet, getHierarchy, handleResouceDetailsError } from "../api/campaignApis";
+import { campaignDetailsSchema } from "../config/models/campaignDetails";
 import Ajv from "ajv";
-import axios from "axios";
-import { createBoundaryMap, generateProcessedFileAndPersist, getLocalizedName } from "../campaignUtils";
-import { calculateKeyIndex, getLocalizedHeaders, getLocalizedMessagesHandler, modifyTargetData, throwError } from "../genericUtils";
+import { calculateKeyIndex, getLocalizedHeaders, getLocalizedMessagesHandler, modifyTargetData, replicateRequest, throwError } from "../utils/genericUtils";
+import { createBoundaryMap, generateProcessedFileAndPersist, getLocalizedName } from "../utils/campaignUtils";
 import { validateBodyViaSchema, validateCampaignBodyViaSchema, validateHierarchyType } from "./genericValidator";
-import { searchCriteriaSchema } from "../../config/models/SearchCriteria";
-import { searchCampaignDetailsSchema } from "../../config/models/searchCampaignDetails";
-import { campaignDetailsDraftSchema } from "../../config/models/campaignDetailsDraftSchema";
-import { downloadRequestSchema } from "../../config/models/downloadRequestSchema";
-import { createRequestSchema } from "../../config/models/createRequestSchema"
-import { getSheetData, getTargetWorkbook } from "../../api/genericApis";
+import { searchCriteriaSchema } from "../config/models/SearchCriteria";
+import { searchCampaignDetailsSchema } from "../config/models/searchCampaignDetails";
+import { campaignDetailsDraftSchema } from "../config/models/campaignDetailsDraftSchema";
+import { downloadRequestSchema } from "../config/models/downloadRequestSchema";
+import { createRequestSchema } from "../config/models/createRequestSchema"
+import { getSheetData, getTargetWorkbook } from "../api/genericApis";
 const _ = require('lodash');
 import * as XLSX from 'xlsx';
-import { campaignStatuses, resourceDataStatuses } from "../../config/constants";
-import { getBoundaryColumnName, getBoundaryTabName } from "../boundaryUtils";
+import { createDataService, searchDataService } from "../service/dataManageService";
+import { searchProjectTypeCampaignService } from "../service/campaignManageService";
+import { campaignStatuses, resourceDataStatuses } from "../config/constants";
+import { getBoundaryColumnName, getBoundaryTabName } from "../utils/boundaryUtils";
 
 
 
@@ -48,7 +49,30 @@ async function fetchBoundariesInChunks(request: any) {
     return responseBoundaries;
 }
 
+function processBoundaryfromCampaignDetails(responseBoundaries: any[], request: any, boundaryItems: any[]) {
+    boundaryItems.forEach((boundaryItem: any) => {
+        const { code, boundaryType, children } = boundaryItem;
+        responseBoundaries.push({ code, boundaryType });
+        if (children.length > 0) {
+            processBoundaryfromCampaignDetails(responseBoundaries, request, children);
+        }
+    });
+}
 
+async function fetchBoundariesFromCampaignDetails(request: any) {
+    const { tenantId, hierarchyType } = request.body.CampaignDetails;
+    const boundaryEntitySearchParams: any = {
+        tenantId, hierarchyType, includeChildren: true
+    };
+    const responseBoundaries: any[] = [];
+    var response = await httpRequest(config.host.boundaryHost + config.paths.boundaryRelationship, request.body, boundaryEntitySearchParams);
+    const TenantBoundary = response.TenantBoundary;
+    TenantBoundary.forEach((tenantBoundary: any) => {
+        const { boundary } = tenantBoundary;
+        processBoundaryfromCampaignDetails(responseBoundaries, request, boundary);
+    });
+    return responseBoundaries;
+}
 
 // Compares unique boundaries with response boundaries and throws error for missing codes.
 function compareBoundariesWithUnique(uniqueBoundaries: any[], responseBoundaries: any[], request: any) {
@@ -468,27 +492,41 @@ function validateFacilityCreateData(data: any) {
 
 }
 
-async function validateCampaignBoundary(boundary: any, hierarchyType: any, tenantId: any, request: any): Promise<void> {
-    const params = {
-        tenantId: tenantId,
-        codes: boundary.code,
-        boundaryType: boundary.type,
-        hierarchyType: hierarchyType,
-        includeParents: true
-    };
-    const boundaryResponse = await httpRequest(config.host.boundaryHost + config.paths.boundaryRelationship, { RequestInfo: request.body.RequestInfo }, params);
-    if (!boundaryResponse?.TenantBoundary || !Array.isArray(boundaryResponse.TenantBoundary) || boundaryResponse.TenantBoundary.length === 0) {
-        throwError("BOUNDARY", 400, "BOUNDARY_NOT_FOUND", `Boundary with code ${boundary.code} not found for boundary type ${boundary.type} and hierarchy type ${hierarchyType}`);
+function throwMissingCodesError(missingCodes: any, hierarchyType: any) {
+    const missingCodesMessage = missingCodes.map((code: any) =>
+        `'${code.code}' for type '${code.type}'`
+    ).join(', ');
+    throwError(
+        "COMMON",
+        400,
+        "VALIDATION_ERROR",
+        `The following boundary codes (${missingCodesMessage}) do not exist for hierarchy type '${hierarchyType}'.`
+    );
+}
+
+async function validateCampaignBoundary(boundaries: any[], hierarchyType: any, tenantId: any, request: any): Promise<void> {
+    const boundaryCodesToMatch = Array.from(new Set(boundaries.map((boundary: any) => ({
+        code: boundary.code.trim(),
+        type: boundary.type.trim()
+    }))));
+    const responseBoundaries = await fetchBoundariesFromCampaignDetails(request);
+    const responseBoundaryCodes = responseBoundaries.map(boundary => ({
+        code: boundary.code.trim(),
+        type: boundary.boundaryType.trim()
+    }));
+    logger.info("responseBoundaryCodes " + JSON.stringify(responseBoundaryCodes))
+    logger.info("boundaryCodesToMatch " + JSON.stringify(boundaryCodesToMatch))
+    function isEqual(obj1: any, obj2: any) {
+        return obj1.code === obj2.code && obj1.type === obj2.type;
     }
 
-    const boundaryData = boundaryResponse.TenantBoundary[0]?.boundary;
+    // Find missing codes
+    const missingCodes = boundaryCodesToMatch.filter(codeToMatch =>
+        !responseBoundaryCodes.some(responseCode => isEqual(codeToMatch, responseCode))
+    );
 
-    if (!boundaryData || !Array.isArray(boundaryData) || boundaryData.length === 0) {
-        throwError("BOUNDARY", 400, "BOUNDARY_NOT_FOUND", `Boundary with code ${boundary.code} not found for boundary type ${boundary.type} and hierarchy type ${hierarchyType}`);
-    }
-
-    if (boundary.isRoot && boundaryData[0]?.code !== boundary.code) {
-        throwError("BOUNDARY", 400, "BOUNDARY_NOT_FOUND", `Boundary with code ${boundary.code} not found for boundary type ${boundary.type} and hierarchy type ${hierarchyType}`);
+    if (missingCodes.length > 0) {
+        throwMissingCodesError(missingCodes, hierarchyType)
     }
 }
 
@@ -514,9 +552,7 @@ async function validateProjectCampaignBoundaries(boundaries: any[], hierarchyTyp
             if (rootBoundaryCount !== 1) {
                 throwError("COMMON", 400, "VALIDATION_ERROR", "Exactly one boundary should have isRoot=true");
             }
-            for (const boundary of boundaries) {
-                await validateCampaignBoundary(boundary, hierarchyType, tenantId, request);
-            }
+            await validateCampaignBoundary(boundaries, hierarchyType, tenantId, request);
         }
         else {
             throwError("COMMON", 400, "VALIDATION_ERROR", "Missing boundaries array");
@@ -534,15 +570,16 @@ async function validateResources(resources: any, request: any) {
                     tenantId: request?.body?.CampaignDetails?.tenantId
                 }
             }
-            const response = await httpRequest(config.host.projectFactoryBff + "project-factory/v1/data/_search", searchBody);
-            if (response?.ResourceDetails?.[0]) {
-                if (!(response?.ResourceDetails?.[0]?.status == resourceDataStatuses.completed && response?.ResourceDetails?.[0]?.action == "validate")) {
+            const req: any = replicateRequest(request, searchBody);
+            const res: any = await searchDataService(req);
+            if (res?.[0]) {
+                if (!(res?.ResourceDetails?.[0]?.status == resourceDataStatuses.completed && res?.ResourceDetails?.[0]?.action == "validate")) {
                     logger.error(`Error during validation of resource with Id ${resource?.resourceId} :`);
                     throwError("COMMON", 400, "VALIDATION_ERROR", `Error during validation of resource with Id ${resource?.resourceId}.  If resourceId data is invalid, don't send resourceId in resources`);
                 }
-                if (response?.ResourceDetails?.[0]?.fileStoreId != resource?.filestoreId) {
-                    logger.error(`fileStoreId doesn't match for resource with Id ${resource?.resourceId}. Expected fileStoreId ${resource?.filestoreId} but received ${response?.ResourceDetails?.[0]?.fileStoreId}`);
-                    throwError("COMMON", 400, "VALIDATION_ERROR", `fileStoreId doesn't match for resource with Id ${resource?.resourceId}. Expected fileStoreId ${resource?.filestoreId} but received ${response?.ResourceDetails?.[0]?.fileStoreId}`)
+                if (res?.ResourceDetails?.[0]?.fileStoreId != resource?.filestoreId) {
+                    logger.error(`fileStoreId doesn't match for resource with Id ${resource?.resourceId}. Expected fileStoreId ${resource?.filestoreId} but received ${res?.ResourceDetails?.[0]?.fileStoreId}`);
+                    throwError("COMMON", 400, "VALIDATION_ERROR", `fileStoreId doesn't match for resource with Id ${resource?.resourceId}. Expected fileStoreId ${resource?.filestoreId} but received ${res?.ResourceDetails?.[0]?.fileStoreId}`)
                 }
             }
             else {
@@ -560,10 +597,11 @@ async function validateResources(resources: any, request: any) {
                 additionalDetails: {}
             };
             try {
-                await axios.post(`${config.host.projectFactoryBff}project-factory/v1/data/_create`, {
+                const req: any = replicateRequest(request, {
                     RequestInfo: request.body.RequestInfo,
                     ResourceDetails: resourceDetails
-                });
+                })
+                await createDataService(req);
             } catch (error: any) {
                 logger.error(`Error during resource validation of ${resourceDetails.fileStoreId} :` + error?.response?.data?.Errors?.[0]?.description || error?.response?.data?.Errors?.[0]?.message);
                 throwError("COMMON", error?.response?.status, error?.response?.data?.Errors?.[0]?.code, `Error during resource validation of ${resourceDetails.fileStoreId} :` + error?.response?.data?.Errors?.[0]?.description || error?.response?.data?.Errors?.[0]?.message);
@@ -659,7 +697,8 @@ async function validateCampaignName(request: any, actionInUrl: any) {
                 campaignName: campaignName
             }
         }
-        const searchResponse: any = await httpRequest(config.host.projectFactoryBff + "project-factory/v1/project-type/search", searchBody);
+        const req: any = replicateRequest(request, searchBody)
+        const searchResponse: any = await searchProjectTypeCampaignService(req)
         if (Array.isArray(searchResponse?.CampaignDetails)) {
             if (searchResponse?.CampaignDetails?.length > 0 && actionInUrl == "create") {
                 throwError("CAMPAIGN", 400, "CAMPAIGN_NAME_ERROR");
@@ -686,11 +725,12 @@ async function validateById(request: any) {
             ids: [id]
         }
     }
-    const searchResponse: any = await axios.post(config.host.projectFactoryBff + "project-factory/v1/project-type/search", searchBody);
-    if (Array.isArray(searchResponse?.data?.CampaignDetails)) {
-        if (searchResponse?.data?.CampaignDetails?.length > 0) {
-            logger.info("CampaignDetails : " + JSON.stringify(searchResponse?.data?.CampaignDetails));
-            request.body.ExistingCampaignDetails = searchResponse?.data?.CampaignDetails[0];
+    const req: any = replicateRequest(request, searchBody)
+    const searchResponse: any = await searchProjectTypeCampaignService(req)
+    if (Array.isArray(searchResponse?.CampaignDetails)) {
+        if (searchResponse?.CampaignDetails?.length > 0) {
+            logger.info("CampaignDetails : " + JSON.stringify(searchResponse?.CampaignDetails));
+            request.body.ExistingCampaignDetails = searchResponse?.CampaignDetails[0];
             if (request.body.ExistingCampaignDetails?.campaignName != request?.body?.CampaignDetails?.campaignName && request.body.ExistingCampaignDetails?.status != campaignStatuses?.drafted) {
                 throwError("CAMPAIGN", 400, "CAMPAIGNNAME_MISMATCH", `CampaignName can only be updated in ${campaignStatuses?.drafted} state. CampaignName mismatch, Provided CampaignName = ${request?.body?.CampaignDetails?.campaignName} but Existing CampaignName = ${request.body.ExistingCampaignDetails?.campaignName}`);
             }
