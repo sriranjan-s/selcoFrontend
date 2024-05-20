@@ -41,6 +41,13 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
   // State variable to store the lowest hierarchy level
   const [lowestHierarchy, setLowestHierarchy] = useState(null);
 
+  const filteredArray = selectedData
+    .filter(item => item.includeAllChildren)
+    .map(item => ({ code: item.code, type: item.type }));
+
+
+    console.log("sele", selectedData ,filteredArray);
+
   useEffect(() => {
     if (props?.props?.dataParams) {
       setParams(props?.props?.dataParams);
@@ -359,12 +366,12 @@ function SelectingBoundaries({ onSelect, formData, ...props }) {
                       })) || []
                     }
                     optionsKey={"code"}
-                    onSelect={(value) => {
+                    onSelect={(value ,categorySelectAllState) => {
                       handleBoundaryChange(value, boundary);
                     }}
                     selected={selectedData?.filter((item) => item?.type === boundary?.boundaryType) || []}
-                    addCategorySelectAllCheck={true}
-                    addSelectAllCheck={true}
+                    addCategorySelectAllCheck={boundaryData[boundary?.boundaryType]?.length >0}
+                    addSelectAllCheck={boundaryData[boundary?.boundaryType]?.length >0}
                     variant="nestedmultiselect"
                   />
                 </div>

@@ -250,7 +250,7 @@ const SetupCampaign = () => {
     return keyParam ? parseInt(keyParam) : 1;
   });
 
-  const [lowest, setLowest] = useState(null);
+  const [lowesthierarchylevel, setLowestHierarchyLevel] = useState(null);
   const [fetchBoundary, setFetchBoundary] = useState(() => Boolean(searchParams.get("fetchBoundary")));
   const [fetchUpload, setFetchUpload] = useState(false);
 
@@ -271,7 +271,7 @@ const SetupCampaign = () => {
 
   useEffect(() => {
     if (hierarchyDefinition) {
-      setLowest(
+      setLowestHierarchyLevel(
         hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.filter(
           (e) => !hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.find((e1) => e1?.parentBoundaryType == e?.boundaryType)
         )
@@ -497,6 +497,44 @@ const SetupCampaign = () => {
     return restructuredData;
   }
 
+function restructureBoundaryData(selectedData, boundaryData, lowestHierarchyLevel , isAllChildrenPresent) {
+  const nowLowest = boundaryData[lowestHierarchyLevel];
+
+  if (!lowestHierarchyLevel || !isAllChildrenPresent) return selectedData;
+
+  for (let i = 0; i < nowLowest?.length; i++) {
+      // const isParentProcessed = false;
+      const parent = nowLowest?.[i]?.parentCode;
+      const number = nowLowest?.[i]?.boundaryTypeData?.TenantBoundary?.[0]?.boundary?.length;
+
+      const childrenWithParent = selectedData?.filter(item => item?.parent === parent);
+      const y = childrenWithParent?.length;
+      if (y === number) {
+        childrenWithParent.forEach(child => {
+            const index = selectedData.findIndex(item => item.code === child.parent);
+            if (index !== -1) {
+                selectedData[index].includeAllChildren = true;
+            }
+        });
+        selectedData = selectedData.filter(item => item?.parent !== parent);
+        // const nextLowestLevel = hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy.find(i => i.boundaryType === lowestHierarchyLevel);
+        // if (nextLowestLevel) {
+        //     return restructureBoundaryData(selectedData, boundaryData, nextLowestLevel?.parentBoundaryType);
+        // }
+    }
+    else{
+      isAllChildrenPresent = false;
+    }
+  }
+
+  const parentBoundaryType = boundaryData[lowestHierarchyLevel]?.parentCode; 
+  const nextLowestLevel = hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy.find(i => i.boundaryType === lowestHierarchyLevel);
+  if (nextLowestLevel) {
+      return restructureBoundaryData(selectedData, boundaryData, nextLowestLevel?.parentBoundaryType , isAllChildrenPresent);
+  }
+}
+
+
   function resourceData(facilityData, boundaryData, userData) {
     const resources = [facilityData, boundaryData, userData].filter((data) => data !== null && data !== undefined);
     return resources;
@@ -530,7 +568,11 @@ const SetupCampaign = () => {
           payloadData.action = "create";
           payloadData.campaignName = totalFormData?.HCM_CAMPAIGN_NAME?.campaignName;
           if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData) {
-            payloadData.boundaries = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
+            const isAllChildrenPresent = true;
+            // payloadData.boundaries = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
+            const temp = restructureBoundaryData(totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData, totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData , lowesthierarchylevel?.[0]?.boundaryType , isAllChildrenPresent)
+            console.log("temp", temp);
+            payloadData.boundaries = temp;
           }
           const temp = resourceData(
             totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
@@ -605,7 +647,11 @@ const SetupCampaign = () => {
           payloadData.action = "draft";
           payloadData.campaignName = totalFormData?.HCM_CAMPAIGN_NAME?.campaignName;
           if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData) {
-            payloadData.boundaries = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
+            // payloadData.boundaries = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
+            const isAllChildrenPresent = true;
+            const temp = restructureBoundaryData(totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData, totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData , lowesthierarchylevel?.[0]?.boundaryType,isAllChildrenPresent)
+            console.log("temp", temp);
+            payloadData.boundaries = temp;
           }
           const temp = resourceData(
             totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
@@ -660,7 +706,11 @@ const SetupCampaign = () => {
           payloadData.action = "draft";
           payloadData.campaignName = totalFormData?.HCM_CAMPAIGN_NAME?.campaignName;
           if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData) {
-            payloadData.boundaries = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
+            const isAllChildrenPresent = true;
+            // payloadData.boundaries = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
+            const temp = restructureBoundaryData(totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData, totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData , lowesthierarchylevel?.[0]?.boundaryType,isAllChildrenPresent)
+            console.log("temp", temp);
+            payloadData.boundaries = temp;
           }
           const temp = resourceData(
             totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
@@ -828,13 +878,14 @@ const SetupCampaign = () => {
 
     // Check for missing children
     const missingParents = filteredData?.filter((item) => item?.parent && !parentChildrenMap[item.code]);
-    const extraParent = missingParents?.filter((i) => i?.type !== lowest?.[0]?.boundaryType);
-    
+    const extraParent = missingParents?.filter((i) => i?.type !== lowesthierarchylevel?.[0]?.boundaryType);
+
     return extraParent;
   }
 
   // validating the screen data on clicking next button
   const handleValidate = (formData) => {
+    console.log("formData", formData);
     const key = Object.keys(formData)?.[0];
     switch (key) {
       case "campaignName":
@@ -879,11 +930,11 @@ const SetupCampaign = () => {
           if (!validateBoundary) {
             setShowToast({ key: "error", label: t("HCM_CAMPAIGN_ALL_THE_LEVELS_ARE_MANDATORY") });
             return false;
-          }
-          else if(recursiveParentFind(formData?.boundaryType?.selectedData).length >0){
-            setShowToast({ key: "error", 
-            label: `${t(`HCM_CAMPAIGN_FOR`)} ${t(missedType?.[0]?.type)} ${t(missedType?.[0]?.code)} ${t(`HCM_CAMPAIGN_CHILD_NOT_PRESENT`)}`
-          })
+          } else if (recursiveParentFind(formData?.boundaryType?.selectedData).length > 0) {
+            setShowToast({
+              key: "error",
+              label: `${t(`HCM_CAMPAIGN_FOR`)} ${t(missedType?.[0]?.type)} ${t(missedType?.[0]?.code)} ${t(`HCM_CAMPAIGN_CHILD_NOT_PRESENT`)}`,
+            });
             return false;
           }
           setShowToast(null);
@@ -993,7 +1044,6 @@ const SetupCampaign = () => {
       setTimeout(closeToast, 10000);
     }
   }, [showToast]);
-
 
   const onSubmit = (formData, cc) => {
     const checkValid = handleValidate(formData);
