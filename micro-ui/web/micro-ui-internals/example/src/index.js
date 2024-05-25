@@ -9,7 +9,7 @@ import { initEngagementComponents } from "@egovernments/digit-ui-module-engageme
 import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
 // import { initUtilitiesComponents } from  "@egovernments/digit-ui-module-utilities";
 import {initWorkbenchComponents} from "@egovernments/digit-ui-module-workbench";
-
+import { initIMComponents,IMReducers } from "@egovernments/digit-ui-module-pgr";
 import "@egovernments/digit-ui-css/example/index.css";
 
 import { pgrCustomizations } from "./pgr";
@@ -17,7 +17,7 @@ import { UICustomizations } from "./UICustomizations";
 
 var Digit = window.Digit || {};
 
-const enabledModules = [ "DSS", "HRMS",
+const enabledModules = ["IM", "DSS", "HRMS",
 "Workbench"
 //  "Engagement", "NDSS","QuickPayLinks", "Payment",
   // "Utilities",
@@ -62,15 +62,17 @@ const initDigitUI = () => {
     // ...paymentConfigs,
     // PaymentLinks,
   });
-
+  initIMComponents();
   initDSSComponents();
   initHRMSComponents();
   initEngagementComponents();
   // initUtilitiesComponents();
   initWorkbenchComponents();
 
-
-  const moduleReducers = (initData) => initData;
+  const moduleReducers = (initData) => ({
+    initData,
+    pgr: IMReducers(initData),
+  });
 
 
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";

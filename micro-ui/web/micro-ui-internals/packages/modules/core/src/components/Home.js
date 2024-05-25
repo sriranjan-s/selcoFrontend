@@ -19,6 +19,7 @@ import { useTranslation } from "react-i18next";
 Feature :: Citizen All service screen cards
 */
 export const processLinkData = (newData, code, t) => {
+ // console.log("codeee", code)
   const obj = newData?.[`${code}`];
   if (obj) {
     obj.map((link) => {
@@ -34,7 +35,7 @@ export const processLinkData = (newData, code, t) => {
     const roleBasedLoginRoutes = [
       {
         role: "FSM_DSO",
-        from: `/${window?.contextPath}/citizen/fsm/dso-dashboard`,
+        from: "/digit-ui/citizen/fsm/dso-dashboard",
         dashoardLink: "CS_LINK_DSO_DASHBOARD",
         loginLink: "CS_LINK_LOGIN_DSO",
       },
@@ -48,7 +49,7 @@ export const processLinkData = (newData, code, t) => {
         });
       else
         newObj?.links?.push({
-          link: `/${window?.contextPath}/citizen/login`,
+          link: "/digit-ui/citizen/login",
           state: { role: "FSM_DSO", from },
           i18nKey: t(loginLink),
         });
@@ -91,7 +92,7 @@ const CitizenHome = ({ modules, getCitizenMenu, fetchedCitizen, isLoading }) => 
   return (
     <React.Fragment>
       <div className="citizen-all-services-wrapper">
-        {location.pathname.includes("sanitation-ui/citizen/all-services") ? null : <BackButton />}
+        <BackButton />
         <div className="citizenAllServiceGrid">
           {moduleArray
             .filter((mod) => mod)
@@ -127,6 +128,7 @@ const CitizenHome = ({ modules, getCitizenMenu, fetchedCitizen, isLoading }) => 
 };
 
 const EmployeeHome = ({ modules }) => {
+  console.log("modulesmodules",modules)
   return (
     <div className="employee-app-container">
       <div className="ground-container moduleCardWrapper gridModuleWrapper">

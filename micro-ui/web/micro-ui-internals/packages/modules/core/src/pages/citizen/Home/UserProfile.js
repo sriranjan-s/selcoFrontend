@@ -52,6 +52,9 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
   const [email, setEmail] = useState(userInfo?.emailId ? userInfo.emailId : "");
   const [gender, setGender] = useState(userDetails?.gender);
   const [city, setCity] = useState(userInfo?.permanentCity ? userInfo.permanentCity : cityDetails.name);
+  if(city==="State"){
+    setCity("All")
+  }
   const [mobileNumber, setMobileNo] = useState(userInfo?.mobileNumber ? userInfo.mobileNumber : "");
   const [profilePic, setProfilePic] = useState(null);
   const [profileImg, setProfileImg] = useState("");
@@ -136,7 +139,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
     setMobileNo(value);
 
     if (userType === "employee" && !new RegExp(/^[6-9]{1}[0-9]{9}$/).test(value)) {
-      setErrors({...errors, mobileNumber: {type: 'pattern', message: "CORE_COMMON_PROFILE_MOBILE_NUMBER_INVALID"}})
+      setErrors({...errors, mobileNumber: {type: 'pattern', message: t("CORE_COMMON_PROFILE_MOBILE_NUMBER_INVALID")}})
     }else{
       setErrors({...errors, mobileNumber: null});
     }
@@ -220,7 +223,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
           throw JSON.stringify({ type: "error", message: t("CORE_COMMON_PROFILE_PASSWORD_INVALID") });
         }
       }
-
+      requestData["locale"]=Digit.StoreData.getCurrentLanguage();
       const { responseInfo, user } = await Digit.UserService.updateUser(requestData, stateCode);
 
       if (responseInfo && responseInfo.status === "200") {
@@ -314,6 +317,18 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
 
   return (
     <div className="user-profile">
+        <style>{
+          `
+        @media (min-width: 780px) {
+            .user-profile {
+                width: 100%;
+                margin-left: 16px;
+                margin-right: 16px;
+            }
+        }
+        `
+      }
+    </style>
       <section style={{ margin: userType === "citizen" ? "8px" : "24px" }}>
         {userType === "citizen" ? (
           <BackButton></BackButton>
@@ -321,12 +336,12 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
           <BreadCrumb
             crumbs={[
               {
-                path: `/${window?.contextPath}/employee`,
+                path: "/digit-ui/employee",
                 content: t("ES_COMMON_HOME"),
                 show: true,
               },
               {
-                path: `/${window?.contextPath}/employee/user/profile`,
+                path: "/digit-ui/employee/user/profile",
                 content: t("ES_COMMON_PAGE_1"),
                 show: url.includes("/user/profile"),
               },
@@ -463,7 +478,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                 onClick={updateProfile}
                 style={{
                   marginTop: "24px",
-                  backgroundColor: "#F47738",
+                  backgroundColor: "#7a2829",
                   width: "100%",
                   height: "40px",
                   color: "white",
@@ -529,7 +544,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                     type={"text"}
                     isMandatory={false}
                     name="city"
-                    value={t(Digit.Utils.locale.getTransformedLocale(`TENANT_TENANTS_${tenant}`))}
+                    value={t(city)}
                     onChange={(e) => setCity(e.target.value)}
                     placeholder="Enter Your City Name"
                     {...(validation = {
@@ -582,7 +597,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
 
               <LabelFieldPair>
                 <div>
-                  <a style={{ color: "orange", cursor: "default", marginBottom: "5", cursor: "pointer" }} onClick={TogleforPassword}>
+                  <a style={{ color: "#7a2829", cursor: "default", marginBottom: "5", cursor: "pointer" }} onClick={TogleforPassword}>
                     {t("CORE_COMMON_CHANGE_PASSWORD")}
                   </a>
                   {changepassword ? (
@@ -659,7 +674,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
             onClick={updateProfile}
             style={{
               marginTop: "24px",
-              backgroundColor: "#F47738",
+              backgroundColor: "#7a2829",
               width: windowWidth < 768 ? "100%" : "248px",
               height: "40px",
               float: "right",
