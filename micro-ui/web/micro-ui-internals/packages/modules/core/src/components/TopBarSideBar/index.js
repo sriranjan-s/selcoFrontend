@@ -19,6 +19,7 @@ const TopBarSideBar = ({
   islinkDataLoading,
 }) => {
   const [isSidebarOpen, toggleSidebar] = useState(false);
+  const [isSideBarScroll, setSideBarScrollTop] = useState(false);
   const history = useHistory();
   const [showDialog, setShowDialog] = useState(false);
   const handleLogout = () => {
@@ -33,7 +34,7 @@ const TopBarSideBar = ({
     setShowDialog(false);
   }
   const userProfile = () => {
-    history.push(`/${window?.contextPath}/employee/user/profile`);
+    history.push("/digit-ui/employee/user/profile");
   };
   const userOptions = [
     { name: t("EDIT_PROFILE"), icon: <EditPencilIcon className="icon" />, func: userProfile },

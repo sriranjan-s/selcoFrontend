@@ -3,7 +3,7 @@ import { Request } from "../atoms/Utils/Request";
 import cloneDeep from "lodash/cloneDeep";
 
 const getThumbnails = async (ids, tenantId, documents = []) => {
-
+  tenantId = window.location.href.includes("/obps/") || window.location.href.includes("/pt/") ? Digit.ULBService.getStateId() : tenantId;
   
     const res = await Digit.UploadServices.Filefetch(ids, tenantId);
     if (res.data.fileStoreIds && res.data.fileStoreIds.length !== 0) {
@@ -93,7 +93,7 @@ export const WorkflowService = {
       url: Urls.WorkFlow,
       useCache: true,
       method: "POST",
-      params: { tenantId: stateCode, businessServices },
+      params: { tenantId: Digit.SessionStorage.get("Employee.tenantId"), businessServices },
       auth: true,
     });
   },
@@ -103,11 +103,11 @@ export const WorkflowService = {
       url: Urls.WorkFlowProcessSearch,
       useCache: false,
       method: "POST",
-      params: { tenantId: stateCode, businessIds: businessIds, ...params, history },
+      params: { tenantId: stateCode, isStateLevelCall: window.location.href.includes("complaint/details")?false :Digit.SessionStorage.get("Employee.tenantId") == "pg"?true :false,businessIds: businessIds, ...params, history },
       auth: true,
     });
   },
-  getDetailsByIdV2: async ({ tenantId, id, moduleCode }) => {
+  getDetailsByIdV2: async ({ tenantIdNew, idNew, moduleCode }) => {
     
     //process instance search
     const workflow = await Digit.WorkflowService.getByBusinessId(tenantId, id);
@@ -209,7 +209,9 @@ export const WorkflowService = {
     }
     return {};
   },
-  getDetailsById: async ({ tenantId, id, moduleCode, role, getTripData }) => {
+  getDetailsById: async ({ tenantIdNew, idNew, moduleCode, role, getTripData }) => {
+    let tenantId = window.location.href.split("/")[9]
+    let id = window.location.href.split("/")[8]
     const workflow = await Digit.WorkflowService.getByBusinessId(tenantId, id);
     const applicationProcessInstance = cloneDeep(workflow?.ProcessInstances);
     const getLocationDetails = window.location.href.includes("/obps/") || window.location.href.includes("noc/inbox");

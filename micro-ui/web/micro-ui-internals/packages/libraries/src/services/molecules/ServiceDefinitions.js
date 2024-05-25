@@ -9,7 +9,7 @@ export const GetServiceDefinitions = {
         tenantId: tenantId,
         moduleDetails: [
           {
-            moduleName: "RAINMAKER-PGR",
+            moduleName: "Incident",
             masterDetails: [
               {
                 name: "ServiceDefs",
@@ -19,8 +19,7 @@ export const GetServiceDefinitions = {
         ],
       },
     };
-
-    const serviceDefs = await MdmsService.getDataByCriteria(tenantId, criteria, "PGR");
+    const serviceDefs = await MdmsService.getDataByCriteria(tenantId, criteria, "Incident");
     Storage.set("serviceDefinitions", serviceDefs);
     return serviceDefs;
   },

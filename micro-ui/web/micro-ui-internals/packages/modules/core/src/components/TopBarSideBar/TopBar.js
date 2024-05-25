@@ -104,13 +104,13 @@ const TopBar = ({
       <img className="city" src={loggedin ? cityDetails?.logoId : stateInfo?.statelogo} />
       <span style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
         {loggedin &&
-          (cityDetails?.city?.ulbGrade ? (
+          (cityDetails?.city ? (
             <p className="ulb" style={mobileView ? { fontSize: "14px", display: "inline-block" } : {}}>
               {t(cityDetails?.i18nKey).toUpperCase()}{" "}
-              {t(`ULBGRADE_${cityDetails?.city?.ulbGrade.toUpperCase().replace(" ", "_").replace(".", "_")}`).toUpperCase()}
+              {/* {t(`ULBGRADE_${cityDetails?.city?.ulbGrade.toUpperCase().replace(" ", "_").replace(".", "_")}`).toUpperCase()} */}
             </p>
           ) : (
-            <img className="state" src={logoUrl} />
+            <img className="state" src={""} />
           ))}
         {!loggedin && (
           <p className="ulb" style={mobileView ? { fontSize: "14px", display: "inline-block" } : {}}>
@@ -126,7 +126,7 @@ const TopBar = ({
             </div>
             <div className="left">{showLanguageChange && <ChangeLanguage dropdown={true} />}</div>
             {userDetails?.access_token && (
-              <div className="left">
+              <div className="left" style={{width:"130px"}}>
                 <Dropdown
                   option={userOptions}
                   optionKey={"name"}
@@ -134,8 +134,7 @@ const TopBar = ({
                   showArrow={true}
                   freeze={true}
                   style={mobileView ? { right: 0 } : {}}
-                  optionCardStyles={{ overflow: "revert",display:"table" }}
-                  topbarOptionsClassName={"topbarOptionsClassName"}
+                  optionCardStyles={{ overflow: "revert" }}
                   customSelector={
                     profilePic == null ? (
                       <TextToImg name={userDetails?.info?.name || userDetails?.info?.userInfo?.name || "Employee"} />
@@ -146,7 +145,7 @@ const TopBar = ({
                 />
               </div>
             )}
-            <img className="state" src={logoUrl} />
+       <img className="city" src={loggedin ? cityDetails?.logoId : stateInfo?.statelogo} />
           </div>
         )}
       </span>

@@ -39,7 +39,7 @@ const EmployeeApp = ({
   useEffect(() => {
     Digit.UserService.setType("employee");
   }, []);
-
+  const isMobile = window.Digit.Utils.browser.isMobile();
   return (
     <div className="employee">
       <Switch>
@@ -60,11 +60,7 @@ const EmployeeApp = ({
           )}
           <div
             className={isUserProfile ? "grounded-container" : "loginContainer"}
-            style={
-              isUserProfile
-                ? { padding: 0, paddingTop: "80px", marginLeft: mobileView ? "" : "64px" }
-                : { "--banner-url": `url(${stateInfo?.bannerUrl})`, padding: "0px" }
-            }
+            style={isUserProfile ? !isMobile ?{backgroundColor:"#225670", "marginLeft":"40px",paddingTop:"100px"}: {backgroundColor:"#225670",paddingTop:"100px"}:{backgroundColor:"#225670"}}
           >
             <Switch>
               <Route path={`${path}/user/login`}>
@@ -76,14 +72,14 @@ const EmployeeApp = ({
               <Route path={`${path}/user/change-password`}>
                 <ChangePassword />
               </Route>
-              <PrivateRoute path={`${path}/user/profile`}>
+              <Route path={`${path}/user/profile`}>
                 <UserProfile stateCode={stateCode} userType={"employee"} cityDetails={cityDetails} />
-              </PrivateRoute>
+              </Route>
               <Route path={`${path}/user/error`}>
                 <ErrorComponent
                   initData={initData}
                   goToHome={() => {
-                    history.push(`/${window?.contextPath}/${Digit?.UserService?.getType?.()}`);
+                    history.push("/digit-ui/employee");
                   }}
                 />
               </Route>
@@ -109,7 +105,7 @@ const EmployeeApp = ({
             modules={modules}
           />
           <div className={`main ${DSO ? "m-auto" : ""}`}>
-            <div className="employee-app-wrapper">
+            <div className="employee-app-wrapper" style={{overflowX:"scroll"}}>
               <ErrorBoundary initData={initData}>
                 <AppModules stateCode={stateCode} userType="employee" modules={modules} appTenants={appTenants} />
               </ErrorBoundary>

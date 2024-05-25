@@ -18,7 +18,7 @@ const ForgotPassword = ({ config: propsConfig, t }) => {
       return;
     }
     Digit.UserService.setUser(user);
-    const redirectPath = location.state?.from || `/${window?.contextPath}/employee`;
+    const redirectPath = location.state?.from || "/digit-ui/employee";
     history.replace(redirectPath);
   }, [user]);
 
@@ -28,7 +28,7 @@ const ForgotPassword = ({ config: propsConfig, t }) => {
 
   const onForgotPassword = async (data) => {
     if (!data.city) {
-      alert("Please Select City!");
+      alert("Please select Health Care Centre");
       return;
     }
     const requestData = {
@@ -41,7 +41,7 @@ const ForgotPassword = ({ config: propsConfig, t }) => {
     };
     try {
       await Digit.UserService.sendOtp(requestData, data.city.code);
-      history.push(`/${window?.contextPath}/employee/user/change-password?mobile_number=${data.mobileNumber}&tenantId=${data.city.code}`);
+      history.push(`/digit-ui/employee/user/change-password?mobile_number=${data.mobileNumber}&tenantId=${data.city.code}`);
     } catch (err) {
       setShowToast(err?.response?.data?.error?.fields?.[0]?.message || "Invalid login credentials!");
       setTimeout(closeToast, 5000);
@@ -49,7 +49,7 @@ const ForgotPassword = ({ config: propsConfig, t }) => {
   };
 
   const navigateToLogin = () => {
-    history.replace(`/${window?.contextPath}/employee/login`);
+    history.replace("/digit-ui/employee/login");
   };
 
   const [userId, city] = propsConfig.inputs;

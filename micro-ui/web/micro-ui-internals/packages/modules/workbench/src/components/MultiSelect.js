@@ -6,10 +6,10 @@ import { Loader } from "@egovernments/digit-ui-react-components";
 const customStyles = {
   control: (provided, state) => ({
     ...provided,
-    borderColor: state.isFocused ? "#f47738" : "#505a5f",
+    borderColor: state.isFocused ? "#7a2829" : "#505a5f",
     borderRadius: "unset",
     "&:hover": {
-      borderColor: "#f47738",
+      borderColor: "#7a2829",
     },
   }),
 };

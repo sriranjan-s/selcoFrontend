@@ -42,7 +42,7 @@ const SubWorkTableDetails = ({data}) => {
                     ?  <td style={{ "width": "15vw" }}><div style={{"float":"right", "fontWeight":"bold"}}>{row[2]}</div></td>
                     :  <td style={{ "width": "15vw" }}><div style={{"float":"right"}}>{row[2]}</div></td>}
                 {row[3] && <td style={getStyles(3)}>
-                    <div style={{display:"flex",flexDirection:"row",cursor:"pointer",color:"#F47738"}} onClick={() => history.push(
+                    <div style={{display:"flex",flexDirection:"row",cursor:"pointer",color:"#7a2829"}} onClick={() => history.push(
                         {
                             pathname: `/digit-ui/employee/contracts/create-contract?estimateNumber=${data?.state?.estimateNumber}&task=${data?.state?.estimateDetails[index]?.name}&subEstimate=${data?.state?.estimateDetails[index]?.estimateDetailNumber}`,
                             state:{index, data}
@@ -65,7 +65,7 @@ const SubWorkTableDetails = ({data}) => {
               {renderBody(data?.tableRows)}
               {/* <tr>
                   <td style={getStyles(1)}></td>
-                  <td style={{ ...getStyles(2), "textAlign": "center" }} onClick={addRow}><span><AddIcon fill={"#F47738"} styles={{ "margin": "auto", "display": "inline", "marginTop": "-2px" }} /><label style={{ "marginLeft": "10px" }}>{t("WORKS_ADD_ITEM")}</label></span></td>
+                  <td style={{ ...getStyles(2), "textAlign": "center" }} onClick={addRow}><span><AddIcon fill={"#7a2829"} styles={{ "margin": "auto", "display": "inline", "marginTop": "-2px" }} /><label style={{ "marginLeft": "10px" }}>{t("WORKS_ADD_ITEM")}</label></span></td>
                   <td style={getStyles(3)}></td>
                   <td style={getStyles(4)}></td>
               </tr> */}

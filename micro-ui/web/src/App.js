@@ -5,6 +5,10 @@ import {
   PaymentLinks,
   PaymentModule,
 } from "@egovernments/digit-ui-module-common";
+import {
+  initIMComponents,
+  IMReducers,
+} from "@egovernments/digit-ui-module-pgr";
 import { DigitUI } from "@egovernments/digit-ui-module-core";
 import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
 import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
@@ -16,6 +20,7 @@ import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
 
 const enabledModules = [
+  "IM",
   "DSS",
   "NDSS",
   "Utilities",
@@ -26,6 +31,7 @@ const enabledModules = [
 
 const moduleReducers = (initData) => ({
   initData,
+  pgr: IMReducers(initData),
 });
 
 const initDigitUI = () => {
@@ -34,7 +40,7 @@ const initDigitUI = () => {
     ...paymentConfigs,
     PaymentLinks,
   });
-
+  initIMComponents();
   initDSSComponents();
   initHRMSComponents();
   initEngagementComponents();

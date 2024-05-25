@@ -34,10 +34,10 @@ const SurveyDetailsView = ({surveyTitle,surveyDesc,t,surveyId}) => {
             </div>  
         <button
           type={"button"}
-          style={{ border: "2px solid #F47738", backgroundColor: "white", padding: "8px 8px",width:"200px",marginLeft:"50px",marginTop:"-45px" }}
+          style={{ border: "2px solid #7a2829", backgroundColor: "white", padding: "8px 8px",width:"200px",marginLeft:"50px",marginTop:"-45px" }}
           onClick={() => history.push(`/${window?.contextPath}/employee/engagement/surveys/inbox/details/${surveyId}`)}
         >
-          <header style={{ color:"#F47738"}}>{t("SURVEY_QUESTIONS")}</header>
+          <header style={{ color:"#7a2829"}}>{t("SURVEY_QUESTIONS")}</header>
         </button>
         </span>
     

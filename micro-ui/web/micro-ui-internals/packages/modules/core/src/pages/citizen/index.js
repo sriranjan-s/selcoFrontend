@@ -18,11 +18,11 @@ import Search from "./SearchApp";
 import StaticDynamicCard from "./StaticDynamicComponent/StaticDynamicCard";
 
 const sidebarHiddenFor = [
-  `${window?.contextPath}/citizen/register/name`,
-  `/${window?.contextPath}/citizen/select-language`,
-  `/${window?.contextPath}/citizen/select-location`,
-  `/${window?.contextPath}/citizen/login`,
-  `/${window?.contextPath}/citizen/register/otp`,
+  "digit-ui/citizen/register/name",
+  "/digit-ui/citizen/select-language",
+  "/digit-ui/citizen/select-location",
+  "/digit-ui/citizen/login",
+  "/digit-ui/citizen/register/otp",
 ];
 
 const getTenants = (codes, tenants) => {
@@ -51,7 +51,7 @@ const Home = ({
     [
       {
         name: "actions-test",
-        filter: `[?(@.url == '${window.contextPath}-card')]`,
+        filter: "[?(@.url == 'digit-ui-card')]",
       },
     ],
     {
