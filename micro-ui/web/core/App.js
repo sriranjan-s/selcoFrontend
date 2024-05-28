@@ -4,9 +4,9 @@ import { DigitUI } from "@egovernments/digit-ui-module-core";
 import { UICustomizations } from "./Customisations/UICustomizations";
 import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
 import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
-import { initPGRComponents,PGRReducers } from "@egovernments/digit-ui-module-pgr";
+import { initIMComponents,IMReducers } from "@egovernments/digit-ui-module-pgr";
 
-window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
+window.contextPath = "digit-ui" || window?.globalConfigs?.getConfig("CONTEXT_PATH")
 
 const enabledModules = [
   "DSS",
@@ -14,10 +14,11 @@ const enabledModules = [
   "Utilities",
   "Engagement",
   "Workbench",
+  "IM"
 ];
 
 const moduleReducers = (initData) => ({
-  initData, pgr: PGRReducers(initData),
+  initData, pgr: IMReducers(initData),
 });
 
 const initDigitUI = () => {
@@ -28,7 +29,7 @@ const initDigitUI = () => {
   };
   initUtilitiesComponents();
   initWorkbenchComponents();
-  initPGRComponents();
+  initIMComponents();
 };
 
 initLibraries().then(() => {
@@ -36,7 +37,8 @@ initLibraries().then(() => {
 });
 
 function App() {
-  window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
+  window.contextPath = "digit-ui" || window?.globalConfigs?.getConfig("CONTEXT_PATH") || "http://localhost:3003/digit-ui"
+  console.log("CONTEXT_PATH", window?.globalConfigs?.getConfig("CONTEXT_PATH"))
   const stateCode =
     window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") ||
     process.env.REACT_APP_STATE_LEVEL_TENANT_ID;

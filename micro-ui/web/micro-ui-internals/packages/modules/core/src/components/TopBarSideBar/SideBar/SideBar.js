@@ -9,6 +9,14 @@ import {
   CollectionIcon,
   Phone,
   LogoutIcon,
+  PropertyHouse,
+  CaseIcon,
+  ReceiptIcon,
+  DocumentIconSolid,
+  CollectionsBookmarIcons,
+  FinanceChartIcon,
+  DropIcon,
+  PersonIcon
 } from "@egovernments/digit-ui-react-components";
 import ReactTooltip from "react-tooltip";
 import { set } from "lodash";

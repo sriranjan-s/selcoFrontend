@@ -47,18 +47,20 @@ export const UserService = {
     return Digit.SessionStorage.get("User");
   },
   logout: async () => {
-    const userType = UserService.getType();
-    const logoutRedirectURL = window?.globalConfigs?.getConfig("LOGOUT_REDIRECT_URL") || `/${window?.contextPath}/${userType === "citizen"?"citizen":"employee/user/language-selection"}`;
-    try {
-      await UserService.logoutUser();
-    } catch (e) {
-    }
-    finally {
-      window.localStorage.clear();
-      window.sessionStorage.clear();
-      window.location.replace(`/${logoutRedirectURL}`);
-      
-    }
+      const userType = UserService.getType();
+      try {
+        await UserService.logoutUser();
+      } catch (e) {
+      }
+      finally{
+        window.localStorage.clear();
+        window.sessionStorage.clear();
+        if (userType === "citizen") {
+          window.location.replace("/digit-ui/citizen");
+        } else {
+          window.location.replace("/digit-ui/employee/user/language-selection");
+        }
+      }
   },
   sendOtp: (details, stateCode) =>
     ServiceRequest({
