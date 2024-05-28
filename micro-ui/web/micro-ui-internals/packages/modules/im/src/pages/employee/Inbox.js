@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 
 const Inbox = () => {
   const { t } = useTranslation();
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  let tenantId = Digit.ULBService.getCurrentTenantId();
   const { uuid } = Digit.UserService.getUser().info;
   const [pageOffset, setPageOffset] = useState(0);
   const [pageSize, setPageSize] = useState(10);
@@ -18,7 +18,12 @@ const Inbox = () => {
   useEffect(() => {
     (async () => {
       const applicationStatus = searchParams?.filters?.pgrfilters?.applicationStatus?.map(e => e.code).join(",")
+      if(searchParams?.filters?.pgrQuery?.phcType)
+      {
+        tenantId= searchParams?.filters?.pgrQuery?.phcType
+      }
       let response = await Digit.PGRService.count(tenantId, applicationStatus?.length > 0  ? {applicationStatus} : {} );
+      console.log("STEP6",response,searchParams?.filters?.pgrQuery?.phcType,tenantId)
       if (response?.count) {
         setTotalRecords(response.count);
       }
@@ -58,7 +63,7 @@ const Inbox = () => {
   console.log("complai", complaints)
 
   let isMobile = Digit.Utils.browser.isMobile();
-
+console.log("totalRecords",totalRecords)
   if (complaints?.length !== null) {
     if (isMobile) {
       return (

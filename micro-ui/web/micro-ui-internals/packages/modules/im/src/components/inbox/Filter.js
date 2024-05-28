@@ -81,9 +81,7 @@ console.log("healthcare", healthcareMenu)
     for (const property in pgrfilters) {
       if (Array.isArray(pgrfilters[property])) {
         count += pgrfilters[property].length;
-        let params = pgrfilters[property].map((prop) => prop.name).join();
-        console.log("property", pgrfilters[property])
-        console.log("params", params)
+        let params = pgrfilters[property].map((prop) => prop.code).join();
         if (params) {
           pgrQuery[property] = params;
         }

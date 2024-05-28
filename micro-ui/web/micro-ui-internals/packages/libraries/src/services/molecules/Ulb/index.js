@@ -30,6 +30,8 @@ export const ULBService = {
   getCurrentTenantId: () => {
     // TODO: change when setter is done.
     const user = UserService.getUser();
+    const emp= UserService.getEmployeeTenant()
+    console.log("empempemp",emp)
     if (user?.extraRoleInfo) {
       const isDsoRoute = Digit.Utils.detectDsoRoute(window.location.pathname);
       if (isDsoRoute) {
@@ -38,7 +40,7 @@ export const ULBService = {
     }
     //TODO: fix tenant id from userinfo
     const tenantId =
-      user?.info?.type === "EMPLOYEE" && user?.info?.tenantId ? user?.info?.tenantId : window?.globalConfigs.getConfig("STATE_LEVEL_TENANT_ID");
+      user?.info?.type === "EMPLOYEE" && user?.info?.tenantId ? emp : window?.globalConfigs.getConfig("STATE_LEVEL_TENANT_ID");
     return tenantId;
   },
   /**

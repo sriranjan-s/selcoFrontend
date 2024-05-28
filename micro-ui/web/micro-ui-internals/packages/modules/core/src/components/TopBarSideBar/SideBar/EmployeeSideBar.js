@@ -29,7 +29,7 @@ const EmployeeSideBar = () => {
     setSubNav(true);
   };
   const collapseNav = () => {
-    sidebarRef.current.style.width = "60px";
+    sidebarRef.current.style.width = "55px";
     sidebarRef.current.style.overflow = "hidden";
     setSubNav(false);
   };
@@ -185,33 +185,7 @@ const EmployeeSideBar = () => {
       {renderSearch()}
       {splitKeyValue(configEmployeeSideBar)}
       
-            <div className="submenu-container">
-          <div onClick={""} className={`sidebar-link`}>
-            <div className="actions">
-            <Phone />
-              <div data-tip="React-tooltip" data-for={`jk-side-$}`} style={{display:"flex",flexDirection:"column"}}>
-                <span>{t("CS_COMMON_HELPLINE")} </span>
-                <span>{"6362222593"} </span>
-              </div>
-            </div>
-            {/* <div> {item.links && subnav ? <ArrowVectorDown /> : item.links ? <ArrowForward /> : null} </div> */}
-          </div>
-        </div>
-        <div className="submenu-container">
-          <div onClick={""} className={`sidebar-link`}>
-            <div className="actions">
-            <LogoutIcon></LogoutIcon>
-              <div data-tip="React-tooltip" data-for={`jk-side-$}`} onClick={(e)=> {handleLogout()}}style={{display:"flex",flexDirection:"column"}}>
-                <span>{t("CS_COMMON_LOGOUT")} </span>
-               
-              </div>
-            </div>
-            {/* <div> {item.links && subnav ? <ArrowVectorDown /> : item.links ? <ArrowForward /> : null} </div> */}
-          </div>
-          {showDialog && (
-        <LogoutDialog onSelect={handleOnSubmit} onCancel={handleOnCancel} onDismiss={handleOnCancel}></LogoutDialog>
-      )}
-        </div>
+     
        
     </div>
   );

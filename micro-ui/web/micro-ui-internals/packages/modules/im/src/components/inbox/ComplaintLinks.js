@@ -62,7 +62,12 @@ const ComplaintsLink = ({ isMobile, data }) => {
             
             padding: 12px;
             border-radius: 4px;
-        }`
+        }
+        .complaint-links-container .body .link {
+         padding-left: 0px;
+      }
+        
+        `
       }
     </style>
         {GetLogo()}

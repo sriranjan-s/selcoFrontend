@@ -23,7 +23,7 @@ const EmployeeModuleCard = ({ Icon, moduleName, kpis = [], links = [], isCitizen
                   </div>
                   <div>
                  
-                {link ? <span className="link" onClick={()=> history.push(`${link}`,{count})}>{label}</span> : null}
+                {link ? <span className="link" style={{paddingLeft:"0px"}} onClick={()=> history.push(`${link}`,{count})}>{label}</span> : null}
                   </div>
                 </div>
               ))}
@@ -83,3 +83,9 @@ const ModuleCardFullWidth = ({ moduleName,  links = [], isCitizen = false, class
 };
 
 export { EmployeeModuleCard, ModuleCardFullWidth };
+   // background: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url("https://selco-assets.s3.ap-south-1.amazonaws.com/background.jpg");
+  //  background-size: cover;
+  //  /* Cover the entire area */
+  //  background-position: center;
+  //  /* Center the image */
+  //  background-repeat: no-repeat;

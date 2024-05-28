@@ -46,6 +46,9 @@ export const UserService = {
   getUser: () => {
     return Digit.SessionStorage.get("User");
   },
+  getEmployeeTenant: () => {
+    return Digit.SessionStorage.get("Employee.tenantId");
+  },
   logout: async () => {
       const userType = UserService.getType();
       try {
