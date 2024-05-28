@@ -7,7 +7,7 @@ import SearchFields from "./SearchFields";
 const SearchApplication = ({ tenantId, t, onSubmit, data, count }) => {
   const initialValues = Digit.SessionStorage.get("AUDIT_APPLICATION_DETAIL") || {
     offset: 0,
-    limit: 5,
+    limit:10,
     sortOrder: "DESC",
   };
   const { register, control, handleSubmit, setValue, getValues, reset } = useForm({
@@ -204,5 +204,5 @@ const SearchApplication = ({ tenantId, t, onSubmit, data, count }) => {
     </React.Fragment>
   );
 };
-
-export default SearchApplication;
+  
+  export default SearchApplication;

@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Loader, SearchIcon } from "@egovernments/digit-ui-react-components";
+import { Loader, SearchIcon,Phone,LogoutIcon,HomeIcon,
+  ComplaintIcon, } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import Sidebar from "./SideBar";
 
@@ -9,6 +10,8 @@ const EmployeeSideBar = () => {
   const sidebarRef = useRef(null);
   const { isLoading, data } = Digit.Hooks.useAccessControl();
   const [search, setSearch] = useState("");
+  
+  const [showDialog, setShowDialog] = useState(false);
   const { t } = useTranslation();
   const [subNav, setSubNav] = useState(false);
 
@@ -86,7 +89,14 @@ const EmployeeSideBar = () => {
         mergeObjects(configEmployeeSideBar, hierarchicalMap);
       }
     });
-
+    const handleOnSubmit = () => {
+      Digit.UserService.logout();
+      setShowDialog(false);
+    }
+  
+    const handleOnCancel = () => {
+      setShowDialog(false);
+    }
   const splitKeyValue = (configEmployeeSideBar) => {
     const objectArray = Object.entries(configEmployeeSideBar);
 
@@ -118,7 +128,35 @@ const EmployeeSideBar = () => {
 
   const renderSearch = () => {
     return (
-      <div className="">
+      <div className="submenu-container">
+          <style>
+      
+         {`
+          .citizen .sidebar .sidebar-link:hover,
+          .employee .sidebar .sidebar-link:hover {
+            color: #7a2829 !important;
+            background-color: #486480;
+            cursor: pointer;
+          }
+          .citizen .sidebar .sidebar-link:hover svg,
+          .employee .sidebar .sidebar-link:hover svg {
+            fill: #7a2829 !important;
+          }
+          .citizen .sidebar .sidebar-link.active, 
+        .employee .sidebar .sidebar-link.active {
+            color: #7a2829 !important;
+            border-right: 4px solid #7a2829;
+        }
+        .citizen .sidebar .dropdown-link.active, .employee .sidebar .dropdown-link.active {
+          color: #7a2829 !important;
+          border-right: 4px solid #7a2829;
+        }
+        .citizen .sidebar .dropdown-link:hover, .employee .sidebar .dropdown-link:hover {
+          color: #7a2829 !important;
+          cursor: pointer;
+        }
+        `}
+      </style>
         <div className="sidebar-link">
           {subNav ? (
             <div className="actions search-icon-wrapper">
@@ -146,6 +184,35 @@ const EmployeeSideBar = () => {
     <div className="sidebar" ref={sidebarRef} onMouseOver={expandNav} onMouseLeave={collapseNav}>
       {renderSearch()}
       {splitKeyValue(configEmployeeSideBar)}
+      
+            <div className="submenu-container">
+          <div onClick={""} className={`sidebar-link`}>
+            <div className="actions">
+            <Phone />
+              <div data-tip="React-tooltip" data-for={`jk-side-$}`} style={{display:"flex",flexDirection:"column"}}>
+                <span>{t("CS_COMMON_HELPLINE")} </span>
+                <span>{"6362222593"} </span>
+              </div>
+            </div>
+            {/* <div> {item.links && subnav ? <ArrowVectorDown /> : item.links ? <ArrowForward /> : null} </div> */}
+          </div>
+        </div>
+        <div className="submenu-container">
+          <div onClick={""} className={`sidebar-link`}>
+            <div className="actions">
+            <LogoutIcon></LogoutIcon>
+              <div data-tip="React-tooltip" data-for={`jk-side-$}`} onClick={(e)=> {handleLogout()}}style={{display:"flex",flexDirection:"column"}}>
+                <span>{t("CS_COMMON_LOGOUT")} </span>
+               
+              </div>
+            </div>
+            {/* <div> {item.links && subnav ? <ArrowVectorDown /> : item.links ? <ArrowForward /> : null} </div> */}
+          </div>
+          {showDialog && (
+        <LogoutDialog onSelect={handleOnSubmit} onCancel={handleOnCancel} onDismiss={handleOnCancel}></LogoutDialog>
+      )}
+        </div>
+       
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-export const AccountCircle = ({ className, height = "24", width = "24", style = {}, fill = "#F47738", onClick = null }) => {
+export const AccountCircle = ({ className, height = "24", width = "24", style = {}, fill = "#7a2829", onClick = null }) => {
   return (
     <svg
       width={width}

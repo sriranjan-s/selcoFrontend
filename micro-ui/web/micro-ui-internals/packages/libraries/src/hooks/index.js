@@ -45,6 +45,7 @@ import useLocalities from "./pgr/useLocalities";
 import useServiceDefs from "./pgr/useServiceDefs";
 import usePGRTenants from "./pgr/useTenants";
 import useGenderMDMS from "./useGenderMDMS";
+import usePGRMDMS from "./pgr/useMDMS";
 
 import useEmployeeSearch from "./useEmployeeSearch";
 
@@ -106,6 +107,7 @@ const pgr = {
   useTenants: usePGRTenants,
   useComplaintSubType,
   useComplaintStatusCount,
+  useMDMS: usePGRMDMS,
 };
 
 

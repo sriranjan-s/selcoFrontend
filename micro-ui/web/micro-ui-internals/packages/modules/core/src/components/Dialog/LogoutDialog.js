@@ -93,6 +93,7 @@ const LogoutDialog = ({ onSelect, onCancel, onDismiss }) => {
     <Modal
       popupModuleMianStyles={{
         paddingTop: "30px",
+        color:"black"
       }}
       headerBarMain={<Heading label={t("CORE_LOGOUT_WEB_HEADER")} />}
       headerBarEnd={<CloseBtn onClick={onDismiss} isMobileView={false} />}

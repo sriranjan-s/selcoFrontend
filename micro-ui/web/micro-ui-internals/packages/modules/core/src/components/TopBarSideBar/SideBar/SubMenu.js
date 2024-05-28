@@ -25,8 +25,6 @@ const SubMenu = ({ item }) => {
   const location = useLocation();
   const { pathname } = location;
   const { t } = useTranslation();
-  const history = useHistory();
-
   const showSubnav = () => setSubnav(!subnav);
   const IconsObject = {
     home: <HomeIcon />,
@@ -89,11 +87,9 @@ const SubMenu = ({ item }) => {
                 <div data-tip="React-tooltip" data-for={`jk-side-${getModuleName}`}>
                   <span> {trimModuleName} </span>
 
-                  {trimModuleName?.includes("...") && (
-                    <ReactTooltip textColor="white" backgroundColor="grey" place="right" type="info" effect="solid" id={`jk-side-${getModuleName}`}>
-                      {t(`ACTION_TEST_${getModuleName}`)}
-                    </ReactTooltip>
-                  )}
+                 {trimModuleName?.includes("...") && <ReactTooltip textColor="white" backgroundColor="grey" place="right" type="info" effect="solid" id={`jk-side-${getModuleName}`}>
+                    {t(`ACTION_TEST16_${getModuleName}`)}
+                  </ReactTooltip>}
                 </div>
                 {/* <div className="tooltip">
                   <p className="p1">{trimModuleName}</p>

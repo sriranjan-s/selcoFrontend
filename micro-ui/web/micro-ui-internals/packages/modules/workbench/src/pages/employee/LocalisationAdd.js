@@ -306,7 +306,7 @@ const LocalisationAdd = () => {
         Cell: ({ value, col, row, ...rest }) => {
           return (
             <span onClick={() => handleDeleteRow({row,value,col})} className="icon-wrapper">
-              <DeleteIconv2 fill={"#F47738"} />
+              <DeleteIconv2 fill={"#7a2829"} />
             </span>
           );
         },

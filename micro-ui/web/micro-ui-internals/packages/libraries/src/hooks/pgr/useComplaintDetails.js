@@ -10,57 +10,60 @@ const getThumbnails = async (ids, tenantId) => {
   }
 };
 
-const getDetailsRow = ({ id, service, complaintType }) => ({
-  CS_COMPLAINT_DETAILS_COMPLAINT_NO: id,
-  CS_COMPLAINT_DETAILS_APPLICATION_STATUS: `CS_COMMON_${service.applicationStatus}`,
-  CS_ADDCOMPLAINT_COMPLAINT_TYPE: complaintType === "" ? `SERVICEDEFS.OTHERS` : `SERVICEDEFS.${complaintType}`,
-  CS_ADDCOMPLAINT_COMPLAINT_SUB_TYPE: `SERVICEDEFS.${service.serviceCode.toUpperCase()}`,
-  CS_COMPLAINT_ADDTIONAL_DETAILS: service.description,
-  CS_COMPLAINT_FILED_DATE: Digit.DateUtils.ConvertTimestampToDate(service.auditDetails.createdTime),
-  ES_CREATECOMPLAINT_ADDRESS: [
-    service.address.landmark,
-    Digit.Utils.locale.getLocalityCode(service.address.locality, service.tenantId),
-    service.address.city,
-    service.address.pincode,
-  ],
-});
+const getDetailsRow = ({ id,incident, complaintType }) =>({
+  CS_COMPLAINT_DETAILS_TICKET_NO: id,
+  CS_COMPLAINT_DETAILS_APPLICATION_STATUS: `CS_COMMON_${incident.applicationStatus}`,
+  CS_ADDCOMPLAINT_TICKET_TYPE: complaintType === "" ? `SERVICEDEFS.OTHERS` : `SERVICEDEFS.${complaintType}`,
+  CS_ADDCOMPLAINT_TICKET_SUB_TYPE: `SERVICEDEFS.${incident.incidentSubType.toUpperCase()}`,
+  CS_ADDCOMPLAINT_DISTRICT : incident.district.charAt(0).toUpperCase() +incident.district.slice(1).toLowerCase(),
+  CS_ADDCOMPLAINT_BLOCK: incident?.block.charAt(0).toUpperCase() + incident.block.slice(1).toLowerCase(),
+  CS_ADDCOMPLAINT_HEALTH_CARE_CENTRE: incident?.phcType,
+  CS_COMPLAINT_COMMENTS: incident?.comments,
+  CS_ADDCOMPLAINT_HEALTH_CARE_SUB_TYPE: incident?.phcSubType,
+  CS_COMPLAINT_FILED_DATE: Digit.DateUtils.ConvertTimestampToDate(incident.auditDetails.createdTime),
+})
 
 const isEmptyOrNull = (obj) => obj === undefined || obj === null || Object.keys(obj).length === 0;
 
-const transformDetails = ({ id, service, workflow, thumbnails, complaintType }) => {
+const transformDetails = ({ id, incident, workflow, thumbnails, complaintType }) => {
   const { Customizations, SessionStorage } = window.Digit;
   const role = (SessionStorage.get("user_type") || "CITIZEN").toUpperCase();
   const customDetails = Customizations?.PGR?.getComplaintDetailsTableRows
-    ? Customizations.PGR.getComplaintDetailsTableRows({ id, service, role })
+    ? Customizations.PGR.getComplaintDetailsTableRows({ id, incident, role })
     : {};
   return {
-    details: !isEmptyOrNull(customDetails) ? customDetails : getDetailsRow({ id, service, complaintType }),
+    details: !isEmptyOrNull(customDetails) ? customDetails : getDetailsRow({ id, incident, complaintType }),
     thumbnails: thumbnails?.thumbs,
     images: thumbnails?.images,
     workflow: workflow,
-    service,
+    incident:incident,
     audit: {
-      citizen: service.citizen,
-      details: service.auditDetails,
-      source: service.source,
-      rating: service.rating,
-      serviceCode: service.serviceCode,
+      details: incident.auditDetails,
+      incidentType: incident.incidentSubType,
     },
-    service: service,
+   // service: service,
   };
 };
 
-const fetchComplaintDetails = async (tenantId, id) => {
-  var serviceDefs = await Digit.MDMSService.getServiceDefs(tenantId, "PGR");
-  const { service, workflow } = (await Digit.PGRService.search(tenantId, { serviceRequestId: id })).ServiceWrappers[0] || {};
-  Digit.SessionStorage.set("complaintDetails", { service, workflow });
-  if (service && workflow && serviceDefs) {
-    const complaintType = serviceDefs.filter((def) => def.serviceCode === service.serviceCode)[0].menuPath.toUpperCase();
+const fetchComplaintDetails = async (tenantIdNew, id) => {
+  
+  let tenantId = window.location.href.split("/")[9]
+  console.log("servkkkk", tenantId,id)
+  var serviceDefs = await Digit.MDMSService.getServiceDefs(tenantId, "Incident");
+  const {incident, workflow} = (await Digit.PGRService.search(tenantId, {incidentId: window.location.href.split("/")[8] })).IncidentWrappers[0];
+  //console.log("service", service)
+ //const workflow=await Digit.PGRService.search(tenantId, {incidentId: id }).IncidentWrappers[0];
+  Digit.SessionStorage.set("complaintDetails", { incident, workflow });
+  if (incident && workflow && serviceDefs) {
+    //const complaintType =  service.incident.incidentType
+    const complaintType = serviceDefs.filter((def) => def.serviceCode === incident.incidentSubType)[0].menuPath.toUpperCase();
+    
     const ids = workflow.verificationDocuments
       ? workflow.verificationDocuments.filter((doc) => doc.documentType === "PHOTO").map((photo) => photo.fileStoreId || photo.id)
       : null;
-    const thumbnails = ids ? await getThumbnails(ids, service.tenantId) : null;
-    const details = transformDetails({ id, service, workflow, thumbnails, complaintType });
+    const state = Digit.ULBService.getStateId();
+    const thumbnails = ids ? await getThumbnails(ids, incident.tenantId) : null;
+    const details = transformDetails({ id, incident, workflow, thumbnails, complaintType });
     return details;
   } else {
     return {};
@@ -68,8 +71,10 @@ const fetchComplaintDetails = async (tenantId, id) => {
 };
 
 const useComplaintDetails = ({ tenantId, id }) => {
+ 
   const queryClient = useQueryClient();
   const { isLoading, error, data } = useQuery(["complaintDetails", tenantId, id], () => fetchComplaintDetails(tenantId, id));
+  
   return { isLoading, error, complaintDetails: data, revalidate: () => queryClient.invalidateQueries(["complaintDetails", tenantId, id]) };
 };
 

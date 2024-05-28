@@ -463,7 +463,7 @@ const Home = ({ stateCode }) => {
                             style={{
                               float: "right",
                               textAlign: "right",
-                              color: "#F47738",
+                              color: "#7a2829",
                               fontSize: 16,
                               fontWeight: "bold",
                               display: "flex",

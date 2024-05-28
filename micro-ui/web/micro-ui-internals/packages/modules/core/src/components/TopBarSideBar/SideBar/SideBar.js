@@ -7,20 +7,14 @@ import {
   ComplaintIcon,
   BPAHomeIcon,
   CollectionIcon,
-  FinanceChartIcon,
-  CollectionsBookmarIcons,
-  DropIcon,
-  DocumentIconSolid,
-  PersonIcon,
-  PropertyHouse,
-  ReceiptIcon,
-  CaseIcon,
+  Phone,
+  LogoutIcon,
 } from "@egovernments/digit-ui-react-components";
 import ReactTooltip from "react-tooltip";
 import { set } from "lodash";
 import { useHistory, useLocation, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-
+import LogoutDialog from "../../Dialog/LogoutDialog";
 const DIGIT_UI_CONTEXTS = [
   "digit-ui",
   "works-ui",
@@ -91,7 +85,7 @@ const Sidebar = ({ data }) => {
   const [selectedParent, setSelectedParent] = useState(null);
   const [selectedChild, setSelectedChild] = useState(null);
   const [selectedChildLevelOne, setSelectedChildLevelOne] = useState(null);
-
+  const [showDialog, setShowDialog] = useState(false);
   const [subNav, setSubNav] = useState(false);
 
   const IconsObject = {
@@ -116,7 +110,10 @@ const Sidebar = ({ data }) => {
       [key]: !prevOpenItems[key],
     }));
   };
-
+  const handleLogout = () => {
+    toggleSidebar(false);
+    setShowDialog(true);
+  };
   const openSidebar = () => {
     setSubNav(true);
   };
@@ -127,7 +124,14 @@ const Sidebar = ({ data }) => {
     setSelectedChild(null);
     setSelectedChildLevelOne(null);
   };
+  const handleOnSubmit = () => {
+    Digit.UserService.logout();
+    setShowDialog(false);
+  }
 
+  const handleOnCancel = () => {
+    setShowDialog(false);
+  }
   function extractLeftIcon(data = {}) {
     for (const key in data) {
       const item = data[key];
@@ -382,6 +386,33 @@ const Sidebar = ({ data }) => {
       onMouseLeave={closeSidebar}
     >
       {renderSidebarItems(data)}
+      <div className="submenu-container">
+          <div onClick={""} className={`sidebar-link`}>
+            <div className="actions">
+            <Phone />
+              <div data-tip="React-tooltip" data-for={`jk-side-$}`} style={{display:"flex",flexDirection:"column"}}>
+                <span>{t("CS_COMMON_HELPLINE")} </span>
+                <span>{"6362222593"} </span>
+              </div>
+            </div>
+            {/* <div> {item.links && subnav ? <ArrowVectorDown /> : item.links ? <ArrowForward /> : null} </div> */}
+          </div>
+        </div>
+        <div className="submenu-container">
+          <div onClick={""} className={`sidebar-link`}>
+            <div className="actions">
+            <LogoutIcon></LogoutIcon>
+              <div data-tip="React-tooltip" data-for={`jk-side-$}`} onClick={(e)=> {handleLogout()}}style={{display:"flex",flexDirection:"column"}}>
+                <span>{t("CS_COMMON_LOGOUT")} </span>
+               
+              </div>
+            </div>
+            {/* <div> {item.links && subnav ? <ArrowVectorDown /> : item.links ? <ArrowForward /> : null} </div> */}
+          </div>
+          {showDialog && (
+        <LogoutDialog onSelect={handleOnSubmit} onCancel={handleOnCancel} onDismiss={handleOnCancel}></LogoutDialog>
+      )}
+        </div>
     </div>
   );
 };

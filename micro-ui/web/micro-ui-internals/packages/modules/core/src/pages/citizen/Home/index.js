@@ -11,7 +11,8 @@ const Home = () => {
   const tenantId = Digit.ULBService.getCitizenCurrentTenant(true);
   const { data: { stateInfo, uiHomePage } = {}, isLoading } = Digit.Hooks.useStore.getInitData();
   let isMobile = window.Digit.Utils.browser.isMobile();
-
+  if(window.Digit.SessionStorage.get("TL_CREATE_TRADE")) window.Digit.SessionStorage.set("TL_CREATE_TRADE",{})
+   
   const conditionsToDisableNotificationCountTrigger = () => {
     if (Digit.UserService?.getUser()?.info?.type === "EMPLOYEE") return false;
     if (!Digit.UserService?.getUser()?.access_token) return false;
@@ -27,7 +28,9 @@ const Home = () => {
   });
 
   if (!tenantId) {
-    history.push(`/${window?.contextPath}/citizen/select-language`);
+    Digit.SessionStorage.get("locale") === null
+      ? history.push(`/digit-ui/citizen/select-language`)
+      : history.push(`/digit-ui/citizen/select-location`);
   }
 
   const appBannerWebObj = uiHomePage?.appBannerDesktop;
@@ -37,15 +40,6 @@ const Home = () => {
   const whatsAppBannerWebObj = uiHomePage?.whatsAppBannerDesktop;
   const whatsAppBannerMobObj = uiHomePage?.whatsAppBannerMobile;
   const whatsNewSectionObj = uiHomePage?.whatsNewSection;
-  const redirectURL = uiHomePage?.redirectURL;
-  /* configure redirect URL only if it is required to overide the default citizen home screen */
-  if (redirectURL) {
-    history.push(`/${window?.contextPath}/citizen/${redirectURL}`);
-  }
-  /* fix for sanitation ui */
-  if (window?.location?.href?.includes?.("sanitation-ui")) {
-    history.push(`/${window?.contextPath}/citizen/all-services`);
-  }
 
   const handleClickOnWhatsAppBanner = (obj) => {
     window.open(obj?.navigationUrl);

@@ -155,7 +155,7 @@ const getModuleServiceDefsCriteria = (tenantId, moduleCode) => ({
     tenantId: tenantId,
     moduleDetails: [
       {
-        moduleName: `RAINMAKER-${moduleCode}`,
+        moduleName: `Incident`,
         masterDetails: [
           {
             name: "ServiceDefs",
@@ -984,7 +984,7 @@ const GetEgovLocations = (MdmsRes) => {
   }));
 };
 
-const GetServiceDefs = (MdmsRes, moduleCode) => MdmsRes[`RAINMAKER-${moduleCode}`].ServiceDefs.filter((def) => def.active);
+const GetServiceDefs = (MdmsRes, moduleCode) => MdmsRes["Incident"].ServiceDefs.filter((def) => def.active);
 
 const GetSanitationType = (MdmsRes) => MdmsRes["FSM"].SanitationType.filter((type) => type.active);
 
@@ -1506,7 +1506,17 @@ export const MdmsService = {
     PersistantStorage.set(key, responseValue, cacheSetting.cacheTimeInSecs);
     return responseValue;
   },
-  getServiceDefs: (tenantId, moduleCode) => {
+  getServiceDefs: (tenantIdNew, moduleCode) => {
+    console.log("STEP 1getServiceDefsgetServiceDefs",  window.location.href,tenantIdNew)
+    var tenantId
+    if(window.location.href.includes("details"))
+    {
+       tenantId = window.location.href.split("/")[9]
+    }
+   else {
+    tenantId = tenantIdNew
+   }
+
     return MdmsService.getDataByCriteria(tenantId, getModuleServiceDefsCriteria(tenantId, moduleCode), moduleCode);
   },
   getSanitationType: (tenantId, moduleCode) => {

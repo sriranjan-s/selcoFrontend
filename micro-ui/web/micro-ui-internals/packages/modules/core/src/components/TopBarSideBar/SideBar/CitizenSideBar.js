@@ -84,25 +84,26 @@ export const CitizenSideBar = ({ isOpen, isMobile = false, toggleSidebar, onLogo
   const { isLoading, data } = Digit.Hooks.useAccessControl();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const showProfilePage = () => {
-    const redirectUrl = isEmployee ? `/${window?.contextPath}/employee/user/profile` : `/${window?.contextPath}/citizen/user/profile`;
+    const redirectUrl = isEmployee ? "/digit-ui/employee/user/profile" : "/digit-ui/citizen/user/profile";
     history.push(redirectUrl);
     closeSidebar();
   };
   const redirectToLoginPage = () => {
     // localStorage.clear();
     // sessionStorage.clear();
-    history.push(`/${window?.contextPath}/citizen/login`);
+    history.push("/digit-ui/citizen/login");
     closeSidebar();
   };
   if (islinkDataLoading || isLoading) {
     return <Loader />;
   }
+  const filteredTenantContact = storeData?.tenants.filter((e) => e.code === tenantId)[0]?.contactNumber || storeData?.tenants[0]?.contactNumber;
 
-  let menuItems = [...SideBarMenu(t, closeSidebar, redirectToLoginPage, isEmployee)];
+  let menuItems = [...SideBarMenu(t, closeSidebar, redirectToLoginPage, isEmployee, storeData, tenantId)];
   let profileItem;
   if (isFetched && user && user.access_token) {
     profileItem = <Profile info={user?.info} stateName={stateInfo?.name} t={t} />;
-    menuItems = menuItems.filter((item) => item?.id !== "login-btn");
+    menuItems = menuItems.filter((item) => item?.id !== "login-btn" && item?.id !== "help-line");
     menuItems = [
       ...menuItems,
       {
@@ -126,19 +127,8 @@ export const CitizenSideBar = ({ isOpen, isMobile = false, toggleSidebar, onLogo
           <React.Fragment>
             {t("CS_COMMON_HELPLINE")}
             <div className="telephone" style={{ marginTop: "-10%" }}>
-              {storeData?.tenants.map((i) => {
-                i.code === tenantId ? (
-                  <div className="link">
-                    <a href={`tel:${storeData?.tenants[i].contactNumber}`}>{storeData?.tenants[i].contactNumber}</a>
-                  </div>
-                ) : (
-                  <div className="link">
-                    <a href={`tel:${storeData?.tenants[0].contactNumber}`}>{storeData?.tenants[0].contactNumber}</a>
-                  </div>
-                );
-              })}
               <div className="link">
-                <a href={`tel:${storeData?.tenants[0].contactNumber}`}>{storeData?.tenants[0].contactNumber}</a>
+                <a href={`tel:${filteredTenantContact}`}>{filteredTenantContact}</a>
               </div>
             </div>
           </React.Fragment>
@@ -150,14 +140,14 @@ export const CitizenSideBar = ({ isOpen, isMobile = false, toggleSidebar, onLogo
   }
 
   let configEmployeeSideBar = {};
-
+//console.log("linkdata",linkData)
   if (!isEmployee) {
     Object.keys(linkData)
       ?.sort((x, y) => y.localeCompare(x))
       ?.map((key) => {
         if (linkData[key][0]?.sidebar === "digit-ui-links")
           menuItems.splice(1, 0, {
-            type: linkData[key][0]?.sidebarURL?.includes(window?.contextPath) ? "link" : "external-link",
+            type: linkData[key][0]?.sidebarURL?.includes("digit-ui") ? "link" : "external-link",
             text: t(`ACTION_TEST_${Digit.Utils.locale.getTransformedLocale(key)}`),
             links: linkData[key],
             icon: linkData[key][0]?.leftIcon,
@@ -166,7 +156,7 @@ export const CitizenSideBar = ({ isOpen, isMobile = false, toggleSidebar, onLogo
       });
   } else {
     data?.actions
-      .filter((e) => e.url === "url" && e.displayName !== "Home")
+      .filter((e) => e.url == "url" && e.name !== "Home" )
       .forEach((item) => {
         if (search == "" && item.path !== "") {
           let index = item.path.split(".")[0];
@@ -232,6 +222,23 @@ export const CitizenSideBar = ({ isOpen, isMobile = false, toggleSidebar, onLogo
     menuItems = menuItems.filter((ele) => ele.element === "LANGUAGE");
   }
   return isMobile ? (
+    <div>
+        <style>
+        {`
+          .drawer-list .sidebar-list.active .menu-label {
+            color: #7a2829;
+          }
+          .link {
+            --text-opacity: 1;
+            color: #7a2829;
+            cursor: pointer;
+          }
+          .drawer-list .sidebar-list.active {
+            border-left: 5px solid #7a2829;
+        }
+        `}
+      </style>
+    
     <NavBar
       open={isOpen}
       toggleSidebar={toggleSidebar}
@@ -243,6 +250,7 @@ export const CitizenSideBar = ({ isOpen, isMobile = false, toggleSidebar, onLogo
       search={search}
       setSearch={setSearch}
     />
+    </div>
   ) : (
     <StaticCitizenSideBar logout={onLogout} />
   );

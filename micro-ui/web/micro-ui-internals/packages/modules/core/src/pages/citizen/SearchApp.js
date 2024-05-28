@@ -56,7 +56,18 @@ const Search = ({ path }) => {
   const config = {
     enabled: !!(payload && Object.keys(payload).length > 0),
   };
-  const newObj = { ...payload };
+
+  let curoffset = window.location.href.split("/").pop();
+  let previousoffset;
+  let currentoffset;
+  if (!isNaN(parseInt(curoffset))) {
+    currentoffset = curoffset;
+    previousoffset = parseInt(curoffset) + 10;
+  } else {
+    previousoffset = 10;
+  } 
+
+  const newObj = isMobile ? { ...payload, offset:!isNaN(parseInt(curoffset))? parseInt(currentoffset) : 0 } : { ...payload };
  
   const {
     isLoading,
@@ -70,19 +81,29 @@ const Search = ({ path }) => {
     });
 
     return (
+      <React.Fragment>
         <AuditSearchApplication
           t={t}
           tenantId={tenantId}
           onSubmit={onSubmit}
           data={
             !isLoading
-              ? data?.ElasticSearchData?.length > 0
-                ? data?.ElasticSearchData
+              ? data?.ElasticSearchData?.filter((e)=> !e.total)?.length > 0
+                ? data?.ElasticSearchData?.filter((e)=> !e.total)
                 : { display: "ES_COMMON_NO_DATA" }
               : ""
           }
-          count={data?.ElasticSearchData?.length}
+          count={data?.ElasticSearchData?.filter((e)=> e.total)?.[0]?.total}
+          isLoading={isLoading}
         />
+        {isMobile && data?.ElasticSearchData?.filter((e)=> !e.total)?.length && data?.ElasticSearchData?.filter((e)=> !e.total)?.length !== 0 && (
+          <div>
+            <p style={{ marginLeft: "16px",marginBottom:"40px"}}>
+              <span className="link">{<Link to={`/digit-ui/citizen/Audit/${previousoffset}`}>{t("PT_LOAD_MORE_MSG")}</Link>}</span>
+            </p>
+          </div>
+        )}
+        </React.Fragment>
       );
     };
     export default Search;
