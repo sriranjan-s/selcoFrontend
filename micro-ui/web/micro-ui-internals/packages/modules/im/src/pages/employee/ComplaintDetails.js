@@ -100,15 +100,14 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [uploadedFile, setUploadedFile] = useState(Array);
   console.log("uploadedgg", uploadedFile)
-  const allowedFileTypes = /(.*?)(jpg|jpeg|png|image|pdf)$/i;
+  const allowedFileTypes = /(docx|pdf|xlsx)$/i;
   const stateId = Digit.ULBService.getStateId();
   const [uploadedImages, setUploadedImagesIds] = useState(null)
   //const [uploadedFile, setUploadedFile] = useState(null);
   const [error, setError] = useState(null);
   const cityDetails = Digit.ULBService.getCurrentUlb();
   const [selectedReopenReason, setSelectedReopenReason] = useState(null);
-  console.log("selectedReopenReason", selectedReopenReason)
-  
+
   
   const reopenReasonMenu = [t(`CS_REOPEN_OPTION_ONE`), t(`CS_REOPEN_OPTION_TWO`), t(`CS_REOPEN_OPTION_THREE`), t(`CS_REOPEN_OPTION_FOUR`)];
   // const uploadFile = useCallback( () => {
@@ -195,7 +194,7 @@ console.log("employeeData", employeeData)
       
       
       actionSaveOnSubmit={() => {
-        if((selectedAction === "REJECT"||selectedAction==="SENDBACK") && !comments){
+        if((selectedAction === "REJECT") && !comments){
             setError(t("CS_MANDATORY_COMMENTS"));
         }
         else if(selectedAction==="REOPEN" && selectedReopenReason===null){
@@ -204,7 +203,10 @@ console.log("employeeData", employeeData)
         else if(selectedAction==="ASSIGN" && selectedEmployee===null){
            setError(t("CS_ASSIGNEE_MANDATORY"))
         }
-        else if(selectedAction==="RESOLVE" && (!comments || uploadedFile===null) ){
+        else if(selectedAction==="SENDBACK" && (!comments || uploadedFile.length===0) ){
+          setError(t("CS_MANDATORY_COMMENTS_AND_FILE_UPLOAD"));
+        }
+        else if(selectedAction==="RESOLVE" && (!comments || uploadedFile.length===0) ){
           setError(t("CS_MANDATORY_COMMENTS_AND_FILE_UPLOAD"));
         }
         else{
@@ -244,7 +246,9 @@ console.log("employeeData", employeeData)
           tenantId={tenantId} 
           
           getFormState={(e) => getData(e)}
-          acceptFiles= ".pdf, .jpg" 
+          allowedFileTypesRegex={allowedFileTypes}
+          allowedMaxSizeInMB={5}
+          acceptFiles=" .pdf, .xlsx, .docx"
           />
         {selectedAction === "RESOLVE" ? <div style={{marginTop:"6px", fontSize:"13px", color:"#36454F"}}>{t("RESOLVE_RESOLUTION_REPORT")}</div> : <CardLabelDesc style={{marginTop:"8px", fontSize:"13px"}}> {t("CS_FILE_LIMIT")}</CardLabelDesc>}
       </Card>
@@ -483,7 +487,10 @@ return (
      <div style={{color:"#9e1b32", marginBottom:'10px', textAlign:"right", marginRight:"30px"}}>
     <Link to={`/digit-ui/employee/im/inbox`}>{t("BACK")}</Link></div> 
     <Card>
+      <div style={{display:"flex", flexDirection:"column", gap:"5px"}}>
       <CardSubHeader>{t(`CS_HEADER_INCIDENT_SUMMARY`)}</CardSubHeader>
+      <div style={{fontWeight:"bolder", fontSize:"21px", marginTop:-20, marginBottom:"22px"}}>{t("CS_HEADER_TICKET_DETAILS")}</div>
+      </div>
 
       {isLoading ? (
         <Loader />
