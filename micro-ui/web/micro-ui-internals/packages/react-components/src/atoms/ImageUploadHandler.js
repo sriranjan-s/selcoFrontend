@@ -7,6 +7,7 @@ export const ImageUploadHandler = (props) => {
   // const __initImageIds = Digit.SessionStorage.get("PGR_CREATE_IMAGES");
   // const __initThumbnails = Digit.SessionStorage.get("PGR_CREATE_THUMBNAILS");
   const [image, setImage] = useState(null);
+  
   const [uploadedImagesThumbs, setUploadedImagesThumbs] = useState(null);
   const [uploadedImagesIds, setUploadedImagesIds] = useState(props.uploadedImages);
 
@@ -14,12 +15,41 @@ export const ImageUploadHandler = (props) => {
   const [imageFile, setImageFile] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
   const [error, setError] = useState("");
-
+  const { t } = useTranslation();
+  const allowedTypes=["image/jpeg", "image/png", "image/jpg"]
+  useEffect(()=>{
+    if(imageFile){
+      console.log("image", imageFile)
+      if(!allowedTypes.includes(imageFile.type)){
+        setError(t("ONLY_IMAGES_ARE_ACCEPTED"));
+        setImageFile(null);
+      }
+      else if (imageFile.size > 2097152) {
+        setError("File is too large");
+        setImageFile(null);
+      }
+      else {
+        setImage(imageFile);
+      }
+    }
+  }, [imageFile])  
   useEffect(() => {
     if (image) {
       uploadImage();
     }
   }, [image]);
+  const clearError=useCallback(()=>{
+    setError("");
+  },[])
+  useEffect(()=>{
+    if(error){
+      const timeOut=setTimeout(()=>{
+        clearError();
+      }, 1500);
+      return ()=>clearTimeout(timeOut);
+    }
+
+  }, [error, clearError]);
 
   useEffect(() => {
     if (!isDeleting) {
@@ -35,13 +65,7 @@ export const ImageUploadHandler = (props) => {
     }
   }, [uploadedImagesIds]);
 
-  useEffect(() => {
-    if (imageFile && imageFile.size > 2097152) {
-      setError("File is too large");
-    } else {
-      setImage(imageFile);
-    }
-  }, [imageFile]);
+  
 
   const addUploadedImageIds = useCallback(
     (imageIdData) => {
@@ -56,13 +80,24 @@ export const ImageUploadHandler = (props) => {
   );
 
   function getImage(e) {
-    setError(null);
+    
     setImageFile(e.target.files[0]);
-  }
+    }
+ 
 
   const uploadImage = useCallback(async () => {
+    try{
     const response = await Digit.UploadServices.Filestorage("property-upload", image, props.tenantId);
-    setUploadedImagesIds(addUploadedImageIds(response));
+    if(response){
+      setError("")
+      setUploadedImagesIds(addUploadedImageIds(response));
+    }else{
+        setError("error uploading")
+      }
+    }catch(error){
+      setError(t("CS_ACTION_UPLOAD_ERROR"))
+    }
+    
   }, [addUploadedImageIds, image]);
 
   function addImageThumbnails(thumbnailsData) {
@@ -77,7 +112,7 @@ export const ImageUploadHandler = (props) => {
     // }
 
     const newThumbnails = keys.map((key) => {
-      return { image: thumbnailsData.data[key].split(",")[2], key };
+      return { image: thumbnailsData.data[key].split(",")[3], key };
     });
 
     setUploadedImagesThumbs([...thumbnails, ...newThumbnails]);
