@@ -44,7 +44,6 @@ export const CreateComplaint = ({ parentUrl }) => {
     sortedphcSubMenu=phcSubTypeMenu.sort((a,b)=>a.name.localeCompare(b.name))
    }
   const menu = Digit.Hooks.pgr.useComplaintTypes({ stateCode: tenantId })
-  console.log("menumenu",menu)
 let  sortedMenu=[];
   if (menu !== null) {
     let othersItem = menu.find(item => item.key === 'Others');
@@ -69,7 +68,6 @@ let  sortedMenu=[];
   const [selectTenant, setSelectTenant] =useState(Digit.SessionStorage.get("Employee.tenantId") || null)
 const { isMdmsLoading, data: mdmsData } = Digit.Hooks.pgr.useMDMS(state, "Incident", ["District","Block"]);
 const {  data: phcMenu  } = Digit.Hooks.pgr.useMDMS(state, "tenant", ["tenants"]);
-console.log("phcMenuphcMenu",phcMenu,mdmsData)
 let blockNew =mdmsData?.Incident?.Block
 useEffect(()=>{
   const fetchDistrictMenu=async()=>{
@@ -87,7 +85,7 @@ useEffect(()=>{
           setDistrictMenu(
             districts.map(def=>({
            
-           key:def.code, 
+           key:t(def.code), 
             name:t(def.name) 
          }))
           );
@@ -118,11 +116,11 @@ useEffect(async () => {
     let tenant = Digit.SessionStorage.get("IM_TENANTS")
     const selectedTenantData = tenant.find(item => item.code === selectTenant);
     const selectedDistrict = {
-      key: selectedTenantData.city.districtCode,
+      key: t(selectedTenantData.city.districtCode),
       name: t(selectedTenantData.city.districtCode.charAt(0).toUpperCase() + selectedTenantData.city.districtCode.slice(1).toLowerCase()),
     };
     const selectedBlock = {
-      key: selectedTenantData.city.blockCode.split(".")[1].toUpperCase(),
+      key: t(selectedTenantData.city.blockCode.split(".")[1].toUpperCase()),
       name: t(selectedTenantData.city.blockCode.split(".").pop().charAt(0).toUpperCase() + selectedTenantData.city.blockCode.split(".").pop().slice(1))
     };
       handleDistrictChange(selectedDistrict);
@@ -274,7 +272,7 @@ useEffect(async () => {
   const onSubmit = async (data) => {
     if (!canSubmit) return;
     const { key } = subType;
-    const complaintType = key;
+    //const complaintType = key;
     let uploadImages=[]
     if(uploadedImages!==null){
      uploadImages = uploadedImages?.map((url) => ({
@@ -284,7 +282,7 @@ useEffect(async () => {
       additionalDetails: {},
     }));
   }
-    const formData = { ...data,complaintType, district, block, healthCareType, healthcentre, reporterName, uploadedFile,uploadImages, tenantId:healthcentre?.code};
+    const formData = { ...data,complaintType, subType, district, block, healthCareType, healthcentre, reporterName, uploadedFile,uploadImages, tenantId:healthcentre?.code};
     await dispatch(createComplaint(formData));
     await client.refetchQueries(["fetchInboxData"]);
     history.push(parentUrl + "/incident/response");

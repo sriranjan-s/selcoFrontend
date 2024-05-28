@@ -25,7 +25,7 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
         Cell: ({ row }) => {
           return (
             <span className="link">
-              <Link to={ `/${window?.contextPath}/employee/hrms/details/${row.original.tenantId}/${row.original.code}`}>{row.original.code}</Link>
+              <Link  style={{color:"#7a2829"}} to={ `/digit-ui/employee/hrms/details/${row.original.tenantId}/${row.original.code}`}>{row.original.code}</Link>
             </span>
           );
         },
@@ -118,8 +118,8 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
           return {
             style: {
               maxWidth: cellInfo.column.Header == t("HR_EMP_ID_LABEL") ? "150px" : "",
-              padding: "20px 18px",
-              fontSize: "16px",
+              padding: "10px 20px",
+              fontSize: "14px",
               minWidth: "150px",
             },
           };
@@ -131,7 +131,6 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
         pageSizeLimit={props.pageSizeLimit}
         onSort={props.onSort}
         disableSort={props.disableSort}
-        onPageSizeChange={props.onPageSizeChange}
         sortParams={props.sortParams}
         totalRecords={props.totalRecords}
       />
@@ -141,30 +140,39 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
   return (
     <div className="inbox-container" style={{overflow: "auto", scrollbarWidth:"none", msOverflowStyle:"none"}}>
       {!props.isSearch && (
-        <div className="filters-container">
+        <div className="filters-container" style={{ paddingBottom:"80px"}}>
           <InboxLinks
             parentRoute={props.parentRoute}
             allLinks={[
               {
                 text: "HR_COMMON_CREATE_EMPLOYEE_HEADER",
-                link:  `/${window?.contextPath}/employee/hrms/create`,
+                link:  `/digit-ui/employee/hrms/create`,
                 businessService: "hrms",
                 roles: ["HRMS_ADMIN"],
               },
             ]}
-            headerText={"HRMS"}
+            headerText={t("HRMS_INBOX_HEADER")}
             businessService={props.businessService}
           />
-          <div>
-            {
+          <div style={{marginTop:"16px"}}>
+          
               <FilterComponent
+              getCellProps={(cellInfo) => {
+                return {
+                  style: {
+                    minWidth: cellInfo.column.Header === t("CS_COMMON_TICKET_NO") ? "240px" : "",
+                    padding: "20px 20px",
+                    fontSize: "14px",
+                  },
+                };
+              }}
                 defaultSearchParams={props.defaultSearchParams}
                 onFilterChange={props.onFilterChange}
                 searchParams={props.searchParams}
                 type="desktop"
                 tenantIds={tenantIds}
               />
-            }
+            
           </div>
         </div>
       )}
