@@ -21,6 +21,8 @@
   }
 
   .body {
+    padding-left: 0px;
+    margin-left: 0px;
     padding: 10px;
     @apply flex items-start flex-col;
     margin-left: 46px;
@@ -213,6 +215,8 @@
     }
 
     .body {
+      padding-left: 0px;
+      margin-left: 0px;
       padding: 10px;
       @apply flex items-start flex-col;
       margin-left: 46px;
@@ -265,6 +269,7 @@
       width: 270px;
 
       .filter {
+        margin-top: 0px !important;
         @apply mt-md;
 
         .filter-card {

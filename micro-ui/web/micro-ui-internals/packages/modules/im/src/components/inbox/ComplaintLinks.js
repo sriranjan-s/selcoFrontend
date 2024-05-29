@@ -51,7 +51,7 @@ const ComplaintsLink = ({ isMobile, data }) => {
 
   return (
     <Card className="employeeCard filter inboxLinks">
-      <div className="complaint-links-container">
+      <div className="complaint-links-container" style={{padding:"16px",height:"115px",margin:"auto"}}>
       <style>
         {`
         .complaint-links-container .header .logo {
@@ -65,7 +65,11 @@ const ComplaintsLink = ({ isMobile, data }) => {
         }
         .complaint-links-container .body .link {
          padding-left: 0px;
+         
       }
+      .complaint-links-container .body {
+        padding-left: 0px;
+        margin-left: 0px;
         
         `
       }

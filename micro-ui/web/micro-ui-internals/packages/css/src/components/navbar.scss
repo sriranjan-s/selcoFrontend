@@ -126,6 +126,7 @@
       flex-direction: column;
       
       .sidebar-link {
+        padding-left: 0px !important;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -238,6 +239,7 @@
         flex-direction: column;
         
         .sidebar-link {
+          padding-left: 0px !important;
           display: flex;
           justify-content: space-between;
           align-items: center;
