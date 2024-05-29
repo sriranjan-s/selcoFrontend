@@ -100,7 +100,7 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [uploadedFile, setUploadedFile] = useState(Array);
   console.log("uploadedgg", uploadedFile)
-  const allowedFileTypes = /(docx|pdf|xlsx)$/i;
+  const allowedFileTypes = /(docx|pdf|jpg|xlsx)$/i;
   const stateId = Digit.ULBService.getStateId();
   const [uploadedImages, setUploadedImagesIds] = useState(null)
   //const [uploadedFile, setUploadedFile] = useState(null);
@@ -121,6 +121,9 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
   function addComment(e) { 
     if(e.target.value.length>256){
       setError(t("CS_COMMENT_LENGTH_LIMIT_EXCEED"))
+    }
+    else if(!/^[a-zA-Z0-9\s./]*$/.test(e.target.value)){
+      setError(t("CS_COMMENT_INVALID_CHARACTERS"))
     }
     else{
       setError(null);
@@ -235,10 +238,13 @@ console.log("employeeData", employeeData)
         <CardLabel>{t("CS_COMMON_EMPLOYEE_COMMENTS")}*</CardLabel>
         ):<CardLabel>{t("CS_COMMON_EMPLOYEE_COMMENTS")}</CardLabel>}
         <TextArea name="comment" onChange={addComment} value={comments} />
-        <CardLabel>{t("CS_ACTION_SUPPORTING_DOCUMENTS")}</CardLabel>
         {selectedAction==="RESOLVE" ? (
-          <CardLabelDesc>{t(`CS_UPLOAD_RESTRICTIONS`)}*</CardLabelDesc>
-        ) : <CardLabelDesc>{t(`CS_UPLOAD_RESTRICTIONS`)}</CardLabelDesc>}
+           <CardLabel>{t("CS_ACTION_SUPPORTING_DOCUMENTS")}*</CardLabel>
+        ):  <CardLabel>{t("CS_ACTION_SUPPORTING_DOCUMENTS")}</CardLabel>}
+       
+        {/* {selectedAction==="RESOLVE" ? (
+        //   <CardLabelDesc>{t(`CS_UPLOAD_RESTRICTIONS`)}*</CardLabelDesc>
+        // ) : <CardLabelDesc>{t(`CS_UPLOAD_RESTRICTIONS`)}</CardLabelDesc>} */}
         
         <MultiUploadWrapper 
           t={t} 
@@ -246,9 +252,9 @@ console.log("employeeData", employeeData)
           tenantId={tenantId} 
           
           getFormState={(e) => getData(e)}
-          allowedFileTypesRegex={allowedFileTypes}
+          allowedFileTypesRegex={(selectedAction==="RESOLVE") ?/(docx|pdf|xlsx)$/i : /(pdf|jpg)$/i}
           allowedMaxSizeInMB={5}
-          acceptFiles=" .pdf, .xlsx, .docx"
+          acceptFiles= {(selectedAction==="RESOLVE") ? ".pdf, .xlsx, .docx": ".pdf, .jpg"}
           />
         {selectedAction === "RESOLVE" ? <div style={{marginTop:"6px", fontSize:"13px", color:"#36454F"}}>{t("RESOLVE_RESOLUTION_REPORT")}</div> : <CardLabelDesc style={{marginTop:"8px", fontSize:"13px"}}> {t("CS_FILE_LIMIT")}</CardLabelDesc>}
       </Card>
@@ -261,6 +267,29 @@ export const ComplaintDetails = (props) => {
   const { t } = useTranslation();
   const [fullscreen, setFullscreen] = useState(false);
   const [imageZoom, setImageZoom] = useState(null);
+  const mobileDeviceWidth = 780;
+  const [isMobileView, setIsMobileView] = React.useState(window.innerWidth <= mobileDeviceWidth);
+  const onResize = () => {
+    if (window.innerWidth <= mobileDeviceWidth) {
+      if (!isMobileView) {
+        setIsMobileView(true);
+      }
+    } else {
+      if (isMobileView) {
+        setIsMobileView(false);
+      }
+    }
+  };
+  React.useEffect(() => {
+    window.addEventListener("resize", () => {
+      onResize();
+    });
+    return () => {
+      window.addEventListener("resize", () => {
+        onResize();
+      });
+    };
+  });
   // const [actionCalled, setActionCalled] = useState(false);
   const [toast, setToast] = useState(false);
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -487,10 +516,12 @@ return (
      <div style={{color:"#9e1b32", marginBottom:'10px', textAlign:"right", marginRight:"30px"}}>
     <Link to={`/digit-ui/employee/im/inbox`}>{t("CS_COMMON_BACK")}</Link></div> 
     <Card>
+      
       <div style={{display:"flex", flexDirection:"column", gap:"5px"}}>
       <CardSubHeader>{t(`CS_HEADER_INCIDENT_SUMMARY`)}</CardSubHeader>
-      <div style={{fontWeight:"bolder", fontSize:"21px", marginTop:-20, marginBottom:"22px"}}>{t("CS_HEADER_TICKET_DETAILS")}</div>
+      <div style={{fontWeight:"bolder", fontSize: isMobileView ? "16px":"21px", marginTop: isMobileView? "20px": -20, marginBottom:"22px"}}>{t("CS_HEADER_TICKET_DETAILS")}</div>
       </div>
+      
 
       {isLoading ? (
         <Loader />

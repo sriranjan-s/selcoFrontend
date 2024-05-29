@@ -191,6 +191,10 @@ const UploadFile = (props) => {
   useEffect(() => handleChange(), [props.message]);
 
   const showHint = props?.showHint || false;
+  const styles = {
+    ...props?.textStyles,
+    color: "white"
+  };
 
   return (
     <Fragment>
@@ -200,8 +204,8 @@ const UploadFile = (props) => {
           <ButtonSelector
             theme="border"
             label={t("CS_COMMON_CHOOSE_FILE")}
-            style={{ ...(extraStyles ? extraStyles?.buttonStyles : {}), ...(!props.enableButton ? { opacity: 0.5 } : {}) }}
-            textStyles={props?.textStyles}
+            style={{ ...(extraStyles ? extraStyles?.buttonStyles : {}), ...(!props.enableButton ? { opacity: 0.5 } : {}), minHeight:"0px",maxHeight:"none", backgroundColor:"#7a2829" }}
+            textStyles={styles}
             type={props.buttonType}
           />
             {props?.uploadedFiles?.map((file, index) => {
