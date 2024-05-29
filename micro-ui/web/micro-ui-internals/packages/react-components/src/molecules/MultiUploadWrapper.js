@@ -130,7 +130,7 @@ const MultiUploadWrapper = ({ t, module = "PGR", tenantId = Digit.ULBService.get
                     setFileErrors([])
                 }}
                 accept={acceptFiles}
-                message={t(`WORKS_NO_FILE_SELECTED`)}
+                message={t(`ACTION_NO_FILE_SELECTED`)}
                 customClass={customClass}
                 enableButton={enableButton}
             />

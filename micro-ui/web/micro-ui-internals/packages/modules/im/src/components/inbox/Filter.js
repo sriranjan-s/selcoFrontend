@@ -221,7 +221,7 @@ console.log("pgrfilters", pgrfilters)
             <RadioButtons onSelect={onRadioChange} selectedOption={selectAssigned} optionsKey="name" options={assignedToOptions} />
             <div>
               {GetSelectOptions(
-                t("CS_COMPLAINT_DETAILS_TICKET_SUBTYPE"),
+                t("CS_COMPLAINT_DETAILS_TICKET_TYPE"),
                 sortedMenu,
                 selectedComplaintType,
                 complaintType,
