@@ -17,7 +17,7 @@ Axios.interceptors.response.use(
           localStorage.clear();
           sessionStorage.clear();
           window.location.href =
-          (isEmployee ? `/${window?.contextPath}/employee/user/login` : `/${window?.contextPath}/citizen/login`) +
+          (isEmployee ? `/${window?.contextPath}/employee/user/login` : `/${window?.contextPath}/employee`) +
             `?from=${encodeURIComponent(window.location.pathname + window.location.search)}`;
         } else if (
           error?.message?.toLowerCase()?.includes("internal server error") ||

@@ -75,7 +75,7 @@ console.log("totalRecords",totalRecords)
           <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
           <Header>{t("ES_COMMON_INBOX")}</Header>
           <div style={{color:"#9e1b32", marginBottom:'10px', textAlign:"right", marginRight:"30px"}}>
-              <Link to={`/digit-ui/employee`}>{t("BACK")}</Link>
+              <Link to={`/digit-ui/employee`}>{t("CS_COMMON_BACK")}</Link>
           </div> 
           </div>
           <DesktopInbox

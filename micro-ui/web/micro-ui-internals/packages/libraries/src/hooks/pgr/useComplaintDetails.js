@@ -13,7 +13,7 @@ const getThumbnails = async (ids, tenantId) => {
 const getDetailsRow = ({ id,incident, complaintType }) =>({
   CS_COMPLAINT_DETAILS_TICKET_NO: id,
   CS_COMPLAINT_DETAILS_APPLICATION_STATUS: `CS_COMMON_${incident.applicationStatus}`,
-  CS_ADDCOMPLAINT_TICKET_TYPE: `SERVICEDEFS.${incident.incidentType}`,
+  CS_ADDCOMPLAINT_TICKET_TYPE: `SERVICEDEFS.${incident.incidentType.toUpperCase()}`,
   CS_ADDCOMPLAINT_TICKET_SUB_TYPE: `SERVICEDEFS.${incident.incidentSubType.toUpperCase()}`,
   CS_ADDCOMPLAINT_DISTRICT : `${incident.district}`,
   CS_ADDCOMPLAINT_BLOCK: `${incident?.block}`,
