@@ -9,7 +9,7 @@ const displayError = ({ t, error, name }, customErrorMsg) => (
 )
 
 const fileValidationStatus = (file, regex, maxSize, t) => {
-    
+    const fileExtention=file.name.split('.').pop().toLowerCase();
     const status = { valid: true, name: file?.name?.substring(0, 15), error: '' };
     if (!file) return;
 
@@ -17,7 +17,7 @@ const fileValidationStatus = (file, regex, maxSize, t) => {
         status.valid = false; status.error = t(`NOT_SUPPORTED_FILE_TYPE_AND_FILE_SIZE_EXCEEDED_5MB`);
     }
 
-    if (!regex.test(file.type)) {
+    if (!regex.test(fileExtention)) {
         status.valid = false; status.error = t(`NOT_SUPPORTED_FILE_TYPE`);
     }
 
@@ -54,7 +54,7 @@ const checkIfAllValidFiles = (files, regex, maxSize, t, maxFilesAllowed, state) 
 }
 
 // can use react hook form to set validations @neeraj-egov
-const MultiUploadWrapper = ({ t, module = "PGR", tenantId = Digit.ULBService.getStateId(), getFormState, requestSpecifcFileRemoval, extraStyleName = "", setuploadedstate = [], showHintBelow, hintText, allowedFileTypesRegex = /(.*?)(jpg|jpeg|webp|aif|png|image|pdf|msword|openxmlformats-officedocument)$/i, allowedMaxSizeInMB = 10, acceptFiles = "image/*, .jpg, .jpeg, .webp, .aif, .png, .image, .pdf, .msword, .openxmlformats-officedocument, .dxf", maxFilesAllowed, customClass="", customErrorMsg,containerStyles }) => {
+const MultiUploadWrapper = ({ t, module = "PGR", tenantId = Digit.ULBService.getStateId(), getFormState, requestSpecifcFileRemoval, extraStyleName = "", setuploadedstate = [], showHintBelow, hintText, allowedFileTypesRegex = /(.*?)(jpg|jpeg|webp|aif|png|image|pdf|msword|xlsx|openxmlformats-officedocument)$/i, allowedMaxSizeInMB = 10, acceptFiles = "image/*, .jpg, .jpeg, .webp, .aif, .png, .image, .pdf, .msword, .openxmlformats-officedocument, .dxf", maxFilesAllowed, customClass="", customErrorMsg,containerStyles }) => {
     const FILES_UPLOADED = "FILES_UPLOADED"
     const TARGET_FILE_REMOVAL = "TARGET_FILE_REMOVAL"
 
