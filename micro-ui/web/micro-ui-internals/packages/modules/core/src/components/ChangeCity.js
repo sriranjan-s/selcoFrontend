@@ -59,7 +59,7 @@ const ChangeCity = (prop) => {
 
   // if (isDropdown) {
   return (
-    <div style={{width:"300px"}}>
+    <div style={prop?.mobileView ? {color: "#767676"} : {width:"300px"}}>
       <Dropdown
         option={selectCityData}
         selected={selectCityData.find((cityValue) => cityValue.value === dropDownData?.value)}
