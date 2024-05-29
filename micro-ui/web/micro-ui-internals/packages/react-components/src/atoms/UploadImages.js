@@ -7,7 +7,7 @@ const MiniUpload = (props) => {
   return (
     <div className="upload-img-container">
       <CameraSvg className="upload-camera-img" />
-      <input type="file" id="miniupload" accept="image/*" onChange={(e) => props.onUpload(e)} />
+      <input type="file" id="miniupload" accept="image/*"style={{marginLeft: `calc(-50% - 23px)`}} onChange={(e) => props.onUpload(e)} />
     </div>
   );
 };

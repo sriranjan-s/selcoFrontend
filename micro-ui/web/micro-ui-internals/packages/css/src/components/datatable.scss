@@ -34,6 +34,8 @@
 
 .employee-data-table {
   .row {
+    padding-bottom: 0px !important;
+    margin-bottom: 0px !important;
     @apply flex pb-sm mb-sm;
 
     span {
@@ -68,6 +70,8 @@
 
 .employee-data-table {
   .row {
+    padding-bottom: 0px !important;
+    margin-bottom: 0px !important;
     @apply flex pb-sm mb-sm;
 
     span {
