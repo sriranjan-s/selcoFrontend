@@ -92,10 +92,11 @@ const LogoutDialog = ({ onSelect, onCancel, onDismiss }) => {
   ) : (
     <Modal
       popupModuleMianStyles={{
-        paddingTop: "30px",
-        color:"black"
+        paddingTop: "0px",
+        color:"black",
+        width:"400px"
       }}
-      headerBarMain={<Heading label={t("CORE_LOGOUT_WEB_HEADER")} />}
+      headerBarMain={<Heading style={{maxWidth:"240px"}} label={t("CORE_LOGOUT_WEB_HEADER")} />}
       headerBarEnd={<CloseBtn onClick={onDismiss} isMobileView={false} />}
       actionCancelLabel={t("CORE_LOGOUT_CANCEL")}
       actionCancelOnSubmit={onCancel}
@@ -104,7 +105,7 @@ const LogoutDialog = ({ onSelect, onCancel, onDismiss }) => {
       formId="modal-action"
     >
       <div>
-        <CardText style={{ marginBottom: "54px", marginLeft: "8px", marginRight: "8px" }}>
+        <CardText style={{ marginBottom: "40px", marginLeft: "8px", marginRight: "8px" }}>
           {t("CORE_LOGOUT_WEB_CONFIRMATION_MESSAGE") + " "}
           <strong>{t("CORE_LOGOUT_MESSAGE")}?</strong>
         </CardText>

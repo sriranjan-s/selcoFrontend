@@ -89,13 +89,14 @@ const DesktopInbox = ({
   } else if (data && data.length === 0) {
     result = (
       <Card style={{ marginTop: 20 }}>
-        {t(LOCALE.NO_COMPLAINTS_EMPLOYEE)
+       <div style={{color:"#7a2824"}}> {t(LOCALE.NO_COMPLAINTS_EMPLOYEE)
           .split("\\n")
           .map((text, index) => (
             <p key={index} style={{ textAlign: "center" }}>
               {text}
             </p>
           ))}
+          </div>
       </Card>
     );
   } else if (data?.length > 0) {
@@ -107,9 +108,10 @@ const DesktopInbox = ({
         getCellProps={(cellInfo) => {
           return {
             style: {
-              minWidth: cellInfo.column.Header === t("CS_COMMON_TICKET_NO") ? "100px" : "",
-              padding: "10px 10px",
-              fontSize: "14px",
+              //minWidth: cellInfo.column.Header === t("CS_COMMON_TICKET_NO") ? "100px" : "",
+              maxWidth:"100%",
+              padding: "17.24px 18px",
+              fontSize: "15px",
             },
           };
         }}
@@ -139,13 +141,13 @@ const DesktopInbox = ({
     <div className="inbox-container">
       <div className="filters-container">
         <ComplaintsLink />
-        <div style={{paddingTop:"12px"}}>
+        <div style={{paddingTop:"5px", paddingBottom:"0px"}}>
           <Filter complaints={data} onFilterChange={onFilterChange} type="desktop" searchParams={searchParams} />
         </div>
       </div>
       <div style={{ flex: 1 }}>
         <SearchComplaint onSearch={onSearch} type="desktop" />
-        <div style={{ marginTop: "27px", marginLeft:"24px", flex: 1 }}>{result}</div>
+        <div style={{ marginTop: "21px", marginLeft:"24px", flex: 1 }}>{result}</div>
       </div>
     </div>
   );

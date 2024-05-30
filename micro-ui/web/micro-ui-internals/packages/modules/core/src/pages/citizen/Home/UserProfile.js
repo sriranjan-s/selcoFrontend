@@ -342,7 +342,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
               },
               {
                 path: "/digit-ui/employee/user/profile",
-                content: t("ES_COMMON_PAGE_1"),
+                
                 show: url.includes("/user/profile"),
               },
             ]}

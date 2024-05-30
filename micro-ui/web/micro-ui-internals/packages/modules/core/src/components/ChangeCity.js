@@ -14,6 +14,10 @@ const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
 const ChangeCity = (prop) => {
   const [dropDownData, setDropDownData] = useState(null);
   const [selectCityData, setSelectCityData] = useState([]);
+  let sortSelectCityData=[];
+  if(selectCityData.length>0){
+    sortSelectCityData=selectCityData.sort((a, b) => a.label.localeCompare(b.label));
+  }
   const [selectedCity, setSelectedCity] = useState([]); //selectedCities?.[0]?.value
   const history = useHistory();
   const isDropdown = prop.dropdown || false;
@@ -61,8 +65,8 @@ const ChangeCity = (prop) => {
   return (
     <div style={prop?.mobileView ? {color: "#767676"} : {width:"300px"}}>
       <Dropdown
-        option={selectCityData}
-        selected={selectCityData.find((cityValue) => cityValue.value === dropDownData?.value)}
+        option={sortSelectCityData}
+        selected={sortSelectCityData.find((cityValue) => cityValue.value === dropDownData?.value)}
         optionKey={"label"}
         select={handleChangeCity}
         freeze={true}
