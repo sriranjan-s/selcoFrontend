@@ -11,6 +11,11 @@ const SearchComplaint = ({ onSearch, type, onClose, searchParams }) => {
   const state = Digit.ULBService.getStateId();
   const { isMdmsLoading, data: mdmsData } = Digit.Hooks.pgr.useMDMS(state, "Incident", ["District","Block"]);
   const {  data: phcMenu  } = Digit.Hooks.pgr.useMDMS(state, "tenant", ["tenants"]);
+  const phcMenus=Digit.SessionStorage.get("Tenants")
+  let sortedPhcMenu=[];
+  if(phcMenus.length>0){
+    sortedPhcMenu=phcMenus.sort((a, b) => a.name.localeCompare(b.name));
+  }
   const [mobileNo, setMobileNo] = useState(searchParams?.search?.mobileNumber || "");
   const { register, errors, handleSubmit, reset } = useForm();
   const { t } = useTranslation();
@@ -100,7 +105,7 @@ console.log("Digit.SessionStorage.get)",Digit.SessionStorage.get("Tenants"),phcM
               <span className="mobile-input">
                 <Label>{t("CS_COMMON_PHC_TYPE")}</Label>
                 <Dropdown
-                option={Digit.SessionStorage.get("Tenants")}
+                option={sortedPhcMenu}
                   //name="mobileNumber"
                   optionKey="name"
                   id="healthCentre"

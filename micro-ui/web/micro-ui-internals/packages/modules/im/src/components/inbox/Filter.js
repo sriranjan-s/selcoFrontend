@@ -69,6 +69,10 @@ const convertedData = Digit.SessionStorage.get("Tenants").map(item => ({
 }));
 const healthcareMenu= Digit.SessionStorage.get("Tenants")
 console.log("healthcare", healthcareMenu)
+let sortedHealthCaremenu=[];
+if(healthcareMenu.length>0){
+  sortedHealthCaremenu=healthcareMenu.sort((a, b) => a.name.localeCompare(b.name));
+}
 
   const onRadioChange = (value) => {
     setSelectedAssigned(value);
@@ -230,7 +234,7 @@ console.log("pgrfilters", pgrfilters)
                 "incidentType"
               )}
             </div>
-            <div>{GetSelectOptions(t("CS_HEALTH_CARE"), healthcareMenu, selectedHealthCare, onSelectHealthCare, "name", onRemove, "phcType")}</div>
+            <div>{GetSelectOptions(t("CS_HEALTH_CARE"), sortedHealthCaremenu, selectedHealthCare, onSelectHealthCare, "name", onRemove, "phcType")}</div>
             {<Status complaints={props.complaints} onAssignmentChange={handleAssignmentChange} pgrfilters={pgrfilters} />}
           </div>
         </div>
