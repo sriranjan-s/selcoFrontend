@@ -132,7 +132,31 @@ const Table = ({
   );
   let isTotalColSpanRendered = false;
   const [toast, setToast] = useState({show : false, label : "", error : false});
-
+  const iPadMaxWidth=1024;
+  const iPadMinWidth=768
+  const [isIpadView, setIsIpadView] = React.useState(window.innerWidth <= iPadMaxWidth && window.innerWidth>=iPadMinWidth);
+  const onResize = () => {
+    if (window.innerWidth >=iPadMinWidth && window.innerWidth <= iPadMaxWidth ) {
+      if (!isIpadView) {
+        setIsIpadView(true);
+      }
+    } else {
+      if (isIpadView) {
+        setIsIpadView(false);
+      }
+    }
+  };
+  React.useEffect(() => {
+    window.addEventListener("resize", () => {
+      onResize();
+    });
+    return () => {
+      window.addEventListener("resize", () => {
+        onResize();
+      });
+    };
+  });
+  console.log("isipad99", isIpadView)
   useEffect(() => {
     onSort(sortBy);
   }, [onSort, sortBy]);
@@ -162,6 +186,7 @@ const Table = ({
   //use case -> without this if we enter string to search and then click on it's attendence checkbox or skill selector for that matter then the global filtering resets and whole table is shown
   return (
     <React.Fragment>
+      <div style={{marginTop:isIpadView? "210px":"none", marginLeft:isIpadView? -20:"none"}}>
       <span className={customTableWrapperClassName}>
         {tableTopComponent ? tableTopComponent : null}
         <table className={className} {...getTableProps()} style={styles} ref={tableRef} {...getNoColumnBorder(noColumnBorder)}>
@@ -258,6 +283,7 @@ const Table = ({
           {/* to go to first and last page we need to do a manual pagination , it can be updated later*/}
         </div>
       )}
+  </div>
       { Object.keys(selectedRowIds)?.length > 0 && (
         <ActionBar className="actionBarWrapper">
           <span style={{display: "flex"}}>

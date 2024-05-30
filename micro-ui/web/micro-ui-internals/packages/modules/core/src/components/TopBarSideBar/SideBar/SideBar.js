@@ -410,7 +410,7 @@ const Sidebar = ({ data }) => {
           <div onClick={""} className={`sidebar-link`}>
             <div className="actions">
             <LogoutIcon></LogoutIcon>
-              <div data-tip="React-tooltip" data-for={`jk-side-$}`} onClick={(e)=> {handleLogout()}}style={{display:"flex",flexDirection:"column"}}>
+              <div onClick={(e)=> {handleLogout()}}style={{display:"flex",flexDirection:"column", color:"white"}}>
                 <span>{t("CS_COMMON_LOGOUT")} </span>
                
               </div>
