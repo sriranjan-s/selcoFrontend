@@ -45,7 +45,7 @@ const Modal = ({
   }
   return (
     <PopUp>
-      <div className="popup-module" style={popupStyles}>
+      <div className="popup-module" style={mobileView? {...popUpstyles,width:"300px"}:popUpstyles}>
         <HeaderBar main={headerBarMain} end={headerBarEnd} style={headerBarMainStyle ? headerBarMainStyle : {}}/>
         <div className="popup-module-main" style={popupModuleMianStyles ? popupModuleMianStyles : {}}>
           {children}
