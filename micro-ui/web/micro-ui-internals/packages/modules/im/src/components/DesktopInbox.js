@@ -26,6 +26,31 @@ const DesktopInbox = ({
   const GetSlaCell = (value) => {
     return value < 0 ? <span className="sla-cell-error">{value || ""}</span> : <span className="sla-cell-success">{value || ""}</span>;
   };
+  const iPadMaxWidth=1024;
+  const iPadMinWidth=768
+  const [isIpadView, setIsIpadView] = React.useState(window.innerWidth <= iPadMaxWidth && window.innerWidth>=iPadMinWidth);
+  const onResize = () => {
+    if (window.innerWidth >=iPadMinWidth && window.innerWidth <= iPadMaxWidth ) {
+      if (!isIpadView) {
+        setIsIpadView(true);
+      }
+    } else {
+      if (isIpadView) {
+        setIsIpadView(false);
+      }
+    }
+  };
+  React.useEffect(() => {
+    window.addEventListener("resize", () => {
+      onResize();
+    });
+    return () => {
+      window.addEventListener("resize", () => {
+        onResize();
+      });
+    };
+  });
+
 
   const columns = React.useMemo(
     () => [
@@ -89,7 +114,7 @@ const DesktopInbox = ({
   } else if (data && data.length === 0) {
     result = (
       <Card style={{ marginTop: 20 }}>
-       <div style={{color:"#7a2824"}}> {t(LOCALE.NO_COMPLAINTS_EMPLOYEE)
+       <div style={{color:"#7a2824", marginTop:isIpadView? "210px":""}}> {t(LOCALE.NO_COMPLAINTS_EMPLOYEE)
           .split("\\n")
           .map((text, index) => (
             <p key={index} style={{ textAlign: "center" }}>
