@@ -10,7 +10,7 @@ export const Details = ({ label, name, onClick}) => {
       <span className="label">
         <h2>{label}</h2>
       </span>
-      <span className="name">{name}</span>
+      <span className="name" style={{overflowWrap:"break-word"}}>{name}</span>
     </div>
   );
 };
@@ -23,20 +23,22 @@ const DetailsCard = ({ data, serviceRequestIdKey, linkPrefix, handleSelect, sele
           return (
             <Link
               key={itemIndex}
-              to={isTwoDynamicPrefix 
-                ?
+              to={window.location.href.includes("im/inbox") ? "/digit-ui/employee/im/complaint/details/" + object["Ticket No."] + "/" + object["TenantID"]
+                : isTwoDynamicPrefix
+                  ?
                   `${linkPrefix}${typeof serviceRequestIdKey === "function"
                     ?
                     serviceRequestIdKey(object)
-                      :
-                    `${getRedirectionLink(object["Application Type"]==="BPA_STAKEHOLDER_REGISTRATION"?"BPAREG":"BPA")}/${object[object["Application Type"]==="BPA_STAKEHOLDER_REGISTRATION"?"applicationNo":"Application Number"]}`}`
-                :
+                    :
+                    `${getRedirectionLink(object["Application Type"] === "BPA_STAKEHOLDER_REGISTRATION" ? "BPAREG" : "BPA")}/${object[object["Application Type"] === "BPA_STAKEHOLDER_REGISTRATION" ? "applicationNo" : "Application Number"]}`}`
+                  :
                   `${linkPrefix}${typeof serviceRequestIdKey === "function"
                     ?
                     serviceRequestIdKey(object)
                       :
                     object[serviceRequestIdKey]}`
                 }
+                style={{textDecoration:"none", color:"black"}}
             >
               <div className="details-container">
                 {Object.keys(object).map((name, index) => {

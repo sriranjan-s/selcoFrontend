@@ -113,7 +113,7 @@ console.log("Digit.SessionStorage.get)",Digit.SessionStorage.get("Tenants"),phcM
                 ></Dropdown>
               </span>
               {type === "desktop" && (
-                <div style={{display:'flex', alignItems:'center',marginTop: 6}}>
+                <div style={{display:'flex', alignItems:'center',marginTop: "24px"}}>
                 <SubmitBar
                   style={{ marginLeft: "10px" }}
                   label={t("ES_COMMON_SEARCH")}
