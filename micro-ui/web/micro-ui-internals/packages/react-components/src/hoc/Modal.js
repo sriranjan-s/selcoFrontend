@@ -35,14 +35,22 @@ const Modal = ({
       document.body.style.overflowY = 'auto';
     }
   }, [])
+  const styles={
+    ...style,
+    backgroundColor:"#7a2829"
+  }
+  const popUpstyles={
+    ...popupStyles,
+    width:"400px"
+  }
   return (
     <PopUp>
-      <div className="popup-module" style={popupStyles}>
+      <div className="popup-module" style={popUpstyles}>
         <HeaderBar main={headerBarMain} end={headerBarEnd} style={headerBarMainStyle ? headerBarMainStyle : {}}/>
         <div className="popup-module-main" style={popupModuleMianStyles ? popupModuleMianStyles : {}}>
           {children}
           <div className="popup-module-action-bar" style={isOBPSFlow?!mobileView?{marginRight:"18px"}:{position:"absolute",bottom:"5%",right:"10%",left:window.location.href.includes("employee")?"0%":"7%"}:popupModuleActionBarStyles}>
-            {actionCancelLabel ? <ButtonSelector textStyles={{margin:"0px"}} theme="border" label={actionCancelLabel} onSubmit={actionCancelOnSubmit} style={style}/> : null}
+            {actionCancelLabel ? <ButtonSelector textStyles={{margin:"0px", color: "white"}} theme="border" label={actionCancelLabel} onSubmit={actionCancelOnSubmit} style={styles}/> : null}
             {!hideSubmit ? <ButtonSelector textStyles={{margin:"0px"}} label={actionSaveLabel} onSubmit={actionSaveOnSubmit} formId={formId} isDisabled={isDisabled} style={style}/> : null}
           </div>
         </div>

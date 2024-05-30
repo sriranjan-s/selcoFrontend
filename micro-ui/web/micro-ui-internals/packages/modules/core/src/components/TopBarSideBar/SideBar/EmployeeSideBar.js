@@ -159,10 +159,11 @@ const EmployeeSideBar = () => {
       </style>
         <div className="sidebar-link">
           {subNav ? (
-            <div className="actions search-icon-wrapper">
+            <div className="actions search-icon-wrapper" style={{display:"flex", backgroundColor:"none"}}>
               <input
                 className="employee-search-input nav-bar"
                 type="text"
+                style={{paddingLeft:"0px"}}
                 placeholder={t(`ACTION_TEST_SEARCH`)}
                 name="search"
                 value={search}

@@ -99,6 +99,7 @@ const TopBar = ({
   }
   const loggedin = userDetails?.access_token ? true : false;
   return (
+    <div  style={{padding:"5px 0px"}}>
     <div className="topbar">
       {mobileView ? <Hamburger handleClick={toggleSidebar} color="#9E9E9E" /> : null}
       <img className="city" src={loggedin ? cityDetails?.logoId : stateInfo?.statelogo} />
@@ -149,6 +150,7 @@ const TopBar = ({
           </div>
         )}
       </span>
+      </div>
     </div>
   );
 };
