@@ -455,10 +455,18 @@ console.log("wfoo", workflowDetails)
   if (workflowDetails.isError) return <React.Fragment>{workflowDetails.error}</React.Fragment>;
 
   const getTimelineCaptions = (checkpoint, index, arr) => {
+    const arr1=arr
     const {wfComment: comment, thumbnailsToShow} = checkpoint;
-    function zoomImageTimeLineWrapper(imageSource, index,thumbnailsToShow){
-      let newIndex=thumbnailsToShow.thumbs?.findIndex(link=>link===imageSource);
-      zoomImage((newIndex>-1&&thumbnailsToShow?.fullImage?.[newIndex])||imageSource);
+    function zoomImageTimeLineWrapper(imageSource, index,thumbnailsToShow,arr){
+      if(arr1[index]?.status == "RESOLVED")
+      {
+        window.open(arr1[index].thumbnailsToShow.fullImage[0], "_blank")
+      }
+      else {
+        let newIndex=thumbnailsToShow.thumbs?.findIndex(link=>link===imageSource);
+        zoomImage((newIndex>-1&&thumbnailsToShow?.fullImage?.[newIndex])||imageSource);
+      }
+      
     }
     const captionForOtherCheckpointsInTL = {
       date: checkpoint?.auditDetails?.lastModified,
@@ -488,7 +496,7 @@ console.log("wfoo", workflowDetails)
           )}</div> : null}
           {checkpoint.status !== "COMPLAINT_FILED" && thumbnailsToShow?.thumbs?.length > 0 ? <div className="TLComments">
             <h3>{t("CS_COMMON_ATTACHMENTS")}</h3>
-            <DisplayPhotos srcs={thumbnailsToShow.thumbs} onClick={(src, index) => zoomImageTimeLineWrapper(src, index,thumbnailsToShow)} />
+            <DisplayPhotos srcs={thumbnailsToShow.thumbs} onClick={(src, index) => zoomImageTimeLineWrapper(src, index,thumbnailsToShow,arr)} />
           </div> : null}
           {caption?.date ? <TLCaption data={caption}/> : null}
         </>
@@ -504,7 +512,7 @@ console.log("wfoo", workflowDetails)
       )}</div> : null}
       {checkpoint.status !== "COMPLAINT_FILED" && checkpoint?.performedAction!=="INITIATE" && thumbnailsToShow?.thumbs?.length > 0 ? <div className="TLComments">
         <h3>{t("CS_COMMON_ATTACHMENTS")}</h3>
-        <DisplayPhotos srcs={thumbnailsToShow.thumbs} onClick={(src, index) => zoomImageTimeLineWrapper(src, index,thumbnailsToShow)} />
+        <DisplayPhotos srcs={thumbnailsToShow.thumbs} onClick={(src, index) => zoomImageTimeLineWrapper(src, index,thumbnailsToShow,arr)} />
       </div> : null}
       {captionForOtherCheckpointsInTL?.date ? <TLCaption data={captionForOtherCheckpointsInTL}/> : null}
       {(checkpoint.status == "CLOSEDAFTERRESOLUTION" && complaintDetails.workflow.action == "RATE" && index <= 1) && complaintDetails.audit.rating ? <StarRated text={t("CS_ADDCOMPLAINT_YOU_RATED")} rating={complaintDetails.audit.rating} />: null}
