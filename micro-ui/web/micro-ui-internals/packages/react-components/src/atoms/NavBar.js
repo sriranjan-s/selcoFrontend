@@ -127,6 +127,7 @@ const NavBar = ({ open, toggleSidebar, profileItem, menuItems, onClose, Footer, 
                 type="text"
                 placeholder={t(`ACTION_TEST_SEARCH`)}
                 name="search"
+                style={{marginLeft:"10px", fontSize:"16px"}}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
