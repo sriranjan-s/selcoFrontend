@@ -55,7 +55,7 @@ const SubMenu = ({ item }) => {
   if (item.type === "single") {
     const getOrigin = window.location.origin;
     return (
-      <div className="submenu-container">
+      <div className="submenu-container" style={{marginBottom:"0px"}}>
         <div className={`sidebar-link  ${pathname === item?.navigationURL ? "active" : ""}`}>
           <div className="actions">
             <span style={{ marginLeft: "0px" }} onClick={() => history.push(`${item.navigationURL}`)}>
@@ -104,7 +104,7 @@ const SubMenu = ({ item }) => {
   } else {
     return (
       <React.Fragment>
-        <div className="submenu-container">
+        <div className="submenu-container" style={{marginBottom:"0px"}}>
           <div
             onClick={item.links && showSubnav}
             className={`sidebar-link  ${item?.links?.some((ele) => ele?.url === "url" && pathname?.includes(ele?.navigationURL)) ? "active" : ""}`}
@@ -144,6 +144,7 @@ const SubMenu = ({ item }) => {
                     key={index}
                     className={`dropdown-link ${pathname === item.link ? "active" : ""}`}
                     href={getOrigin + "/employee/" + item.navigationURL}
+                    style={{textDecoration:"none"}}
                   >
                     <div className="actions" data-tip="React-tooltip" data-for={`jk-side-${index}`}>
                       <span> {trimModuleName} </span>
@@ -167,6 +168,7 @@ const SubMenu = ({ item }) => {
                   to={item?.link || item.navigationURL}
                   key={index}
                   className={`dropdown-link ${pathname === item?.link || pathname === item?.navigationURL ? "active" : ""}`}
+                  style={{textDecoration:"none"}}
                 >
                   <div className="actions" data-tip="React-tooltip" data-for={`jk-side-${index}`}>
                     <span> {trimModuleName} </span>

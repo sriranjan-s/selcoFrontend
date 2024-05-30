@@ -188,7 +188,7 @@ const Sidebar = ({ data }) => {
       );
 
     return (
-      <div className={`submenu-container level-${level}`}>
+      <div className={`submenu-container level-${level}`} style={{width:"calc(100% +24px)"}}>
         {keysArray.map((key, index) => {
           const subItems = items[key];
           const subItemKeys = subItems
@@ -227,6 +227,28 @@ const Sidebar = ({ data }) => {
             const isChildActive = selectedChildLevelOne === trimModuleName;
             //we need to have a heirarchy such as parent -> child1 -> child2 to differentiate b/w different levels in the sidebar
             return (
+              <div>
+                <style>
+{
+`
+.citizen .sidebar .sidebar-link:hover, .employee .sidebar .sidebar-link:hover {
+  color: white !important;
+  background-color: #0b4b65ab;
+  cursor: pointer;
+  margin-left:0px;
+  margin-right:0px;
+  font-weight:bold;
+}
+.citizen .sidebar .dropdown-link:hover, .employee .sidebar .dropdown-link:hover {
+  background-color: #0b4b65ab;
+  opacity: .8;
+  cursor: pointer;
+}
+`
+}
+                 
+                  
+                </style>
               <div
                 key={index}
                 className={`sidebar-link level-${level} ${
@@ -236,6 +258,7 @@ const Sidebar = ({ data }) => {
                   display: "flex",
                   flexDirection: "column",
                   alignItems: "flex-start",
+                  
                 }}
               >
                 <div
@@ -316,6 +339,7 @@ const Sidebar = ({ data }) => {
                   </div>
                 )}
               </div>
+              </div>
             );
           } else if (subItemKeys) {
             // If the item is a link, render it
@@ -389,12 +413,12 @@ const Sidebar = ({ data }) => {
 
   return (
     <div
-      className={`new-sidebar ${openItems ? "show" : ""}`}
+      className={`new-sidebar ${openItems ? "show" : "show"}`}
       onMouseEnter={openSidebar}
       onMouseLeave={closeSidebar}
     >
       {renderSidebarItems(data)}
-      <div className="submenu-container">
+      <div className="submenu-container" style={{marginBottom:"0px"}}>
           <div onClick={""} className={`sidebar-link`}>
             <div className="actions">
             <Phone />
@@ -406,7 +430,7 @@ const Sidebar = ({ data }) => {
             {/* <div> {item.links && subnav ? <ArrowVectorDown /> : item.links ? <ArrowForward /> : null} </div> */}
           </div>
         </div>
-        <div className="submenu-container">
+        <div className="submenu-container" style={{marginBottom:"0px"}}>
           <div onClick={""} className={`sidebar-link`}>
             <div className="actions">
             <LogoutIcon></LogoutIcon>

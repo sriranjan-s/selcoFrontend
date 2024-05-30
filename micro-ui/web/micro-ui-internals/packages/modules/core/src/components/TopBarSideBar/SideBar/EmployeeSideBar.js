@@ -128,7 +128,7 @@ const EmployeeSideBar = () => {
 
   const renderSearch = () => {
     return (
-      <div className="submenu-container">
+      <div className="submenu-container" style={{marginBottom:"0px"}}>
           <style>
       
          {`
@@ -155,6 +155,9 @@ const EmployeeSideBar = () => {
           color: #7a2829 !important;
           cursor: pointer;
         }
+        .citizen .sidebar .dropdown-link:hover svg, .employee .sidebar .dropdown-link:hover svg {
+          fill: #7a2829 !important;
+      }
         `}
       </style>
         <div className="sidebar-link">
@@ -163,7 +166,7 @@ const EmployeeSideBar = () => {
               <input
                 className="employee-search-input nav-bar"
                 type="text"
-                style={{paddingLeft:"0px"}}
+                style={{paddingLeft:"0px",marginLeft:"10px"}}
                 placeholder={t(`ACTION_TEST_SEARCH`)}
                 name="search"
                 value={search}

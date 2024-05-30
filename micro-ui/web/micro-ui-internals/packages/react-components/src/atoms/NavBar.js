@@ -86,7 +86,7 @@ const NavBar = ({ open, toggleSidebar, profileItem, menuItems, onClose, Footer, 
 
     if (item.type === "external-link") {
       return (
-        <a href={item.link}>
+        <a href={item.link} style={{textDecoration:"none"}}>
           <Item />
         </a>
       );
@@ -95,13 +95,13 @@ const NavBar = ({ open, toggleSidebar, profileItem, menuItems, onClose, Footer, 
       if (item.link.indexOf(`/${window?.contextPath}`) === -1 && isEmployee) {
         const getOrigin = window.location.origin;
         return (
-          <a href={getOrigin + "/employee/" + item.link}>
+          <a href={getOrigin + "/employee/" + item.link} style={{textDecoration:"none"}}>
             <Item />
           </a>
         );
       }
       return (
-        <Link to={item.link}>
+        <Link to={item.link} style={{textDecoration:"none"}}>
           <Item />
         </Link>
       );
@@ -118,7 +118,7 @@ const NavBar = ({ open, toggleSidebar, profileItem, menuItems, onClose, Footer, 
   const renderSearch = () => {
     return (
       <div className="sidebar-list">
-        <div className="submenu-container">
+        <div className="submenu-container" style={{marginBottom:"0px"}}>
           <div className="sidebar-link">
             <div className="actions">
               <SearchIcon className="icon" />
@@ -128,6 +128,7 @@ const NavBar = ({ open, toggleSidebar, profileItem, menuItems, onClose, Footer, 
                 placeholder={t(`ACTION_TEST_SEARCH`)}
                 name="search"
                 value={search}
+                style={{marginLeft:"10px"}}
                 onChange={(e) => setSearch(e.target.value)}
               />
             </div>
