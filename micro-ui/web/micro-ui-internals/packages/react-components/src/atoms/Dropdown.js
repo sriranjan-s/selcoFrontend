@@ -187,14 +187,14 @@ return setError("")
     let isSelectedSameAsOptions = props.option?.filter((ob) => ob?.code === selectedOption?.code)?.length > 0;
     if (!isSelectedSameAsOptions) setSelectedOption(null)
   }
-
+  const isMobile = window.Digit.Utils.browser.isMobile();
   return (
     <div
       className={`${user_type === "employee" ? "employee-select-wrap" : "select-wrap"} ${props?.className ? props?.className : ""}`}
       style={{ ...props.style }}
     >
       {hasCustomSelector && (
-        <div className={props.showArrow ? "cp flex-right column-gap-5" : "cp"} onClick={dropdownSwitch}>
+        <div className={props.showArrow ? "cp flex-right column-gap-5" : "cp"} onClick={dropdownSwitch} style={isMobile?{display:"flex", flexDirection:"column"}:{}}>
           {props.customSelector}
           {props.showArrow && <ArrowDown onClick={dropdownSwitch} className={props.disable && "disabled"} />}
         </div>

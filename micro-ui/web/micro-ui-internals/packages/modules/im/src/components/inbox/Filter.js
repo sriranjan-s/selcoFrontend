@@ -63,11 +63,11 @@ const Filter = (props) => {
   const state = Digit.ULBService.getStateId();
 //   const { isMdmsLoading, data: mdmsData } = Digit.Hooks.pgr.useMDMS(state, "Incident", ["District","Block"]);
 // const {  data: phcMenu  } = Digit.Hooks.pgr.useMDMS(state, "tenant", ["tenants"]);
-const convertedData = Digit.SessionStorage.get("Tenants").map(item => ({
+const convertedData = Digit.SessionStorage.get("IM_TENANTS").map(item => ({
   name: item.label,
   code: item.value
 }));
-const healthcareMenu= Digit.SessionStorage.get("Tenants")
+const healthcareMenu= Digit.SessionStorage.get("IM_TENANTS").filter((item) => item.code !=="pg")
 console.log("healthcare", healthcareMenu)
 let sortedHealthCaremenu=[];
 if(healthcareMenu.length>0){

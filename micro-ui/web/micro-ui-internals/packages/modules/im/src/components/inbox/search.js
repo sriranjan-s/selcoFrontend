@@ -11,7 +11,7 @@ const SearchComplaint = ({ onSearch, type, onClose, searchParams }) => {
   const state = Digit.ULBService.getStateId();
   const { isMdmsLoading, data: mdmsData } = Digit.Hooks.pgr.useMDMS(state, "Incident", ["District","Block"]);
   const {  data: phcMenu  } = Digit.Hooks.pgr.useMDMS(state, "tenant", ["tenants"]);
-  const phcMenus=Digit.SessionStorage.get("Tenants")
+  const phcMenus=Digit.SessionStorage.get("IM_TENANTS").filter((item) => item.code !=="pg")
   let sortedPhcMenu=[];
   if(phcMenus.length>0){
     sortedPhcMenu=phcMenus.sort((a, b) => a.name.localeCompare(b.name));
@@ -61,12 +61,16 @@ const SearchComplaint = ({ onSearch, type, onClose, searchParams }) => {
   }
 useEffect(()=>{
 console.log()
-if(Digit.SessionStorage.get("Tenants"))
+if(Digit.SessionStorage.get("IM_TENANTS"))
 {
   let empTenant = Digit.SessionStorage.get("Employee.tenantId")
-  let filtered = Digit.SessionStorage.get("Tenants").filter((abc)=> abc.code ==empTenant)
+  let filtered = Digit.SessionStorage.get("IM_TENANTS").filter((abc)=> abc.code ==empTenant)
   console.log("filtered",filtered)
-  setPhcTypeFunction(filtered?.[0])
+  if(!filtered?.[0].code === "pg")
+  {
+    setPhcTypeFunction(filtered?.[0])
+  }
+ 
 }
 },[])
   function setPhcTypeFunction(value) {
@@ -75,7 +79,7 @@ if(Digit.SessionStorage.get("Tenants"))
   function setMobile(e) {
     setMobileNo(e.target.value);
   }
-console.log("Digit.SessionStorage.get)",Digit.SessionStorage.get("Tenants"),phcMenu?.tenant?.tenants)
+console.log("Digit.SessionStorage.get)",Digit.SessionStorage.get("IM_TENANTS"),phcMenu?.tenant?.tenants)
   return (
     <form onSubmit={handleSubmit(onSubmitInput)} style={{ marginLeft: "24px" }}>
       <React.Fragment>

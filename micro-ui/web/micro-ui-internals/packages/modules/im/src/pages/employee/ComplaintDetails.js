@@ -191,7 +191,7 @@ console.log("employeeData", employeeData)
           : selectedAction === "REJECT"
             ? t("CS_COMMON_REJECT")
             : selectedAction === "REOPEN"
-              ? t("CS_COMMON_REOPEN")
+              ? t("CS_ACTION_REOPEN")
               :selectedAction==="RESOLVE"? t("CS_COMMON_RESOLVE_BUTTON"): selectedAction==="CLOSE" ? t("CS_COMMON_CLOSE") : t("CS_COMMON_SENDbACK")
       }
       
@@ -219,7 +219,7 @@ console.log("employeeData", employeeData)
       error={error}
       setError={setError}
     >
-      <Card>
+      <Card style={{paddingTop:"0px"}}>
         {selectedAction === "REJECT" || selectedAction === "RESOLVE" || selectedAction === "REOPEN" || selectedAction==="SENDBACK" ? null : (
           <React.Fragment>
             
@@ -293,7 +293,7 @@ export const ComplaintDetails = (props) => {
   // const [actionCalled, setActionCalled] = useState(false);
   const [toast, setToast] = useState(false);
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const tenant =  Digit.SessionStorage.get("Employee.tenantId") == "pg"?  Digit.SessionStorage.get("Tenants").map(item => item.code).join(',') :Digit.SessionStorage.get("Employee.tenantId") 
+  const tenant =  Digit.SessionStorage.get("Employee.tenantId") == "pg"?  Digit.SessionStorage.get("IM_TENANTS").map(item => item.code).join(',') :Digit.SessionStorage.get("Employee.tenantId") 
   console.log("")
   const { isLoading, complaintDetails, revalidate: revalidateComplaintDetails } = Digit.Hooks.pgr.useComplaintDetails({ tenant, id });
   console.log("cd", complaintDetails)
