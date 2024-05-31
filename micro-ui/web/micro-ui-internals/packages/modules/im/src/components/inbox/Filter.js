@@ -122,7 +122,7 @@ if(healthcareMenu.length>0){
   }
   function complaintType(_type) {
     console.log("typeeee", _type)
-    const type = { code: t("SERVICEDEFS." + _type.name.toUpperCase()), name: _type.name };
+    const type = { code: _type.key, name: _type.name };
     if (!ifExists(pgrfilters.incidentType, type)) {
       setPgrFilters({ ...pgrfilters, incidentType: [...pgrfilters.incidentType, type] });
     }

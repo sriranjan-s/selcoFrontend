@@ -113,6 +113,13 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
   // const uploadFile = useCallback( () => {
 
   //   }, [file]);
+  useEffect(()=>{
+    if(selectedAction==="REJECT"){
+      const uuid= JSON.parse(sessionStorage.getItem("Digit.User"))?.value?.info?.uuid
+      let name = JSON.parse(sessionStorage.getItem("Digit.User"))?.value?.info?.name;
+      setSelectedEmployee({name, uuid})
+    }
+  }, [selectedAction])
 
   function onSelectEmployee(employee) {
     setSelectedEmployee(employee);
@@ -122,7 +129,7 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
     if(e.target.value.length>256){
       setError(t("CS_COMMENT_LENGTH_LIMIT_EXCEED"))
     }
-    else if(!/^[a-zA-Z0-9\s./]*$/.test(e.target.value)){
+    else if(!/^[a-zA-Z0-9\s./,]*$/.test(e.target.value)){
       setError(t("CS_COMMENT_INVALID_CHARACTERS"))
     }
     else{
@@ -197,7 +204,10 @@ console.log("employeeData", employeeData)
       
       
       actionSaveOnSubmit={() => {
-        if((selectedAction === "REJECT") && !comments){
+        if((selectedAction==="REJECT") && comments.length===0){
+          setError(t("CS_MANDATORY_COMMENTS"))
+        }
+        if((selectedAction==="SENDBACK") && !comments){
             setError(t("CS_MANDATORY_COMMENTS"));
         }
         else if(selectedAction==="REOPEN" && selectedReopenReason===null){
@@ -206,14 +216,11 @@ console.log("employeeData", employeeData)
         else if(selectedAction==="ASSIGN" && selectedEmployee===null){
            setError(t("CS_ASSIGNEE_MANDATORY"))
         }
-        else if(selectedAction==="SENDBACK" && (!comments || uploadedFile.length===0) ){
-          setError(t("CS_MANDATORY_COMMENTS_AND_FILE_UPLOAD"));
-        }
         else if(selectedAction==="RESOLVE" && (!comments || uploadedFile.length===0) ){
           setError(t("CS_MANDATORY_COMMENTS_AND_FILE_UPLOAD"));
         }
         else{
-        onAssign(selectedEmployee, comments, uploadedFile);
+        onAssign(selectedEmployee, comments, uploadedFile, selectedReopenReason);
         }
       }}
       error={error}
@@ -432,9 +439,9 @@ export const ComplaintDetails = (props) => {
     }
   }
 
-  async function onAssign(selectedEmployee, comments, uploadedFile) {
+  async function onAssign(selectedEmployee, comments, uploadedFile, selectedReopenReason) {
     setPopup(false);
-    const response = await Digit.Complaint.assign(complaintDetails, selectedAction, selectedEmployee, comments, uploadedFile, tenant);
+    const response = await Digit.Complaint.assign(complaintDetails, selectedAction, selectedEmployee, comments, uploadedFile, tenant, selectedReopenReason);
     setAssignResponse(response);
     setToast(true);
     setLoader(true);
@@ -470,8 +477,8 @@ console.log("wfoo", workflowDetails)
     }
     const captionForOtherCheckpointsInTL = {
       date: checkpoint?.auditDetails?.lastModified,
-      name: checkpoint?.assigner?.name,
-      mobileNumber: checkpoint?.assigner?.mobileNumber,
+      name: checkpoint?.assignes ? checkpoint?.assignes[0].name :checkpoint?.assigner?.name,
+      mobileNumber: checkpoint?.assignes?checkpoint?.assignes[0].mobileNumber: checkpoint?.assigner?.mobileNumber,
       ...checkpoint.status === "COMPLAINT_FILED" && complaintDetails?.audit ? {
         source: complaintDetails.audit.source,
       } : {}
@@ -480,12 +487,12 @@ console.log("wfoo", workflowDetails)
     if (checkpoint.status === "PENDINGFORASSIGNMENT" && complaintDetails?.audit) {
       if(isFirstPendingForAssignment){
         const caption = {
-          date: Digit.DateUtils.ConvertTimestampToDate(complaintDetails.audit.details.createdTime),
+          date: Digit.DateUtils.ConvertEpochToDate(complaintDetails.audit.details.createdTime),
         };
         return <TLCaption data={caption} comments={checkpoint?.wfComment}/>;
       } else {
         const caption = {
-          date: Digit.DateUtils.ConvertTimestampToDate(complaintDetails.audit.details.createdTime),
+          date: Digit.DateUtils.ConvertEpochToDate(complaintDetails.audit.details.createdTime),         
         };
         return <>
           {checkpoint?.wfComment ? <div>{checkpoint?.wfComment?.map( e => 
@@ -494,6 +501,12 @@ console.log("wfoo", workflowDetails)
               <p>{e}</p>
             </div>
           )}</div> : null}
+          {checkpoint.status!=="COMPLAINT_FILED" ? (
+            <div className="TLComments">
+              <h3>{t("WF_REOPEN_REASON")}</h3>
+              <h1>{complaintDetails?.incident?.additionalDetail?.reopenreason}</h1>
+            </div>
+          ):null}
           {checkpoint.status !== "COMPLAINT_FILED" && thumbnailsToShow?.thumbs?.length > 0 ? <div className="TLComments">
             <h3>{t("CS_COMMON_ATTACHMENTS")}</h3>
             <DisplayPhotos srcs={thumbnailsToShow.thumbs} onClick={(src, index) => zoomImageTimeLineWrapper(src, index,thumbnailsToShow,arr)} />
