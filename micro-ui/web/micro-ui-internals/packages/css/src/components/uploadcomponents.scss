@@ -89,6 +89,9 @@
   }
   input {
     width: 160px;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    max-height:  64px !important;
     @apply absolute top-0 left-0 opacity-0 h-full;
   }
 }

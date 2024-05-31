@@ -42,7 +42,7 @@ const DetailsCard = ({ data, serviceRequestIdKey, linkPrefix, handleSelect, sele
             >
               <div className="details-container">
                 {Object.keys(object).map((name, index) => {
-                  if (name === "applicationNo" || name === "Vehicle Log") return null;
+                  if (name === "applicationNo" || name === "Vehicle Log" || name == "TenantID") return null;
                   return <Details label={name} name={object[name]} key={index} />;
                 })}
               </div>

@@ -5,7 +5,7 @@ const useInboxData = (searchParams,tenantIdNew) => {
  console.log("searchParams",searchParams)
   const fetchInboxData = async () => {
     let tenantId = Digit.ULBService.getCurrentTenantId();
-    const tenants = Digit.SessionStorage.get("Tenants").map(item => item.code).join(',');
+    const tenants = Digit.SessionStorage.get("IM_TENANTS").map(item => item.code).join(',');
     const sessionTenantId = Digit.SessionStorage.get("Employee.tenantId");
     if (searchParams?.filters?.pgrQuery?.phcType) {
       tenantId = searchParams.filters.pgrQuery.phcType;

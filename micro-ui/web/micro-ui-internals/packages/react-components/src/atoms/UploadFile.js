@@ -27,7 +27,9 @@ const getCitizenStyles = (value) => {
         width: "44%",
         minHeight: "2rem",
         maxHeight: "3rem",
-        top: "20%"
+        top: "20%",
+        paddingLeft:"0px !important",
+        paddingRight:"0px !important"
       },
       buttonStyles: {
         height: "auto",
@@ -218,7 +220,7 @@ const UploadFile = (props) => {
         </div>
         <input
           className={props.disabled ? "disabled" : "" + "input-mirror-selector-button"}
-          style={{...(extraStyles ? { ...extraStyles?.inputStyles, ...props?.inputStyles } : { ...props?.inputStyles }), cursor: 'pointer'}}
+          style={{...(extraStyles ? { ...extraStyles?.inputStyles, ...props?.inputStyles,maxHeight:"56px",paddingLeft:"0px !important", paddingRight:"0px !important" } : { ...props?.inputStyles }), cursor: 'pointer'}}
           ref={inpRef}
           type="file"
           id={props.id || `document-${getRandomId()}`}

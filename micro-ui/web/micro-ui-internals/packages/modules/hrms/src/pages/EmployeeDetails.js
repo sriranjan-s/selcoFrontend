@@ -1,4 +1,4 @@
-import { ActionBar, Card, CardSubHeader, DocumentSVG, Header, Loader, Menu, Row, StatusTable, SubmitBar } from "@egovernments/digit-ui-react-components";
+import { ActionBar, Card, CardSubHeader, DocumentSVG, Header, Loader,Menu, Row, StatusTable, SubmitBar } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
@@ -214,6 +214,7 @@ const Details = () => {
             options={data?.Employees?.[0]?.isActive ? activeworkflowActions : deactiveworkflowActions}
             t={t}
             onSelect={onActionSelect}
+            style={{marginTop:"0px"}}
           />
         ) : null}
         <SubmitBar label={t("HR_COMMON_TAKE_ACTION")} onSubmit={() => setDisplayMenu(!displayMenu)} />
