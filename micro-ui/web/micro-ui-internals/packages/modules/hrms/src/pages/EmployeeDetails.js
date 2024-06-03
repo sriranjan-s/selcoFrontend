@@ -208,13 +208,60 @@ const Details = () => {
         <ActionModal t={t} action={selectedAction} tenantId={tenantId} applicationData={data} closeModal={closeModal} submitAction={submitAction} />
       ) : null}
       <ActionBar>
+      <style>
+        {`
+    .selector-button-border h2 {
+      font-family: Roboto Condensed, sans-serif;
+      font-weight: 500;
+      font-size: 19px;
+      line-height: 23px;
+      --text-opacity: 1;
+      color: #0b0c0c;
+      color: rgba(11, 12, 12, var(--text-opacity));
+      margin: 0px
+    }
+    .selector-button-primary {
+      height: 3rem;
+      --bg-opacity: 1;
+      background-color: #7a2829;
+      background-color: rgba(122, 40, 41, var(--bg-opacity));
+      text-align: center;
+      --border-opacity: 1;
+      border-color: #464646;
+      border-bottom: 1px;
+      border-style: solid;
+      border-color: rgba(70, 70, 70, var(--border-opacity));
+      outline: 2px solid transparent;
+      outline-offset: 2px;
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+    .selector-button-primary-disabled {
+      height: 3rem;
+      --bg-opacity: 1;
+      background-color: #7a2829;
+      background-color: rgba(122, 40, 41, var(--bg-opacity));
+      text-align: center;
+      --border-opacity: 1;
+      border-color: #464646;
+      border-bottom: 1px;
+      border-style: solid;
+      border-color: rgba(70, 70, 70, var(--border-opacity));
+      outline: 2px solid transparent;
+      outline-offset: 2px;
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+    `
+  }
+  </style>
         {displayMenu && data ? (
           <Menu
             localeKeyPrefix="HR"
             options={data?.Employees?.[0]?.isActive ? activeworkflowActions : deactiveworkflowActions}
             t={t}
             onSelect={onActionSelect}
-            style={{marginTop:"0px"}}
+            style={{marginTop:"0px !important"}}
           />
         ) : null}
         <SubmitBar label={t("HR_COMMON_TAKE_ACTION")} onSubmit={() => setDisplayMenu(!displayMenu)} />

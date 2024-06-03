@@ -67,7 +67,7 @@ const convertedData = Digit.SessionStorage.get("IM_TENANTS").map(item => ({
   name: item.label,
   code: item.value
 }));
-const healthcareMenu= Digit.SessionStorage.get("IM_TENANTS").filter((item) => item.code !=="pg")
+const healthcareMenu=Digit.SessionStorage.get("Employee.tenantId") !== "pg" ? Digit.SessionStorage.get("Tenants"):Digit.SessionStorage.get("IM_TENANTS").filter((item) => item.code !=="pg")
 console.log("healthcare", healthcareMenu)
 let sortedHealthCaremenu=[];
 if(healthcareMenu.length>0){
