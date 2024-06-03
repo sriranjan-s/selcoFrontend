@@ -19,7 +19,6 @@ export const ImageUploadHandler = (props) => {
   const allowedTypes=["image/jpeg", "image/png", "image/jpg"]
   useEffect(()=>{
     if(imageFile){
-      console.log("image", imageFile)
       if(!allowedTypes.includes(imageFile.type)){
         setError(t("ONLY_IMAGES_ARE_ACCEPTED"));
         setImageFile(null);
@@ -141,7 +140,7 @@ export const ImageUploadHandler = (props) => {
   return (
     <React.Fragment>
       {error && <Toast error={true} label={error} onClose={() => setError(null)} />}
-      <UploadImages onUpload={getImage} onDelete={deleteImage} thumbnails={uploadedImagesThumbs ? uploadedImagesThumbs.map((o) => o.image) : []} />
+      <UploadImages onUpload={getImage} onDelete={deleteImage} thumbnails={uploadedImagesThumbs ? uploadedImagesThumbs.map((o) => o.image) : []} disabled={props.disabled}/>
     </React.Fragment>
   );
 };

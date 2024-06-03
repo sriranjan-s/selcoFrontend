@@ -269,7 +269,7 @@ console.log("employeeData", employeeData)
         <MultiUploadWrapper 
           t={t} 
           module="Incident" 
-          tenantId={tenantId} 
+          tenantId={complaintDetails?.incident?.tenantId || tenantId} 
           
           getFormState={(e) => getData(e)}
           allowedFileTypesRegex={(selectedAction==="RESOLVE") ?/(docx|pdf|xlsx)$/i : /(pdf|jpg)$/i}
