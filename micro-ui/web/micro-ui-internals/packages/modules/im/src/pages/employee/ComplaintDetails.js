@@ -99,7 +99,6 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
   const [file, setFile] = useState(null);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [uploadedFile, setUploadedFile] = useState(Array);
-  console.log("uploadedgg", uploadedFile)
   const allowedFileTypes = /(docx|pdf|jpg|xlsx)$/i;
   const stateId = Digit.ULBService.getStateId();
   const [uploadedImages, setUploadedImagesIds] = useState(null)
@@ -153,24 +152,38 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
     }
 
   }, [error, clearError]);
-  function selectfile(e) {
+  function selectfile(e,newArr) {
     if (e) {
       const newFile={
-      documentType: "PHOTO",
+      documentType: e?.file?.type,
       fileStoreId: e?.fileStoreId?.fileStoreId,
       documentUid: "",
       additionalDetails: {},
       };
       let temp = [...uploadedFile, newFile];
-      setUploadedFile(temp);
+      const filterFileStoreIds = newArr.map(item => item.fileStoreId.fileStoreId);
+
+      // Use a Set to remove duplicates and filter the documents array
+      const seen = new Set();
+      const filteredDocuments = temp.filter(document => {
+        if (filterFileStoreIds.includes(document.fileStoreId) && !seen.has(document.fileStoreId)) {
+          seen.add(document.fileStoreId);
+          return true;
+        }
+        return false;
+      });
+
+      console.log("filteredDocumentsfilteredDocuments",filteredDocuments);
+      setUploadedFile(filteredDocuments);
       e && setFile(e.file);
     }
   }
 
-  const getData = (state) => {
+  const getData = (state) => {  
     let data = Object.fromEntries(state);
     let newArr = Object.values(data);
-    selectfile(newArr[newArr.length - 1]);
+    console.log("statestate",state,data,newArr)
+    selectfile(newArr[newArr.length - 1],newArr);
   };
   console.log("commmmmentsss", comments, comments.length)
 console.log("employeeData", employeeData)
@@ -204,10 +217,10 @@ console.log("employeeData", employeeData)
       
       
       actionSaveOnSubmit={() => {
-        if((selectedAction==="REJECT") && comments.length===0){
+        if((selectedAction==="REJECT") && !comments){
           setError(t("CS_MANDATORY_COMMENTS"))
         }
-        if((selectedAction==="SENDBACK") && !comments){
+       else if((selectedAction==="SENDBACK") && !comments){
             setError(t("CS_MANDATORY_COMMENTS"));
         }
         else if(selectedAction==="REOPEN" && selectedReopenReason===null){
@@ -301,14 +314,13 @@ export const ComplaintDetails = (props) => {
   const [toast, setToast] = useState(false);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const tenant =  Digit.SessionStorage.get("Employee.tenantId") == "pg"?  Digit.SessionStorage.get("IM_TENANTS").map(item => item.code).join(',') :Digit.SessionStorage.get("Employee.tenantId") 
-  console.log("")
+
   const { isLoading, complaintDetails, revalidate: revalidateComplaintDetails } = Digit.Hooks.pgr.useComplaintDetails({ tenant, id });
-  console.log("cd", complaintDetails)
+
   const workflowDetails = Digit.Hooks.useWorkflowDetails({ tenant : id.split("/")[1], id :id.split("/")[0] , moduleCode: "Incident", role: "EMPLOYEE" });
-  console.log("wff", workflowDetails)
+
   const [imagesToShowBelowComplaintDetails, setImagesToShowBelowComplaintDetails] = useState([])
-  console.log("imagesToShowBelowComplaintDetails", imagesToShowBelowComplaintDetails)
-  console.log("workflowDetailsworkflowDetails",workflowDetails,complaintDetails)
+
   // RAIN-5692 PGR : GRO is assigning complaint, Selecting employee and assign. Its not getting assigned.
   // Fix for next action  assignee dropdown issue
   if (workflowDetails && workflowDetails?.data){
@@ -318,14 +330,14 @@ export const ComplaintDetails = (props) => {
     if( complaintDetails)
     {
       complaintDetails.details.CS_COMPLAINT_DETAILS_TICKET_NO =  complaintDetails?.details?.CS_COMPLAINT_DETAILS_TICKET_NO.split("/")[0]
-      console.log("workflowDetailsworkflowDetails",workflowDetails,complaintDetails)
+
     }
    
   useEffect(()=>{
     if(workflowDetails){
       const {data:{timeline: complaintTimelineData}={}} = workflowDetails
       if(complaintTimelineData){
-        console.log("complaintTimelineData", complaintTimelineData)
+
         const applyAction = complaintTimelineData.find(action => action.performedAction === "APPLY");
         const initiate = complaintTimelineData.find(action => action.performedAction === "INITIATE");
         if(!initiate)
@@ -336,13 +348,12 @@ export const ComplaintDetails = (props) => {
         }
         const actionByCitizenOnComplaintCreation = complaintTimelineData?.find( e => e?.performedAction === "APPLY")
         const { thumbnailsToShow } = actionByCitizenOnComplaintCreation
-        console.log("thumbs666", thumbnailsToShow)
+
         thumbnailsToShow ? setImagesToShowBelowComplaintDetails(thumbnailsToShow) : null
       }
     }
   },[workflowDetails])
   const [displayMenu, setDisplayMenu] = useState(false);
-  console.log("displ", displayMenu)
   const [popup, setPopup] = useState(false);
   const [selectedAction, setSelectedAction] = useState(null);
   const [assignResponse, setAssignResponse] = useState(null);
@@ -356,7 +367,6 @@ export const ComplaintDetails = (props) => {
 
   useEffect(() => {
     (async () => {
-      console.log("complaintDetailscomplaintDetails",tenant)
       const assignWorkflow = await Digit?.WorkflowService?.getByBusinessId(tenant, id);
     })();
   }, [complaintDetails]);

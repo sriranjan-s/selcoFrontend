@@ -313,7 +313,7 @@ return setError("")
             </div>
           )
         ) : null}
-        {error && <div style={{ color: "#7a2829", fontSize:"12px" }}>{error}</div>}
+        {error && <div style={{ color: "#7a2829", fontSize:"12px",marginTop:"5px" }}>{error}</div>}
       </div>
     );
   });
