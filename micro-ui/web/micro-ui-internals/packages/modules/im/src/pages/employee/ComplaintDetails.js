@@ -61,6 +61,7 @@ const CloseBtn = (props) => {
 
 const TLCaption = ({ data, comments }) => {
   const { t } = useTranslation()
+  console.log("datadatacommentscomments",data,comments)
   return (
     <div>
       {data?.date && <p>{data?.date}</p>}
@@ -269,7 +270,7 @@ console.log("employeeData", employeeData)
         <MultiUploadWrapper 
           t={t} 
           module="Incident" 
-          tenantId={tenantId} 
+          tenantId={complaintDetails?.incident?.tenantId || tenantId} 
           
           getFormState={(e) => getData(e)}
           allowedFileTypesRegex={(selectedAction==="RESOLVE") ?/(docx|pdf|xlsx)$/i : /(pdf|jpg)$/i}
@@ -511,7 +512,7 @@ console.log("wfoo", workflowDetails)
               <p>{e}</p>
             </div>
           )}</div> : null}
-          {checkpoint.status!=="COMPLAINT_FILED" ? (
+          {checkpoint.status!=="COMPLAINT_FILED" && checkpoint.performedAction!=="SENDBACK" ? (
             <div className="TLComments">
               <h3>{t("WF_REOPEN_REASON")}</h3>
               <h1>{complaintDetails?.incident?.additionalDetail?.reopenreason}</h1>

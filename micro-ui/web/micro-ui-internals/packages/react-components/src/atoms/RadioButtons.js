@@ -27,8 +27,9 @@ const RadioButtons = (props) => {
                   disabled={props?.disabled}
                   name={props.name}
                   ref={props.inputRef}
+                  style={{width:"2rem",height:"2rem"}}
                 />
-                <span className="radio-btn-checkmark"></span>
+             <span className="radio-btn-checkmark" style={{width:"2rem",height:"2rem"}}></span>
               </span>
               <label style={props.inputStyle}>{t(option[props.optionsKey])}</label>
             </div>
@@ -46,8 +47,9 @@ const RadioButtons = (props) => {
                   disabled={props?.disabled}
                   name={props.name}
                   ref={props.inputRef}
+                  style={{width:"2rem",height:"2rem"}}
                 />
-                <span className="radio-btn-checkmark"></span>
+             <span className="radio-btn-checkmark" style={{width:"2rem",height:"2rem"}}></span>
               </span>
               <label style={props.inputStyle}>{t(props.labelKey ? `${props.labelKey}_${option.code}` : option.code)}</label>
             </div>
@@ -65,8 +67,9 @@ const RadioButtons = (props) => {
                   disabled={props?.disabled}
                   name={props.name}
                   ref={props.inputRef}
+                  style={{width:"2rem",height:"2rem"}}
                 />
-                <span className="radio-btn-checkmark"></span>
+                <span className="radio-btn-checkmark" style={{width:"2rem",height:"2rem"}}></span>
               </span>
               <label style={props.inputStyle}>{t(option)}</label>
             </div>

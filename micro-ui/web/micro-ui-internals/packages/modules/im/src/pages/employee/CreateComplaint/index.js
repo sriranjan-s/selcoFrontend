@@ -2,7 +2,7 @@ import React, { useState, useEffect, useMemo,useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch } from "react-redux";
 import { Controller, useForm } from "react-hook-form";
-import { DatePicker, Dropdown, ImageUploadHandler, TextArea, TextInput, UploadFile, CardLabel } from "@egovernments/digit-ui-react-components";
+import { DatePicker, Dropdown, ImageUploadHandler, Toast, TextInput, UploadFile, CardLabel } from "@egovernments/digit-ui-react-components";
 import { useRouteMatch, useHistory } from "react-router-dom";
 import { useQueryClient } from "react-query";
 import { FormComposer } from "../../../components/FormComposer";
@@ -18,6 +18,7 @@ export const CreateComplaint = ({ parentUrl }) => {
   const [blockMenuNew, setBlockMenuNew]=useState([]);
   const [districtMenu, setDistrictMenu]=useState([]);
   const [file, setFile]=useState(null);
+  const [showToast, setShowToast] = useState(null);
   const [uploadedFile, setUploadedFile]=useState(null);
   const [uploadedImages, setUploadedImagesIds] = useState(null)
   const [district, setDistrict]=useState(null);
@@ -27,9 +28,11 @@ export const CreateComplaint = ({ parentUrl }) => {
   const [canSubmit, setSubmitValve] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const tenantId = window.Digit.SessionStorage.get("Employee.tenantId");
+  const [tenant,setTenant]=useState(window.Digit.SessionStorage.get("Employee.tenantId"))
   const [complaintType, setComplaintType]=useState(JSON?.parse(sessionStorage.getItem("complaintType")) || {});
   const [subTypeMenu, setSubTypeMenu] = useState([]);
   const [phcSubTypeMenu, setPhcSubTypeMenu]=useState([]);
+  const [disbaled, setDisable] = useState(true)
   const [phcMenuNew, setPhcMenu] = useState([])
   const dropdownRefs = useRef([]); // Create refs array for dropdowns
   const [errors, setErrors] = useState(Array(6).fill(""));
@@ -212,8 +215,11 @@ useEffect(async () => {
     setHealthCentre(value);
     setPhcSubTypeMenu([value])
     setHealthCareType(value);
+    setDisable(false)
+    setTenant(value?.city?.districtTenantCode)
     centerTypeRef.current.clearError()
-  
+    setShowToast(null);
+    console.log("setHealthCareType",phcSubTypeMenu,value)
    
   }
   const handleBlockChange= (selectedBlock)=>{
@@ -258,6 +264,11 @@ useEffect(async () => {
     setFile(e.target.files[0]);
   }
   const handleUpload = (ids) => {
+    console.log("disbaleddisbaled",disbaled)
+    if(disbaled)
+    {
+      setShowToast({ key: true, label: "PLEASE_SELECT_PHC_TYPE"});
+    }
     setUploadedImagesIds(ids);
   };
 
@@ -409,7 +420,7 @@ useEffect(async () => {
           label:t("INCIDENT_UPLOAD_FILE"),
           populators:
           <div>
-          <ImageUploadHandler tenantId={tenantId} uploadedImages={uploadedImages} onPhotoChange={handleUpload} />
+          <ImageUploadHandler tenantId={tenant} uploadedImages={uploadedImages} onPhotoChange={handleUpload} disabled={disbaled}/>
           <div style={{marginLeft:'20px', marginTop:"10px", fontSize:'12px'}}>{t("CS_IMAGE_BASED_FILES")}</div>
           </div>
          },
@@ -437,6 +448,7 @@ useEffect(async () => {
       isDisabled={!canSubmit && !submitted}
       label={t("FILE_INCIDENT")}
     />   
+ 
      {/* <button onClick={(!selectedOption || Object.keys(selectedOption).length == 0)}>Check Errors</button>  
       {errors.map((error, index) => (
         <div key={index}>{error}</div>
