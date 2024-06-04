@@ -544,7 +544,7 @@ console.log("wfoo", workflowDetails)
 console.log("cdet", complaintDetails)
 return (
   <React.Fragment>
-     <div style={{color:"#9e1b32", marginBottom:'10px', textAlign:"right", marginRight:"30px"}}>
+     <div style={{color:"#9e1b32", marginBottom:'10px', textAlign:"right", marginRight:"0px"}}>
     <Link to={`/digit-ui/employee/im/inbox`}>{t("CS_COMMON_BACK")}</Link></div> 
     <Card>
       

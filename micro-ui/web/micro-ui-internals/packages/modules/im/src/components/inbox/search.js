@@ -95,7 +95,7 @@ if(Digit.SessionStorage.get("Employee.tenantId") !== "pg" ? Digit.SessionStorage
             )}
             <div className="complaint-input-container" style={{display:"grid", height:"83px"}}>
               <span className="complaint-input">
-                <Label>{t("CS_COMMON_TICKET_NO")}</Label>
+                <Label style={{marginTop:"5px"}}>{t("CS_COMMON_TICKET_NO")}</Label>
                 <TextInput
                   name="serviceRequestId"
                   value={complaintNo}
@@ -122,7 +122,7 @@ if(Digit.SessionStorage.get("Employee.tenantId") !== "pg" ? Digit.SessionStorage
                 ></Dropdown>
               </span>
               {type === "desktop" && (
-                <div style={{display:'flex', alignItems:'center',marginTop: "24px"}}>
+                <div style={{display:'flex', alignItems:'center',marginTop: "5px"}}>
                 <SubmitBar
                   style={{ marginLeft: "10px" }}
                   label={t("ES_COMMON_SEARCH")}
