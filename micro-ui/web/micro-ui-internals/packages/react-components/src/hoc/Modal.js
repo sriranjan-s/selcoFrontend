@@ -41,7 +41,7 @@ const Modal = ({
   }
   const popUpstyles={
     ...popupStyles,
-    width:"400px"
+    width:"460px"
   }
   const isMobile = window.Digit.Utils.browser.isMobile();
   return (

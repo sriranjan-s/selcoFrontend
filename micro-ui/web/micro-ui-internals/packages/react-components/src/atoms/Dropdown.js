@@ -121,7 +121,7 @@ const Dropdown = React.forwardRef((props, ref) => {
     console.log("selectedOption",selectedOption,!selectedOption,props,props.onBlur)
     setTouched(true); // Set touched to true on blur
     if (props.required && (!selectedOption || Object.keys(props.selected).length == 0) ){
-      setError("This field is required");
+      setError(t("CS_FIELD_REQUIRED"));
     } else {
       setError("");
     }
@@ -235,7 +235,7 @@ return setError("")
                 setTouched(true); // Set touched to true on blur
                 
                 if (props.required && (!selectedOption || Object.keys(selectedOption).length == 0)) {
-                  setError("This field is required");
+                  setError(t("CS_FIELD_REQUIRED"));
                 } else {
                   setError("");
                 }

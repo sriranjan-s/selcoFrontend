@@ -88,7 +88,7 @@ const Details = () => {
               <Row label={t("HR_EMAIL_LABEL")} text={data?.Employees?.[0]?.user?.emailId || "NA"} />
               <Row label={t("HR_CORRESPONDENCE_ADDRESS_LABEL")} text={data?.Employees?.[0]?.user?.correspondenceAddress || "NA"} />
             </StatusTable>
-            <CardSubHeader className="card-section-header">{t("HR_NEW_EMPLOYEE_FORM_HEADER")}</CardSubHeader>
+            <CardSubHeader style={{marginTop:"10px"}} className="card-section-header">{t("HR_NEW_EMPLOYEE_FORM_HEADER")}</CardSubHeader>
             <StatusTable>
               <Row label={t("HR_EMPLOYMENT_TYPE_LABEL")} text={t(data?.Employees?.[0]?.employeeType ? `EGOV_HRMS_EMPLOYEETYPE_${data?.Employees?.[0]?.employeeType}` : "NA")} textStyle={{ whiteSpace: "pre" }} />
               <Row
@@ -159,7 +159,7 @@ const Details = () => {
                       marginBottom: "2rem",
                     }}
                   >
-                    <div style={{ paddingBottom: "2rem" }}>
+                    <div style={{ paddingBottom: "2rem" , marginTop:"10px"}}>
                       {" "}
                       {t("HR_JURISDICTION")} {index + 1}
                     </div>
