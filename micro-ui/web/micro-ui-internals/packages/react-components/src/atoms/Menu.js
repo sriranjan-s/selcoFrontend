@@ -13,7 +13,7 @@ const Menu = (props) => {
           margin-top: 0px;
         }
         .menu-wrap {
-          height: 8rem;
+          height: 6rem;
         }
         .menu-item {
           margin-top: 1px;
@@ -21,6 +21,12 @@ const Menu = (props) => {
         .menu-item p {
           margin-top: 0px !important;
         }
+        *, :after, :before {
+          -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+          border: 0 solid;
+          margin-top: 0px;
+         }
       `}</style>
       {props.options.map((option, index) => {
         return (

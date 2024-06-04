@@ -1,8 +1,9 @@
-import { ActionBar, Card, CardSubHeader, DocumentSVG, Header, Loader,Menu, Row, StatusTable, SubmitBar } from "@egovernments/digit-ui-react-components";
+import { ActionBar, Card, CardSubHeader, DocumentSVG, Header, Loader, Row, StatusTable, SubmitBar } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 import ActionModal from "../components/Modal";
+import Menu from "../../../../react-components/src/atoms/Menu"
 import { convertEpochFormateToDate, pdfDownloadLink } from "../components/Utils";
 
 const Details = () => {
