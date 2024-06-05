@@ -15,10 +15,7 @@ import {
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import _ from "lodash";
-import Form from "@rjsf/core";
-import validator from "@rjsf/validator-ajv8";
-// import { UiSchema } from '@rjsf/utils';
-import { titleId } from "@rjsf/utils";
+
 import CustomDropdown from "./MultiSelect";
 import CustomCheckbox from "./Checbox";
 /*
@@ -137,11 +134,11 @@ function TitleFieldTemplate(props) {
     </header>
   );
 }
-function ArrayFieldTitleTemplate(props) {
-  const { title, idSchema } = props;
-  const id = titleId(idSchema);
-  return null;
-}
+// function ArrayFieldTitleTemplate(props) {
+//   const { title, idSchema } = props;
+//   const id = titleId(idSchema);
+//   return null;
+// }
 function ArrayFieldTemplate(props) {
   const { t } = useTranslation();
   if (props?.required && !props?.schema?.minItems) {
@@ -274,76 +271,7 @@ const DigitJSONForm = ({
 
   return (
     <React.Fragment>
-      <Header className="digit-form-composer-header">
-        {screenType === "add" ? t("WBH_ADD_MDMS") : screenType === "view" ? t("WBH_VIEW_MDMS") : t("WBH_EDIT_MDMS")}
-      </Header>
-      <Card className="workbench-create-form">
-        <Header className="digit-form-composer-sub-header">{t(Digit.Utils.workbench.getMDMSLabel(`SCHEMA_` + schema?.code))}</Header>
-        <Form
-          schema={schema?.definition}
-          validator={validator}
-          showErrorList={false}
-          formData={formData}
-          noHtml5Validate={true}
-          onChange={onFormChange}
-          onSubmit={onSubmitV2}
-          idPrefix="digit_root"
-          templates={{
-            FieldErrorTemplate,
-            ArrayFieldTemplate,
-            FieldTemplate: CustomFieldTemplate,
-            ObjectFieldTemplate,
-            TitleFieldTemplate,
-            ArrayFieldTitleTemplate,
-            ArrayFieldItemTemplate,
-          }}
-          experimental_defaultFormStateBehavior={{
-            arrayMinItems: { populate: "requiredOnly" },
-          }}
-          widgets={customWidgets}
-          transformErrors={transformErrors.bind(person)}
-          uiSchema={{ ...uiSchema, ...inputUiSchema }}
-          onError={onError}
-          disabled={disabled}
-          // disabled the error onload
-          // focusOnFirstError={true}
-          /* added logic to show live validations after form submit is clicked */
-          liveValidate={liveValidate}
-          // liveValidate={formData && Object.keys(formData) && Object.keys(formData)?.length > 0}
-        >
-          {(screenType === "add" || screenType === "edit") && (
-            <ActionBar style={{ zIndex: "0" }}>
-              <SubmitBar label={screenType === "edit" ? t("WBH_ADD_MDMS_UPDATE_ACTION") : t("WBH_ADD_MDMS_ADD_ACTION")} submit="submit" />
-              {/* <LinkButton style={props?.skipStyle} label={t(`CS_SKIP_CONTINUE`)}  /> */}
-            </ActionBar>
-          )}
-          {screenType === "view" && (
-            <ActionBar>
-              {displayMenu ? (
-                <Menu
-                  localeKeyPrefix={""}
-                  options={viewActions}
-                  optionKey={"label"}
-                  t={t}
-                  onSelect={onViewActionsSelect}
-                  textStyles={{ margin: "0px" }}
-                />
-              ) : null}
-              <SubmitBar label={t("WORKS_ACTIONS")} onSubmit={() => setDisplayMenu(!displayMenu)} />
-            </ActionBar>
-          )}
-        </Form>
-      </Card>
-      {showToast && (
-        <Toast
-          label={t(showToast)}
-          error={showErrorToast}
-          onClose={() => {
-            setShowToast(null);
-          }}
-          isDleteBtn={true}
-        ></Toast>
-      )}
+
     </React.Fragment>
   );
 };
