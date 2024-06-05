@@ -28,7 +28,7 @@ export const Complaint = {
         incidentType:complaintType?.key,
        incidentSubtype:subType?.key,
        phcType:healthcentre?.name,
-       phcSubType:phcSubType,
+       phcSubType:healthCareType?.centreType,
        comments:comments,
        block:block?.key,
         additionalDetail: {
