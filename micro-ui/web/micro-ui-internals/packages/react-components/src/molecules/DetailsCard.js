@@ -20,10 +20,12 @@ const DetailsCard = ({ data, serviceRequestIdKey, linkPrefix, handleSelect, sele
     return (
       <div>
         {data.map((object, itemIndex) => {
+          let key = Object.keys(object)
+          const incidentId = object[key[0]]
           return (
             <Link
               key={itemIndex}
-              to={window.location.href.includes("im/inbox") ? "/digit-ui/employee/im/complaint/details/" + object["Ticket No."] + "/" + object["TenantID"]
+              to={window.location.href.includes("im/inbox") ? "/digit-ui/employee/im/complaint/details/" + incidentId + "/" + object["TenantID"]
                 : isTwoDynamicPrefix
                   ?
                   `${linkPrefix}${typeof serviceRequestIdKey === "function"
