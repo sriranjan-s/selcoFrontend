@@ -156,7 +156,7 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
   function selectfile(e,newArr) {
     if (e) {
       const newFile={
-      documentType: e?.file?.type,
+      documentType: e?.file?.type.includes(".sheet") ? ".xlsx":e?.file?.type,
       fileStoreId: e?.fileStoreId?.fileStoreId,
       documentUid: "",
       additionalDetails: {},
