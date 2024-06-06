@@ -469,10 +469,22 @@ export const ComplaintDetails = (props) => {
   if (isLoading || workflowDetails.isLoading || loader) {
     return <Loader />;
   }
-console.log("wfoo", workflowDetails)
   if (workflowDetails.isError) return <React.Fragment>{workflowDetails.error}</React.Fragment>;
 
   const getTimelineCaptions = (checkpoint, index, arr) => {
+    let reopenCount = 0;
+    let arrNew= arr.map((abc) => {
+      if(abc.performedAction === "REOPEN")
+      {
+        let reopen=complaintDetails?.incident?.additionalDetail?.reopenreason
+        let obj ={...abc, reopenreason:reopen?.reverse()[reopenCount]}
+        reopen?.reverse()
+        reopenCount +=1
+        return obj
+      }
+      else return abc
+      
+    })
     const arr1=arr
     const {wfComment: comment, thumbnailsToShow} = checkpoint;
     function zoomImageTimeLineWrapper(imageSource, index,thumbnailsToShow,arr){
@@ -515,7 +527,7 @@ console.log("wfoo", workflowDetails)
           {checkpoint.status!=="COMPLAINT_FILED" && checkpoint.performedAction!=="SENDBACK" ? (
             <div className="TLComments">
               <h3>{t("WF_REOPEN_REASON")}</h3>
-              <h1>{complaintDetails?.incident?.additionalDetail?.reopenreason}</h1>
+              <h1>{arrNew[index]?.reopenreason}</h1>
             </div>
           ):null}
           {checkpoint.status !== "COMPLAINT_FILED" && thumbnailsToShow?.thumbs?.length > 0 ? <div className="TLComments">
