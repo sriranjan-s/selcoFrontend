@@ -116,7 +116,7 @@ else {
 useEffect(async () => {
 
   if (selectTenant && selectTenant !== "pg") {
-    let tenant = Digit.SessionStorage.get("IM_TENANTS")
+    let tenant = Digit.SessionStorage.get("Tenants")
     const selectedTenantData = tenant.find(item => item.code === selectTenant);
     const selectedDistrict = {
       key: t(selectedTenantData.city.districtCode),

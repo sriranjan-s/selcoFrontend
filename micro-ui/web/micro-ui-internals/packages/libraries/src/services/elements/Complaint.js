@@ -96,13 +96,13 @@ export const Complaint = {
       : null;
 
     if (!uploadedDocument) complaintDetails.workflow.verificationDocuments = [];
-    let userInfo=Digit.SessionStorage.get("User")
-    complaintDetails.incident.reporter = {
+   // let userInfo=Digit.SessionStorage.get("User")
+    // complaintDetails.incident.reporter = {
 
-      uuid:userInfo.info.uuid,
-      tenantId: userInfo.info.tenantId,
-    };
-    console.log("assignassign",complaintDetails)
+    //   uuid:userInfo.info.uuid,
+    //   tenantId: userInfo.info.tenantId,
+    // };
+    //console.log("assignassign",complaintDetails)
     //TODO: get tenant id
     const response = await Digit.PGRService.update(complaintDetails, tenantId);
     return response;
