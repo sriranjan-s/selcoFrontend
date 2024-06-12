@@ -16,12 +16,22 @@ const IMCard = () => {
     return null;
   }
 
-
+  const isCodePresent = (array, codeToCheck) =>{
+    return array.some(item => item.code === codeToCheck);
+  }
   const [total, setTotal] = useState("-");
   console.log("total", total)
-  const tenantId = window.Digit.SessionStorage.get("Employee.tenantId");
+  let tenantId = window.Digit.SessionStorage.get("Employee.tenantId");
   useEffect(() => {
     (async () => {
+      const userRoles = Digit.SessionStorage.get("User")?.info?.roles || [];
+   if (isCodePresent(userRoles, "COMPLAINT_RESOLVER"))
+      {
+        const codes = Digit.SessionStorage.get("Tenants").filter(item => item.code !== "pg")
+        .map(item => item.code)
+        .join(',');
+        tenantId = codes
+      }
       let response = await Digit.PGRService.count(tenantId,  {} );
       console.log("res", response)
       if (response?.count) {
