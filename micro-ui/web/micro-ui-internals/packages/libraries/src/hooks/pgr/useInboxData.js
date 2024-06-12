@@ -6,13 +6,23 @@ const useInboxData = (searchParams,tenantIdNew) => {
   const fetchInboxData = async () => {
     let tenantId = Digit.ULBService.getCurrentTenantId();
     const tenants = Digit.SessionStorage.get("Tenants").map(item => item.code).join(',');
+    const codes = Digit.SessionStorage.get("Tenants").filter(item => item.code !== "pg")
+    .map(item => item.code)
+    .join(',');
     const sessionTenantId = Digit.SessionStorage.get("Employee.tenantId");
+    const isCodePresent = (array, codeToCheck) =>{
+      return array.some(item => item.code === codeToCheck);
+    }
+    const userRoles = Digit.SessionStorage.get("User")?.info?.roles || [];
     if (searchParams?.filters?.pgrQuery?.phcType) {
+      console.log("dddddddd1",searchParams)
       tenantId = searchParams.filters.pgrQuery.phcType;
     } else if (searchParams?.search?.phcType) {
+      console.log("dddddddd2",searchParams)
       tenantId = searchParams.search.phcType === "pg" ? tenants : searchParams.search.phcType;
     } else {
-      tenantId = sessionTenantId === "pg" ? tenants : sessionTenantId;
+      console.log("dddddddd3",searchParams)
+      tenantId = sessionTenantId === "pg" ? isCodePresent(userRoles, "COMPLAINT_RESOLVER") ? codes:tenants : sessionTenantId;
     }
 
     //const tenant =  Digit.SessionStorage.get("Employee.tenantId") == "pg"?  Digit.SessionStorage.get("Tenants").map(item => item.code).join(',') :Digit.SessionStorage.get("Employee.tenantId") 

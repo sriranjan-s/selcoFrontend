@@ -14,14 +14,27 @@ const Inbox = () => {
   const [pageSize, setPageSize] = useState(10);
   const [totalRecords, setTotalRecords] = useState(0);
   const [searchParams, setSearchParams] = useState({ filters: { wfFilters: { assignee: [{ code: uuid }] } }, search: "", sort: {} });
-
+  const isCodePresent = (array, codeToCheck) =>{
+    return array.some(item => item.code === codeToCheck);
+  }
   useEffect(() => {
     (async () => {
+      const userRoles = Digit.SessionStorage.get("User")?.info?.roles || [];
       const applicationStatus = searchParams?.filters?.pgrfilters?.applicationStatus?.map(e => e.code).join(",")
       if(searchParams?.filters?.pgrQuery?.phcType)
       {
         tenantId= searchParams?.filters?.pgrQuery?.phcType
       }
+      else if (isCodePresent(userRoles, "COMPLAINT_RESOLVER") && (!searchParams?.filters?.pgrQuery || searchParams?.filters?.pgrfilters?.phcType.length ==0) && Digit.SessionStorage.get("Employee.tenantId") == "pg")
+      {
+        const codes = Digit.SessionStorage.get("Tenants").filter(item => item.code !== "pg")
+        .map(item => item.code)
+        .join(',');
+        tenantId = codes
+      }
+
+      console.log("searchParamssearchParamsNew",searchParams,userRoles,tenantId)
+
       let response = await Digit.PGRService.count(tenantId, applicationStatus?.length > 0  ? {applicationStatus} : {} );
       console.log("STEP6",response,searchParams?.filters?.pgrQuery?.phcType,tenantId)
       if (response?.count) {
