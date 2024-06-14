@@ -13,10 +13,12 @@ const Inbox = () => {
   const [pageOffset, setPageOffset] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [totalRecords, setTotalRecords] = useState(0);
-  const [searchParams, setSearchParams] = useState({ filters: { wfFilters: { assignee: [{ code: uuid }] } }, search: "", sort: {} });
+  const userRoles = Digit.SessionStorage.get("User")?.info?.roles || [];
   const isCodePresent = (array, codeToCheck) =>{
     return array.some(item => item.code === codeToCheck);
   }
+  const [searchParams, setSearchParams] = useState({ filters: { wfFilters: { assignee: [{ code: isCodePresent(userRoles, "COMPLAINT_RESOLVER") ? uuid :"" }] } }, search: "", sort: {} });
+ 
   useEffect(() => {
     (async () => {
       const userRoles = Digit.SessionStorage.get("User")?.info?.roles || [];
@@ -71,11 +73,12 @@ const Inbox = () => {
   {
     tenant = searchParams?.search?.phcType
   }
+  let isMobile = Digit.Utils.browser.isMobile();
   console.log("tenant",tenant)
-  let { data: complaints, isLoading } = Digit.Hooks.pgr.useInboxData({ ...searchParams,offset: pageOffset, limit: pageSize }) ;
+  let { data: complaints, isLoading } =isMobile? Digit.Hooks.pgr.useInboxData({ ...searchParams }):Digit.Hooks.pgr.useInboxData({ ...searchParams,offset: pageOffset, limit: pageSize }) ;
   console.log("complai", complaints)
 
-  let isMobile = Digit.Utils.browser.isMobile();
+
 console.log("totalRecords",totalRecords)
   if (complaints?.length !== null) {
     if (isMobile) {
