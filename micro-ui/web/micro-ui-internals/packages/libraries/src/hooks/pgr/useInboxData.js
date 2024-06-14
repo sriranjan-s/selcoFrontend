@@ -15,13 +15,10 @@ const useInboxData = (searchParams,tenantIdNew) => {
     }
     const userRoles = Digit.SessionStorage.get("User")?.info?.roles || [];
     if (searchParams?.filters?.pgrQuery?.phcType) {
-      console.log("dddddddd1",searchParams)
       tenantId = searchParams.filters.pgrQuery.phcType;
     } else if (searchParams?.search?.phcType) {
-      console.log("dddddddd2",searchParams)
       tenantId = searchParams.search.phcType === "pg" ? tenants : searchParams.search.phcType;
     } else {
-      console.log("dddddddd3",searchParams)
       tenantId = sessionTenantId === "pg" ? isCodePresent(userRoles, "COMPLAINT_RESOLVER") ? codes:tenants : sessionTenantId;
     }
 
@@ -40,10 +37,11 @@ const useInboxData = (searchParams,tenantIdNew) => {
       wfFilters = { ...commonFilters, ...searchParams.filters.wfQuery}
     }
     
+    
     let complaintDetailsResponse = null;
     let combinedRes = [];
     complaintDetailsResponse = await Digit.PGRService.search(tenantId, appFilters);
-    console.log("STEP 5",tenantId, appFilters,complaintDetailsResponse)
+    console.log("STEP 5",tenantId, appFilters,complaintDetailsResponse,wfFilters,searchParams)
     complaintDetailsResponse.IncidentWrappers.forEach((incident) => serviceIds.push(incident.incident.incidentId));
     const serviceIdParams = serviceIds.join();
    
