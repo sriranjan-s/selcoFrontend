@@ -61,7 +61,6 @@ const CloseBtn = (props) => {
 
 const TLCaption = ({ data, comments }) => {
   const { t } = useTranslation()
-  console.log("datadatacommentscomments",data,comments)
   return (
     <div>
       {data?.date && <p>{data?.date}</p>}
@@ -409,6 +408,7 @@ export const ComplaintDetails = (props) => {
     setImageZoom(imageSource);
   }
   function zoomImageWrapper(imageSource, index){
+    console.log("imageSourceimageSourceimageSource",index)
     zoomImage(imagesToShowBelowComplaintDetails?.fullImage[index]);
   }
   function onCloseImageZoom() {
@@ -488,6 +488,7 @@ export const ComplaintDetails = (props) => {
     const arr1=arr
     const {wfComment: comment, thumbnailsToShow} = checkpoint;
     function zoomImageTimeLineWrapper(imageSource, index,thumbnailsToShow,arr){
+      console.log("imageSource, index,thumbnailsToShow,arr",imageSource, index,thumbnailsToShow,arr)
       if(arr1[index]?.status == "RESOLVED")
       {
         window.open(arr1[index].thumbnailsToShow.fullImage[0], "_blank")
