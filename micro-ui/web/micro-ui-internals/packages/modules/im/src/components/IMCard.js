@@ -30,7 +30,8 @@ const IMCard = () => {
         const codes = Digit.SessionStorage.get("Tenants")?.filter(item => item.code !== "pg")
         .map(item => item.code)
         .join(',');
-        tenantId = codes
+        tenantId = tenantId == "pg"?codes :tenantId
+       
       }
       let response = await Digit.PGRService.count(tenantId,  {} );
       console.log("res", response)
