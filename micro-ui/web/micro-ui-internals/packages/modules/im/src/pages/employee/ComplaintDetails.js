@@ -153,14 +153,30 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
 
   }, [error, clearError]);
   function selectfile(e,newArr) {
+    console.log("selectfileselectfile",e,newArr)
+    let file=[]
     if (e) {
-      const newFile={
-      documentType: e?.file?.type.includes(".sheet") ? ".xlsx": e?.file?.type.includes(".document")? ".docs": e?.file?.type,
-      fileStoreId: e?.fileStoreId?.fileStoreId,
-      documentUid: "",
-      additionalDetails: {},
-      };
-      let temp = [...uploadedFile, newFile];
+      if(newArr.length >0)
+      {
+        file= newArr.map((e) =>{
+          const newFile={
+            documentType: e?.file?.type.includes(".sheet") ? ".xlsx": e?.file?.type.includes(".document")? ".docs": e?.file?.type,
+            fileStoreId: e?.fileStoreId?.fileStoreId,
+            documentUid: "",
+            additionalDetails: {},
+            };
+          return newFile
+        })
+      }
+      // const newFile={
+      // documentType: e?.file?.type.includes(".sheet") ? ".xlsx": e?.file?.type.includes(".document")? ".docs": e?.file?.type,
+      // fileStoreId: e?.fileStoreId?.fileStoreId,
+      // documentUid: "",
+      // additionalDetails: {},
+      // };
+      console.log("filefile",file)
+      let temp = [...uploadedFile, ...file];
+      console.log("temptemp",temp)
       const filterFileStoreIds = newArr.map(item => item.fileStoreId.fileStoreId);
 
       // Use a Set to remove duplicates and filter the documents array
@@ -233,6 +249,7 @@ console.log("employeeData", employeeData)
           setError(t("CS_MANDATORY_COMMENTS_AND_FILE_UPLOAD"));
         }
         else{
+          console.log("selectedEmployeeselectedEmployee",selectedEmployee, comments, uploadedFile, selectedReopenReason)
         onAssign(selectedEmployee, comments, uploadedFile, selectedReopenReason);
         }
       }}

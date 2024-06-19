@@ -110,16 +110,21 @@ const EmployeeApp = ({
                 <AppModules stateCode={stateCode} userType="employee" modules={modules} appTenants={appTenants} />
               </ErrorBoundary>
             </div>
-            <div className="employee-home-footer">
+            <div className="employee-home-footer" style={{padding:"0px",height:"auto"}}>
               <img
                 alt="Powered by DIGIT"
                 src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER")}
-                style={{ height: "1.1em", cursor: "pointer" }}
+                style={{ height: "1.1rem", cursor: "pointer" }}
                 onClick={() => {
                   window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
                 }}
               />
             </div>
+            <div style={{textAlign:"center",marginBottom:"15px"}}>
+        <img className="bannerLogo" src={"https://selco-assets.s3.ap-south-1.amazonaws.com/powered-by-nhm-ka.png"} alt="Selco Foundation"  style={{ height: "1.2rem", cursor: "pointer", marginRight:"10px" }} />
+        <img className="bannerLogo" src={"https://selco-assets.s3.ap-south-1.amazonaws.com/powered-by-ka_govt.svg"} alt="Selco Foundation"  style={{ height: "1.2em", cursor: "pointer" ,marginRight:"10px" }}/>
+        <img className="bannerLogo" src={"https://selco-assets.s3.ap-south-1.amazonaws.com/logo.png"} alt="Selco Foundation"  style={{ height: "1.2rem", cursor: "pointer",marginRight:"10px"  }} />
+        </div>
           </div>
         </Route>
         <Route>

@@ -26,15 +26,15 @@ const useInboxData = (searchParams,tenantIdNew) => {
     let serviceIds = [];
     let commonFilters = { start: 1, end: 10 };
     const { limit, offset } = searchParams;
-    console.log("serviceIdParamsserviceIdParams",searchParams.filters.wfFilters.assignee[0]?.code)
-    let appFilters = { ...commonFilters, ...searchParams.filters.pgrQuery, ...searchParams.search, limit, offset };
+    //console.log("serviceIdParamsserviceIdParams",searchParams.filters.wfFilters.assignee[0]?.code)
+    let appFilters = { ...commonFilters, ...searchParams?.filters?.pgrQuery, ...searchParams?.search, limit, offset };
    let wfFilters
-    if(searchParams.filters.wfFilters.assignee[0]?.code !=="")
+    if(searchParams?.filters?.wfFilters?.assignee?.[0]?.code !=="")
     {
-     wfFilters = { ...commonFilters, ...searchParams.filters.wfQuery,assignee:searchParams.filters.wfFilters.assignee[0]?.code}
+     wfFilters = { ...commonFilters, ...searchParams?.filters?.wfQuery,assignee:searchParams?.filters?.wfFilters?.assignee?.[0]?.code}
     }
     else {
-      wfFilters = { ...commonFilters, ...searchParams.filters.wfQuery}
+      wfFilters = { ...commonFilters, ...searchParams?.filters?.wfQuery}
     }
     
     

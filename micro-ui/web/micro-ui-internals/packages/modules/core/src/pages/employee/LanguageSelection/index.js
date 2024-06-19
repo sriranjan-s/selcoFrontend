@@ -38,7 +38,7 @@ const LanguageSelection = () => {
     </style>
       <Card className="bannerCard removeBottomMargin">
         <div className="bannerHeader">
-          <img className="bannerLogo" src={"https://selco-assets.s3.ap-south-1.amazonaws.com/logo.png"} alt="Selco Foundation" />
+          <img className="bannerLogo" src={"https://selco-assets.s3.ap-south-1.amazonaws.com/powered-by-saura_emitra.png"} alt="Selco Foundation" />
 
           <p>{t(`HEADER_TENANT_TENANTS_${stateInfo?.code.toUpperCase()}`)}</p>
         </div>
@@ -54,6 +54,11 @@ const LanguageSelection = () => {
           ))}
         </div>
         <SubmitBar style={{ width: "100%" }} label={t(`CORE_COMMON_CONTINUE`)} onSubmit={handleSubmit} />
+        <div style={{textAlign:"center",marginTop:"10px"}}>
+        <img className="bannerLogo" src={"https://selco-assets.s3.ap-south-1.amazonaws.com/powered-by-nhm-ka.png"} alt="Selco Foundation" style={{border:"0px"}} />
+        <img className="bannerLogo" src={"https://selco-assets.s3.ap-south-1.amazonaws.com/powered-by-ka_govt.svg"} alt="Selco Foundation" style={{border:"0px"}}/>
+        <img className="bannerLogo" src={"https://selco-assets.s3.ap-south-1.amazonaws.com/logo.png"} alt="Selco Foundation" style={{border:"0px"}} />
+        </div>
       </Card>
       <div className="EmployeeLoginFooter">
         <img
