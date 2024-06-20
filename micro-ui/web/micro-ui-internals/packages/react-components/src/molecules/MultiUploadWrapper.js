@@ -76,6 +76,7 @@ const MultiUploadWrapper = ({ t, module = "PGR", tenantId = Digit.ULBService.get
     }
 
     const uploadReducer = (state, action) => {
+        console.log("statestate123",state)
         switch (action.type) {
             case FILES_UPLOADED:
                 return uploadMultipleFiles(state, action.payload)
@@ -89,6 +90,8 @@ const MultiUploadWrapper = ({ t, module = "PGR", tenantId = Digit.ULBService.get
     const [state, dispatch] = useReducer(uploadReducer, [...setuploadedstate])
     
     const onUploadMultipleFiles = async (e) => {
+        console.log("onUploadMultipleFiles")
+        e.preventDefault()
         setEnableButton(false)
         setFileErrors([])
         const files = Array.from(e.target.files);
