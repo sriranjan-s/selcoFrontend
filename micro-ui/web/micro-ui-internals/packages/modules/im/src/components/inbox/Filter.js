@@ -43,7 +43,7 @@ console.log("vvvvv",isCodePresent(Digit.SessionStorage.get("User")?.info?.roles,
   let healthcareTenant = Digit.SessionStorage.get("Tenants").filter(item => item.code !== "pg")
 
   const [wfFilters, setWfFilters] = useState(
-    isCodePresent(Digit.SessionStorage.get("User")?.info?.roles, "COMPLAINT_RESOLVER") ? searchParams?.filters?.wfFilters:searchParams?.filters?.wfFilters["assignee"][{"code":""}] || isCodePresent(Digit.SessionStorage.get("User")?.info?.roles, "COMPLAINT_RESOLVER") ? {
+    isCodePresent(Digit.SessionStorage.get("User")?.info?.roles, "COMPLAINT_RESOLVER") ? searchParams?.filters?.wfFilters:searchParams?.filters?.wfFilters?.["assignee"]?.[{"code":""}] || isCodePresent(Digit.SessionStorage.get("User")?.info?.roles, "COMPLAINT_RESOLVER") ? {
       assignee: [{ code: uuid }],
     }
     :

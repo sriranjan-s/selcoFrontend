@@ -262,7 +262,7 @@ console.log("employeeData", employeeData)
             
             <CardLabel>{t("CS_COMMON_EMPLOYEE_NAME")}*</CardLabel>
             
-            {employeeData && <SectionalDropdown selected={selectedEmployee} menuData={employeeData} displayKey="name" select={onSelectEmployee} />}
+            {employeeData && <Dropdown selected={selectedEmployee} menuData={employeeData} displayKey="name" select={onSelectEmployee} />}
           </React.Fragment>
         )}
         {selectedAction === "REOPEN" ? (

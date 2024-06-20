@@ -315,6 +315,7 @@ useEffect(async () => {
     { field: subType, ref: ticketSubTypeRef }
   ];
   const getData = (state) => {  
+
     let data = Object.fromEntries(state);
     let newArr = Object.values(data);
     console.log("statestate",state,data,newArr)
@@ -338,10 +339,10 @@ useEffect(async () => {
     }
    
   };
-  function selectfile(e,newArr) {
-    console.log("selectfileselectfile",e,newArr)
+  function selectfile(arr,newArr) {
+    console.log("selectfileselectfile",arr,newArr)
     let file=[]
-    if (e) {
+    if (arr) {
       if(newArr.length >0)
       {
         console.log
@@ -362,13 +363,13 @@ useEffect(async () => {
       // additionalDetails: {},
       // };
       console.log("filefile",file,uploadedFile)
-      let temp = [...uploadedFile, ...file];
-      console.log("temptemp",temp)
-      const filterFileStoreIds = temp.map(item => item.fileStoreId);
+
+      console.log("temptemp",file)
+      const filterFileStoreIds = file.map(item => item.fileStoreId);
 
       // Use a Set to remove duplicates and filter the documents array
       const seen = new Set();
-      const filteredDocuments = temp.filter(document => {
+      const filteredDocuments = file.filter(document => {
         if (filterFileStoreIds.includes(document.fileStoreId) && !seen.has(document.fileStoreId)) {
           seen.add(document.fileStoreId);
           return true;
@@ -378,7 +379,7 @@ useEffect(async () => {
 
       console.log("filteredDocumentsfilteredDocuments",filteredDocuments);
       setUploadedFile(filteredDocuments);
-      e && setFile(e.file);
+      //arr && setFile(arr.file);
     }
   }
   const config = [

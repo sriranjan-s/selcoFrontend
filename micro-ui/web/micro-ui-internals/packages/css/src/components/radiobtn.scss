@@ -19,6 +19,8 @@
   }
 
   .radio-btn-checkmark {
+    height: 2rem !important;
+    width: 2rem !important;
     @apply h-10 w-10 border border-input-border border-solid rounded-full block;
   }
 

@@ -22,19 +22,21 @@ const IMCard = () => {
   const [total, setTotal] = useState("-");
   console.log("total", total)
   let tenantId = window.Digit.SessionStorage.get("Employee.tenantId");
+  let newTenant = window.Digit.SessionStorage.get("Tenants")
   useEffect(() => {
     (async () => {
       const userRoles = Digit.SessionStorage.get("User")?.info?.roles || [];
-   if (isCodePresent(userRoles, "COMPLAINT_RESOLVER"))
-      {
-        const codes = Digit.SessionStorage.get("Tenants")?.filter(item => item.code !== "pg")
-        .map(item => item.code)
-        .join(',');
-        tenantId = tenantId == "pg"?codes :tenantId
-       
+      if (isCodePresent(userRoles, "COMPLAINT_RESOLVER")) {
+        const tenantCode = Digit.SessionStorage.get("citizen.userRequestObject").info.roles.map((ulb) => {
+          return ulb.tenantId
+        })
+        const uniqueTenant = Array.from(new Set(tenantCode))
+        const codes = uniqueTenant.filter(item => item !== "pg")
+          .map(item => item)
+          .join(',');
+        tenantId = tenantId == "pg" ? codes : tenantId
       }
-      let response = await Digit.PGRService.count(tenantId,  {} );
-      console.log("res", response)
+      let response = await Digit.PGRService.count(tenantId, {});
       if (response?.count) {
         setTotal(response.count);
       }
