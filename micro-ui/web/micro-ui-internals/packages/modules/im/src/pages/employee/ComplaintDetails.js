@@ -262,7 +262,8 @@ console.log("employeeData", employeeData)
             
             <CardLabel>{t("CS_COMMON_EMPLOYEE_NAME")}*</CardLabel>
             
-            {employeeData && <Dropdown selected={selectedEmployee} menuData={employeeData} displayKey="name" select={onSelectEmployee} />}
+            {employeeData &&  <Dropdown  option={employeeData?.[0]?.options} optionKey="name" id="employee" selected={selectedEmployee} select={onSelectEmployee} required={true}/>}
+           
           </React.Fragment>
         )}
         {selectedAction === "REOPEN" ? (
@@ -287,11 +288,12 @@ console.log("employeeData", employeeData)
           t={t} 
           module="Incident" 
           tenantId={complaintDetails?.incident?.tenantId || tenantId} 
-          
+          requestSpecifcFileRemoval={uploadedFile?.[0]}
           getFormState={(e) => getData(e)}
           allowedFileTypesRegex={(selectedAction==="RESOLVE") ?/(docx|pdf|xlsx)$/i : /(pdf|jpg)$/i}
           allowedMaxSizeInMB={5}
           acceptFiles= {(selectedAction==="RESOLVE") ? ".pdf, .xlsx, .docx": ".pdf, .jpg"}
+          ulb={complaintDetails?.incident?.tenantId || tenantId}
           />
         {selectedAction === "RESOLVE" ? <div style={{marginTop:"6px", fontSize:"13px", color:"#36454F"}}>{t("RESOLVE_RESOLUTION_REPORT")}</div> : <CardLabelDesc style={{marginTop:"8px", fontSize:"13px"}}> {t("CS_FILE_LIMIT")}</CardLabelDesc>}
       </Card>
