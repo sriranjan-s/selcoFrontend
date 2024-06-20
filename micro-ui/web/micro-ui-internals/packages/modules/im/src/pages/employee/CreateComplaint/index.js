@@ -33,6 +33,7 @@ export const CreateComplaint = ({ parentUrl }) => {
   const [subTypeMenu, setSubTypeMenu] = useState([]);
   const [phcSubTypeMenu, setPhcSubTypeMenu]=useState([]);
   const [disbaled, setDisable] = useState(true)
+  const [disbaledUpload, setDisableUpload] = useState(true)
   const [phcMenuNew, setPhcMenu] = useState([])
   const dropdownRefs = useRef([]); // Create refs array for dropdowns
   const [errors, setErrors] = useState(Array(6).fill(""));
@@ -173,6 +174,7 @@ useEffect(async () => {
     }
   },[complaintType, subType,healthcentre,healthCareType,district,block])
   async function selectedType(value) {
+    setDisableUpload(false)
     if (value.key !== complaintType.key) {
       if (value.key === "Others") {
         setSubType({ name: "" });
@@ -215,6 +217,7 @@ useEffect(async () => {
     setHealthCentre(value);
     setPhcSubTypeMenu([value])
     setHealthCareType(value);
+    setDisableUpload(false)
     setDisable(false)
     setTenant(value?.city?.districtTenantCode)
     centerTypeRef.current.clearError()
@@ -317,9 +320,12 @@ useEffect(async () => {
   const getData = (state) => {  
 
     let data = Object.fromEntries(state);
+    const mappedArray = state.map(item => {
+      return  item[1];
+    })
     let newArr = Object.values(data);
-    console.log("statestate",state,data,newArr)
-    selectfile(newArr[newArr.length - 1],newArr);
+    console.log("statestate",state,data,newArr,mappedArray)
+    selectfile(newArr[newArr.length - 1],mappedArray);
   };
   const handleButtonClick = () => {
     const hasEmptyFields = fieldsToValidate.some(({ field }) => field === null || Object.keys(field).length === 0);
@@ -478,7 +484,9 @@ useEffect(async () => {
           getFormState={(e) => getData(e)}
           allowedFileTypesRegex={/(jpg|jpeg|png|image)$/i}
           allowedMaxSizeInMB={5}
-          maxFilesAllowed={3}
+          maxFilesAllowed={5}
+          disabled={disbaledUpload}
+          ulb={Digit.SessionStorage.get("Employee.tenantId") !== "pg" ? Digit.SessionStorage.get("Employee.tenantId"  ):healthcentre?.code}
           acceptFiles= {".png, .image, .jpg, .jpeg"}
           />
                {/* <ImageUploadHandler tenantId={tenant} uploadedImages={uploadedImages} onPhotoChange={handleUpload} disabled={disbaled}/> */}
