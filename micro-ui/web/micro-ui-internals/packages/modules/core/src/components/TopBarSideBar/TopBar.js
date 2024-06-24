@@ -102,7 +102,7 @@ const TopBar = ({
     <div  style={{padding:"5px 0px"}}>
     <div className="topbar">
       {mobileView ? <Hamburger handleClick={toggleSidebar} color="#9E9E9E" /> : null}
-      <img className="city" src={"https://selco-assets.s3.ap-south-1.amazonaws.com/powered-by-saura_emitra.png"} />
+      <img className="city" style={{width:"80px",height:"48px"}} src={"https://selco-assets.s3.ap-south-1.amazonaws.com/powered-by-saura_emitra.png"} />
       <span style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
         {loggedin &&
           (cityDetails?.city ? (
