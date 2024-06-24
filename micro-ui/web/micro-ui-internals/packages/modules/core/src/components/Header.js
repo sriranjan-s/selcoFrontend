@@ -11,7 +11,7 @@ const Header = () => {
 
   return (
     <div className="bannerHeader">
-      <img className="bannerLogo" src={"https://selco-assets.s3.ap-south-1.amazonaws.com/powered-by-saura_emitra.png"} />
+      <img style={{width:"80px",height:"48px"}}className="bannerLogo" src={"https://selco-assets.s3.ap-south-1.amazonaws.com/powered-by-saura_emitra.png"} />
       <p>{t(`HEADER_TENANT_TENANTS_${stateInfo?.code.toUpperCase()}`)}</p>
     </div>
   );
