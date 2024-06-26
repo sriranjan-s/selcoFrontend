@@ -110,7 +110,13 @@ const EmployeeApp = ({
                 <AppModules stateCode={stateCode} userType="employee" modules={modules} appTenants={appTenants} />
               </ErrorBoundary>
             </div>
-            <div className="employee-home-footer" style={{padding:"0px",height:"auto"}}>
+            
+            <div style={{textAlign:"center",marginBottom:"15px",marginTop:"10px"}}>
+        <img className="bannerLogo" src={"https://selco-assets.s3.ap-south-1.amazonaws.com/powered-by-nhm-ka.png"} alt="Selco Foundation"  style={{ height: "3rem",width:"3rem", cursor: "pointer", marginRight:"15px",marginLeft:"15px" }} />
+        <img className="bannerLogo" src={"https://selco-assets.s3.ap-south-1.amazonaws.com/powered-by-ka_govt.svg"} alt="Selco Foundation"  style={{ height: "3rem", width:"3rem", cursor: "pointer" ,marginRight:"15px" }}/>
+        <img className="bannerLogo" src={"https://selco-assets.s3.ap-south-1.amazonaws.com/logo.png"} alt="Selco Foundation"  style={{ height: "3rem", cursor: "pointer",width:"3rem", marginRight:"15px"  }} />
+        </div>
+        <div className="employee-home-footer" style={{padding:"0px",height:"auto"}}>
               <img
                 alt="Powered by DIGIT"
                 src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER")}
@@ -120,11 +126,6 @@ const EmployeeApp = ({
                 }}
               />
             </div>
-            <div style={{textAlign:"center",marginBottom:"15px",marginTop:"10px"}}>
-        <img className="bannerLogo" src={"https://selco-assets.s3.ap-south-1.amazonaws.com/powered-by-nhm-ka.png"} alt="Selco Foundation"  style={{ height: "1.4rem",width:"1.4rem", cursor: "pointer", marginRight:"15px",marginLeft:"15px" }} />
-        <img className="bannerLogo" src={"https://selco-assets.s3.ap-south-1.amazonaws.com/powered-by-ka_govt.svg"} alt="Selco Foundation"  style={{ height: "1.4em", width:"1.4rem", cursor: "pointer" ,marginRight:"15px" }}/>
-        <img className="bannerLogo" src={"https://selco-assets.s3.ap-south-1.amazonaws.com/logo.png"} alt="Selco Foundation"  style={{ height: "1.4rem", cursor: "pointer",width:"1.4rem", marginRight:"15px"  }} />
-        </div>
           </div>
         </Route>
         <Route>

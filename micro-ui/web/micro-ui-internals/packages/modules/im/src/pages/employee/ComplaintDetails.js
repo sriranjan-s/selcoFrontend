@@ -520,8 +520,8 @@ export const ComplaintDetails = (props) => {
     }
     const captionForOtherCheckpointsInTL = {
       date: checkpoint?.auditDetails?.lastModified,
-      name: checkpoint?.assignes ? checkpoint?.assignes[0].name :checkpoint?.assigner?.name,
-      mobileNumber: checkpoint?.assignes?checkpoint?.assignes[0].mobileNumber: checkpoint?.assigner?.mobileNumber,
+      name: checkpoint?.assigner?.name,
+      mobileNumber: checkpoint?.assigner?.mobileNumber,
       ...checkpoint.status === "COMPLAINT_FILED" && complaintDetails?.audit ? {
         source: complaintDetails.audit.source,
       } : {}
