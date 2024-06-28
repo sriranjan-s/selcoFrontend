@@ -11,8 +11,10 @@ const Header = () => {
 
   return (
     <div className="bannerHeader">
-      <img style={{width:"80px",height:"48px"}}className="bannerLogo" src={"https://selco-assets.s3.ap-south-1.amazonaws.com/powered-by-saura_emitra.png"} />
-      <p>{t(`HEADER_TENANT_TENANTS_${stateInfo?.code.toUpperCase()}`)}</p>
+     <img className="bannerLogo" src={"https://selco-assets.s3.ap-south-1.amazonaws.com/TwoClr_horizontal_4X.png"} alt="Selco Foundation" style={{height:"60px", width:"170px", marginRight:"-35px", paddingRight:"0px",border:"0px"}} />
+
+<p style={{marginLeft:"-10px", paddingLeft:"10px",borderLeft:"1px solid black"}}>{t(`HEADER_TENANT_TENANTS_${stateInfo?.code.toUpperCase()}`)}</p>
+
     </div>
   );
 }

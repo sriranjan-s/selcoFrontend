@@ -255,7 +255,7 @@ export const CitizenSideBar = ({ isOpen, isMobile = false, toggleSidebar, onLogo
       profileItem={profileItem}
       onClose={closeSidebar}
       menuItems={menuItems}
-      Footer={<PoweredBy />}
+     
       isEmployee={isEmployee}
       search={search}
       setSearch={setSearch}
