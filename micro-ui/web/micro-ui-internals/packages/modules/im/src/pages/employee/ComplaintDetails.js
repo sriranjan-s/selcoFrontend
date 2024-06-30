@@ -290,9 +290,9 @@ console.log("employeeData", employeeData)
           tenantId={complaintDetails?.incident?.tenantId || tenantId} 
           requestSpecifcFileRemoval={uploadedFile?.[0]}
           getFormState={(e) => getData(e)}
-          allowedFileTypesRegex={(selectedAction==="RESOLVE") ?/(docx|pdf|xlsx)$/i : /(pdf|jpg)$/i}
+          allowedFileTypesRegex={(selectedAction==="RESOLVE") ?/(docx|doc|pdf|xlsx)$/i : /(pdf|jpg|jpeg|png)$/i}
           allowedMaxSizeInMB={5}
-          acceptFiles= {(selectedAction==="RESOLVE") ? ".pdf, .xlsx, .docx": ".pdf, .jpg"}
+          acceptFiles= {(selectedAction==="RESOLVE") ? ".pdf, .xlsx, .docx, .doc": ".pdf, .jpg, .jpeg, .png"}
           ulb={complaintDetails?.incident?.tenantId || tenantId}
           />
         {selectedAction === "RESOLVE" ? <div style={{marginTop:"6px", fontSize:"13px", color:"#36454F"}}>{t("RESOLVE_RESOLUTION_REPORT")}</div> : <CardLabelDesc style={{marginTop:"8px", fontSize:"13px"}}> {t("CS_FILE_LIMIT")}</CardLabelDesc>}

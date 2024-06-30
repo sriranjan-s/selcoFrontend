@@ -30,7 +30,7 @@ const dataUrl = `data:image/svg+xml;charset=UTF-8,${encodedSvg}`;
     </a>
   </div>
   :
-  <img key={index} src={source.includes(".xlsx") || source.includes(".docx") ?dataUrl:source} style={{cursor:"pointer"}}{...last ? {className:"last"} : {}} alt="issue thumbnail" onClick={() => onClick(source, index)}></img>
+  <img key={index} src={source.includes(".xlsx") || source.includes(".docx") || source.includes(".doc")?dataUrl:source} style={{cursor:"pointer"}}{...last ? {className:"last"} : {}} alt="issue thumbnail" onClick={() => onClick(source, index)}></img>
 }
 
 const DisplayPhotos = (props) => {
