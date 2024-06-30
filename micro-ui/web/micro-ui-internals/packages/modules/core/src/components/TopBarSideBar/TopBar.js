@@ -107,7 +107,8 @@ const TopBar = ({
           height: '100px',
           marginBottom: '-30px',
           marginTop: '-30px',
-          marginRight: '-30px'
+          marginRight: '-40px',
+          marginLeft:"-60px"
         }} src={"https://selco-assets.s3.ap-south-1.amazonaws.com/Icon_twoclr.png"} />}
       <span style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%" }}>
         {loggedin &&
