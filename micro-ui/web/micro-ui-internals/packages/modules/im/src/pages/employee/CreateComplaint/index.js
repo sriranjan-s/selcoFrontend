@@ -236,9 +236,9 @@ useEffect(async () => {
       const phcMenuType= phcMenu?.tenant?.tenants.filter(centre => centre?.city?.blockCode === block?.code)
       const translatedPhcMenu=phcMenuType.map(item=>({
         ...item,
-        //key:item.name,
+        key:item.name,
         name:t(item.name),
-        //centreTypeKey:item.centreType,
+        centreTypeKey:item.centreType,
         centreType:t(item.centreType)
       }))
       setPhcMenu(translatedPhcMenu)
@@ -257,9 +257,9 @@ useEffect(async () => {
       const phcMenuType= phcMenu?.tenant?.tenants.filter(centre => centre?.city?.blockCode === block?.code)
       const translatedPhcMenu=phcMenuType.map(item=>({
         ...item,
-        //key:item.name,
+        key:item.name,
         name:t(item.name),
-        //centreTypeKey:item.centreType,
+        centreTypeKey:item.centreType,
         centreType:t(item.centreType)
       }))
       setPhcMenu(translatedPhcMenu)
