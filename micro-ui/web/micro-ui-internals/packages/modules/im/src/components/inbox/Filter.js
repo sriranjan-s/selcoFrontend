@@ -77,10 +77,14 @@ const convertedData = Digit.SessionStorage.get("IM_TENANTS").map(item => ({
   code: item.value
 }));
 const healthcareMenu=Digit.SessionStorage.get("Employee.tenantId") !== "pg" ? Digit.SessionStorage.get("Tenants") : Digit.SessionStorage.get("Employee.tenantId") == "pg" ? isCodePresent(Digit.SessionStorage.get("User")?.info?.roles, "COMPLAINT_RESOLVER")?  healthcareTenant: Digit.SessionStorage.get("IM_TENANTS").filter((item) => item.code !=="pg"): Digit.SessionStorage.get("IM_TENANTS").filter((item) => item.code !=="pg")
-console.log("healthcare", healthcareMenu)
+const translatedPhcMenu=healthcareMenu.map(item=>({
+  ...item,
+  name:t(item.name),
+  centreType:t(item.centreType)
+}))
 let sortedHealthCaremenu=[];
-if(healthcareMenu.length>0){
-  sortedHealthCaremenu=healthcareMenu.sort((a, b) => a.name.localeCompare(b.name));
+if(translatedPhcMenu.length>0){
+  sortedHealthCaremenu=translatedPhcMenu.sort((a, b) => a.name.localeCompare(b.name));
 }
 
   const onRadioChange = (value) => {

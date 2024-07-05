@@ -89,7 +89,7 @@ useEffect(()=>{
           setDistrictMenu(
             districts.map(def=>({
            
-           key:t(def.code), 
+           key:(def.code), 
             name:t(def.name) 
          }))
           );
@@ -198,6 +198,7 @@ useEffect(async () => {
     const response=mdmsData?.Incident?.Block;
     if(response){
       const blocks=response.filter((def)=>def.districtCode===selectedDistrict.key);
+      console.log("blocks", blocks)
       blocks.sort((a,b)=>a.name.localeCompare(b.name))
       setBlockMenuNew(blocks)
       setBlockMenu(
@@ -233,7 +234,14 @@ useEffect(async () => {
     {
       const block  = blockNew?.find(item => item?.name.toUpperCase() === selectedBlock?.key.toUpperCase())
       const phcMenuType= phcMenu?.tenant?.tenants.filter(centre => centre?.city?.blockCode === block?.code)
-      setPhcMenu(phcMenuType)
+      const translatedPhcMenu=phcMenuType.map(item=>({
+        ...item,
+        //key:item.name,
+        name:t(item.name),
+        //centreTypeKey:item.centreType,
+        centreType:t(item.centreType)
+      }))
+      setPhcMenu(translatedPhcMenu)
       setBlock(selectedBlock);
       let tenant = Digit.SessionStorage.get("Employee.tenantId")
       console.log("phcMenuType",phcMenuType,tenant)
@@ -247,7 +255,14 @@ useEffect(async () => {
     else {
       const block  = blockMenuNew.find(item => item?.name.toUpperCase() === selectedBlock?.key.toUpperCase())
       const phcMenuType= phcMenu?.tenant?.tenants.filter(centre => centre?.city?.blockCode === block?.code)
-      setPhcMenu(phcMenuType)
+      const translatedPhcMenu=phcMenuType.map(item=>({
+        ...item,
+        //key:item.name,
+        name:t(item.name),
+        //centreTypeKey:item.centreType,
+        centreType:t(item.centreType)
+      }))
+      setPhcMenu(translatedPhcMenu)
       console.log("phcMenuTypephcMenuTypephcMenuType",phcMenuType)
       setBlock(selectedBlock);
 
