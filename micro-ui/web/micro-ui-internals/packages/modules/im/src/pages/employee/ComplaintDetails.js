@@ -60,6 +60,7 @@ const CloseBtn = (props) => {
 };
 
 const TLCaption = ({ data, comments }) => {
+  console.log("datadata",data)
   const { t } = useTranslation()
   return (
     <div>
@@ -491,6 +492,8 @@ export const ComplaintDetails = (props) => {
   if (workflowDetails.isError) return <React.Fragment>{workflowDetails.error}</React.Fragment>;
 
   const getTimelineCaptions = (checkpoint, index, arr) => {
+
+    console.log("checkpointcheckpoint",checkpoint)
     let reopenCount = 0;
     let arrNew= arr.map((abc) => {
       if(abc.performedAction === "REOPEN")
@@ -533,7 +536,8 @@ export const ComplaintDetails = (props) => {
           date: Digit.DateUtils.ConvertEpochToDate(complaintDetails.audit.details.createdTime),
         };
         return <TLCaption data={caption} comments={checkpoint?.wfComment}/>;
-      } else {
+      } 
+      else {
         const caption = {
           date: Digit.DateUtils.ConvertEpochToDate(complaintDetails.audit.details.createdTime),         
         };
@@ -557,6 +561,12 @@ export const ComplaintDetails = (props) => {
           {caption?.date ? <TLCaption data={caption}/> : null}
         </>
       }
+    }
+   else if(checkpoint.status === "CLOSEDAFTERRESOLUTION")
+    {      
+      console.log("checkpointcheckpointcheckpoint",checkpoint)
+    return <TLCaption data={""} comments={checkpoint?.wfComment}/>;
+
     }
     // return (checkpoint.caption && checkpoint.caption.length !== 0) || checkpoint?.wfComment?.length > 0 ? <TLCaption data={checkpoint?.caption?.[0]} comments={checkpoint?.wfComment} /> : null;
     return <>

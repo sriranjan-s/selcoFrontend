@@ -73,6 +73,7 @@ let  sortedMenu=[];
 const { isMdmsLoading, data: mdmsData } = Digit.Hooks.pgr.useMDMS(state, "Incident", ["District","Block"]);
 const {  data: phcMenu  } = Digit.Hooks.pgr.useMDMS(state, "tenant", ["tenants"]);
 let blockNew =mdmsData?.Incident?.Block
+console.log("44444444",blockNew)
 useEffect(()=>{
   const fetchDistrictMenu=async()=>{
     const response=phcMenu?.Incident?.District;
@@ -121,11 +122,15 @@ useEffect(async () => {
     const selectedTenantData = tenant.find(item => item.code === selectTenant);
     const selectedDistrict = {
       key: t(selectedTenantData.city.districtCode),
+      codeNew: selectedTenantData.city.districtCode,
       name: t(selectedTenantData.city.districtCode.charAt(0).toUpperCase() + selectedTenantData.city.districtCode.slice(1).toLowerCase()),
     };
+    console.log("selectedTenantDataselectedTenantData",selectedTenantData,tenant)
     const selectedBlock = {
       key: t(selectedTenantData.city.blockCode.split(".")[1].toUpperCase()),
-      name: t(selectedTenantData.city.blockCode.split(".").pop().charAt(0).toUpperCase() + selectedTenantData.city.blockCode.split(".").pop().slice(1))
+      name: t(selectedTenantData.city.blockCode.split(".").pop().charAt(0).toUpperCase() + selectedTenantData.city.blockCode.split(".").pop().slice(1)),
+      codeNew : selectedTenantData.city.blockCode,
+      codeKey:selectedTenantData.city.blockCode.split(".")[1].toUpperCase()
     };
       handleDistrictChange(selectedDistrict);
       handleBlockChange(selectedBlock)
@@ -215,6 +220,7 @@ useEffect(async () => {
     setSubType(value);
   }
   async function selectedHealthCentre(value){
+    console.log("valuevalue111",value)
     setHealthCentre(value);
     setPhcSubTypeMenu([value])
     setHealthCareType(value);
@@ -232,20 +238,27 @@ useEffect(async () => {
     setHealthCentre({})
     if (selectTenant && selectTenant !== "pg")
     {
-      const block  = blockNew?.find(item => item?.name.toUpperCase() === selectedBlock?.key.toUpperCase())
+      console.log("selectedBlock?.codeNew.split",selectedBlock?.codeNew.split(".")[1].toUpperCase())
+      const block  = blockNew?.find(item => item?.name.toUpperCase() === selectedBlock?.codeNew.split(".")[1].toUpperCase())
+      console.log("blockblockblockblock",block)
       const phcMenuType= phcMenu?.tenant?.tenants.filter(centre => centre?.city?.blockCode === block?.code)
-      const translatedPhcMenu=phcMenuType.map(item=>({
+      const translatedPhcMenu=phcMenuType?.map(item=>({
         ...item,
-        key:item.name,
-        name:t(item.name),
-        centreTypeKey:item.centreType,
-        centreType:t(item.centreType)
+        key:item?.name,
+        name:t(item?.name),
+        centreTypeKey:item?.centreType,
+        centreType:t(item?.centreType)
       }))
       setPhcMenu(translatedPhcMenu)
       setBlock(selectedBlock);
+      console.log("block",block, phcMenu)
+      console.log("selectedBlock",selectedBlock)
+      console.log("phcMenuType",phcMenuType)
+      console.log("translatedPhcMenu",translatedPhcMenu,blockNew)
       let tenant = Digit.SessionStorage.get("Employee.tenantId")
       console.log("phcMenuType",phcMenuType,tenant)
-      const filtereddata = phcMenuType?.filter((code)=> code.code == tenant)
+      const filtereddata = phcMenuType?.filter((codeNew)=> codeNew.code == tenant)
+      console.log("filtereddata",filtereddata)
       if(filtereddata)
       {
         selectedHealthCentre(filtereddata?.[0])
@@ -255,12 +268,12 @@ useEffect(async () => {
     else {
       const block  = blockMenuNew.find(item => item?.name.toUpperCase() === selectedBlock?.key.toUpperCase())
       const phcMenuType= phcMenu?.tenant?.tenants.filter(centre => centre?.city?.blockCode === block?.code)
-      const translatedPhcMenu=phcMenuType.map(item=>({
+      const translatedPhcMenu=phcMenuType?.map(item=>({
         ...item,
-        key:item.name,
-        name:t(item.name),
-        centreTypeKey:item.centreType,
-        centreType:t(item.centreType)
+        key:item?.name,
+        name:t(item?.name),
+        centreTypeKey:item?.centreType,
+        centreType:t(item?.centreType)
       }))
       setPhcMenu(translatedPhcMenu)
       console.log("phcMenuTypephcMenuTypephcMenuType",phcMenuType)
@@ -436,7 +449,7 @@ useEffect(async () => {
           isMandatory:true,
           type: "dropdown",
           populators: (
-            <Dropdown ref={healthCareRef} option={phcMenuNew} optionKey="name" id="healthCentre" selected={healthcentre} select={selectedHealthCentre} disable={selectTenant && selectTenant !== "pg"?true:false}  required={true}/>
+            <Dropdown ref={healthCareRef} t={t} option={phcMenuNew} optionKey="name" id="healthCentre" selected={healthcentre} select={selectedHealthCentre} disable={selectTenant && selectTenant !== "pg"?true:false}  required={true}/>
             
           ),
            
@@ -446,7 +459,7 @@ useEffect(async () => {
           isMandatory:true,
           type: "dropdown",
           populators: (
-            <Dropdown ref={centerTypeRef} option={sortedphcSubMenu} optionKey="centreType" id="healthcaretype" selected={healthCareType} select={handlePhcSubType} disable={selectTenant && selectTenant !== "pg"?true:false}  required={true}/>
+            <Dropdown ref={centerTypeRef} t={t} option={sortedphcSubMenu} optionKey="centreType" id="healthcaretype" selected={healthCareType} select={handlePhcSubType} disable={selectTenant && selectTenant !== "pg"?true:false}  required={true}/>
              
           ),
            

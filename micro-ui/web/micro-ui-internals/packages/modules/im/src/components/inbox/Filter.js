@@ -79,8 +79,8 @@ const convertedData = Digit.SessionStorage.get("IM_TENANTS").map(item => ({
 const healthcareMenu=Digit.SessionStorage.get("Employee.tenantId") !== "pg" ? Digit.SessionStorage.get("Tenants") : Digit.SessionStorage.get("Employee.tenantId") == "pg" ? isCodePresent(Digit.SessionStorage.get("User")?.info?.roles, "COMPLAINT_RESOLVER")?  healthcareTenant: Digit.SessionStorage.get("IM_TENANTS").filter((item) => item.code !=="pg"): Digit.SessionStorage.get("IM_TENANTS").filter((item) => item.code !=="pg")
 const translatedPhcMenu=healthcareMenu.map(item=>({
   ...item,
-  name:t(item.name),
-  centreType:t(item.centreType)
+  name:t(item?.name),
+  centreType:t(item?.centreType)
 }))
 let sortedHealthCaremenu=[];
 if(translatedPhcMenu.length>0){

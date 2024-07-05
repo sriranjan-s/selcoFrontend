@@ -21,16 +21,18 @@ export const Complaint = {
     if(healthCareType?.centreType!==null){
       phcSubType=healthCareType?.centreType.replace(/\s+/g,'').toUpperCase();
     }
+    console.log("ffffffffffffff",  district,block,  healthcentre,
+    healthCareType,)
     const defaultData = {
       incident: {
-        district: district?.key,
+        district: district?.codeNew || district?.key,
         tenantId:tenantIdNew,
         incidentType:complaintType?.key,
        incidentSubtype:subType?.key,
-       phcType:healthcentre?.key,
-       phcSubType:healthCareType?.centreTypeKey,
+       phcType: healthcentre?.key||healthcentre?.name,
+       phcSubType:healthCareType?.centreTypeKey ||healthCareType?.centreType,
        comments:comments,
-       block:block?.key,
+       block:block?.codeKey || block?.key,
         additionalDetail: {
           fileStoreId: uploadedFile,
           reopenreason:[]
