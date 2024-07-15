@@ -80,7 +80,7 @@ const Inbox = ({ parentRoute, businessService = "HRMS", initialStates = {}, filt
         componentInFront: "+91",
       },
       {
-        label: t("HR_EMPLOYEE_ID_LABEL"),
+        label: t("HR_USER_NAME_LABEL"),
         name: "codes",
       },
     ];

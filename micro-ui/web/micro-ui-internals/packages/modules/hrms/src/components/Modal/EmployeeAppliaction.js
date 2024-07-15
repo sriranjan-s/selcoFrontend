@@ -18,13 +18,7 @@ export const configEmployeeApplication = ({ t, action, selectFile, uploadedFile,
             name: "reasonForDeactivation",
             populators: <Dropdown isMandatory selected={selectedReason} optionKey="i18key" option={Reasons} select={selectReason} t={t} />,
           },
-          {
-            label: t("HR_ORDER_NO"),
-            type: "text",
-            populators: {
-             name: "orderNo",
-            },
-          },
+          
 
           {
             label: t("HR_EFFECTIVE_DATE"),
@@ -43,7 +37,8 @@ export const configEmployeeApplication = ({ t, action, selectFile, uploadedFile,
             label: t("HR_APPROVAL_UPLOAD_HEAD"),
             populators: (
               <div style={{ marginBottom: "2rem" }}>
-                <span>{t("TL_APPROVAL_UPLOAD_SUBHEAD")}</span>
+               <span>{t("TL_APPROVAL_UPLOAD_SUBHEAD")}</span>
+               <div style={{marginTop:"10px"}}>
                 <UploadFile
                 id={"hrms-deactivation-doc"}
                   onUpload={selectFile}
@@ -53,6 +48,7 @@ export const configEmployeeApplication = ({ t, action, selectFile, uploadedFile,
                   }}
                   message={uploadedFile ? `1 ${t(`HR_ACTION_FILEUPLOADED`)}` : t(`HR_ACTION_NO_FILEUPLOADED`)}
                 />
+                </div>
               </div>
             ),
           },

@@ -5,6 +5,7 @@ import { Card, Loader } from "@egovernments/digit-ui-react-components";
 import InboxLinks from "../inbox/ApplicationLinks";
 import SearchApplication from "./search";
 import { Link } from "react-router-dom";
+import { SubmitBar } from "@egovernments/digit-ui-react-components";
 
 const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
   const { t } = useTranslation();
@@ -20,7 +21,7 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
   const columns = React.useMemo(() => {
     return [
       {
-        Header: t("HR_EMP_ID_LABEL"),
+        Header: t("HR_USER_NAME_LABEL"),
         disableSortBy: true,
         Cell: ({ row }) => {
           return (
@@ -31,10 +32,10 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
         },
       },
       {
-        Header: t("HR_EMP_NAME_LABEL"),
+        Header: t("HR_EMP_TYPE"),
         disableSortBy: true,
         Cell: ({ row }) => {
-          return GetCell(`${row.original?.user?.name}`);
+          return GetCell(`${row.original?.employeeType}`);
         },
       },
       {
@@ -56,30 +57,25 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
         },
         disableSortBy: true,
       },
+      // {
+      //   Header: t("HR_DESG_LABEL"),
+      //   disableSortBy: true,
+      //   Cell: ({ row }) => {
+      //     return GetCell(
+      //       `${
+      //         t(
+      //           "COMMON_MASTERS_DESIGNATION_" + row.original?.assignments?.sort((a, b) => new Date(a.fromDate) - new Date(b.fromDate))[0]?.designation
+      //         ) || ""
+      //       }`
+      //     );
+      //   },
+      // },
+      // 
       {
-        Header: t("HR_DESG_LABEL"),
+        Header: t("HR_MOB_NO_LABEL"),
         disableSortBy: true,
         Cell: ({ row }) => {
-          return GetCell(
-            `${
-              t(
-                "COMMON_MASTERS_DESIGNATION_" + row.original?.assignments?.sort((a, b) => new Date(a.fromDate) - new Date(b.fromDate))[0]?.designation
-              ) || ""
-            }`
-          );
-        },
-      },
-      {
-        Header: t("HR_DEPT_LABEL"),
-        disableSortBy: true,
-        Cell: ({ row }) => {
-          return GetCell(
-            `${
-              t(
-                "COMMON_MASTERS_DEPARTMENT_" + row.original?.assignments?.sort((a, b) => new Date(a.fromDate) - new Date(b.fromDate))[0]?.department
-              ) || ""
-            }`
-          );
+          return GetCell(`${row.original?.user?.mobileNumber}`);
         },
       },
       {
@@ -144,12 +140,12 @@ const DesktopInbox = ({ tableConfig, filterComponent, ...props }) => {
           <InboxLinks
             parentRoute={props.parentRoute}
             allLinks={[
-              {
-                text: "HR_COMMON_CREATE_EMPLOYEE_HEADER",
-                link:  `/digit-ui/employee/hrms/create`,
-                businessService: "hrms",
-                roles: ["HRMS_ADMIN"],
-              },
+              // {
+              //   text: "HR_VIEW_DETAILS",
+              //   link:  `/digit-ui/employee/hrms/create`,
+              //   businessService: "hrms",
+              //   roles: ["HRMS_ADMIN"],
+              // },
             ]}
             headerText={t("HRMS_INBOX_HEADER")}
             businessService={props.businessService}
