@@ -31,10 +31,7 @@ const HRMSCard = () => {
                 label: t("HR_HOME_SEARCH_RESULTS_HEADING"),
                 link: `/${window?.contextPath}/employee/hrms/inbox`
             },
-            {
-                label: t("HR_COMMON_CREATE_EMPLOYEE_HEADER"),
-                link: `/${window?.contextPath}/employee/hrms/create`
-            }           
+                      
         ]
     }
 
