@@ -22,13 +22,74 @@ const Details = () => {
   const [mutationHappened, setMutationHappened, clear] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_MUTATION_HAPPENED", false);
   const [successData, setsuccessData, clearSuccessData] = Digit.Hooks.useSessionStorage("EMPLOYEE_HRMS_MUTATION_SUCCESS_DATA", false);
   const isMobile = window.Digit.Utils.browser.isMobile();
-
+  const state = Digit.ULBService.getStateId();
+  const {  data: phcMenu  } = Digit.Hooks.pgr.useMDMS(state, "tenant", ["tenants"]);
+  const { isMdmsLoading, data: mdmsData } = Digit.Hooks.pgr.useMDMS(state, "Incident", ["District","Block"]);
   useEffect(() => {
     setMutationHappened(false);
     clearSuccessData();
     clearError();
   }, []);
+ 
+  const consolidatedBoundaries=[...new Set(data?.Employees?.[0]?.jurisdictions.map(j=>j.boundary))].map(boundary=>{
+    const jurisdiction=data.Employees[0].jurisdictions.find(j=>j.boundary===boundary);
+    const tenantData=phcMenu?.tenant?.tenants?.find(tenant=>tenant.code===boundary);
+    return {
+      boundary,
+      hierarchy:jurisdiction.hierarchy,
+      boundaryType:jurisdiction.boundaryType,
+      district:tenantData?.city?.districtName,
+      block:tenantData?.city?.blockCode,
+      roles: data?.Employees?.[0]?.user?.roles.filter((item) => item.tenantId === boundary),
+    }
+  });
+ 
+  const convertBoundary=(boundary)=>{
+   
+    const parts=t(`TENANT_TENANTS_${boundary.replace(".", "_").toUpperCase()}`);
+    return parts;
+  }
+  const convertBlock=(block)=>{
+   
+    let extractedBlock=""
+    if(block!==null && mdmsData!==undefined){
+      const tenantData=mdmsData?.Incident?.Block.find(block=>block.code===block);
+     
+      const part=block.split(".")[1];
+     
+      extractedBlock=t(`${part.charAt(0).toUpperCase()+part.slice(1).toLowerCase()}`);
+    } 
+    return extractedBlock;
+  }
+  const consolidatedBoundariesByDistrict=(boundaries)=>{
+    const groupedByDistrict=boundaries.reduce((acc,curr)=>{
+      const {district, block, boundary, boundaryType, hierarchy, roles}=curr;
+      if(!acc[district]){
+        acc[district]={
+          district,
+          block:new Set(),
+          boundary: new Set(),
+          hierarchy:hierarchy,
+          boundaryType:boundaryType,
+          roles:new Set(),
+        };
+      }
+      acc[district].block.add(block);
+      acc[district].boundary.add(convertBoundary(boundary));
+      roles.forEach((role)=>acc[district].roles.add(role.code));
+      return acc;
+    },{});
+   
+    return Object.values(groupedByDistrict).map((group)=>({
+      ...group,
+      block:Array.from(group.block).join(",  "),
+      boundary:Array.from(group.boundary).join(", "),
+      roles:Array.from(group.roles).join(", ")
+    }));
+  };
 
+  const groupedBoundaries=consolidatedBoundariesByDistrict(consolidatedBoundaries);
+ 
   function onActionSelect(action) {
     setSelectedAction(action);
     setDisplayMenu(false);
@@ -149,9 +210,10 @@ const Details = () => {
             {data?.Employees?.[0]?.jurisdictions.length > 0 ? (
               <CardSubHeader className="card-section-header">{t("HR_JURIS_DET_HEADER")}</CardSubHeader>
             ) : null}
-
-            {data?.Employees?.[0]?.jurisdictions?.length > 0
-              ? data?.Employees?.[0]?.jurisdictions.map((element, index) => {
+            
+            {groupedBoundaries.length > 0 ?
+               groupedBoundaries.map((element, index) => {
+               
                 return (
                   <StatusTable
                     key={index}
@@ -169,11 +231,13 @@ const Details = () => {
                       {t("HR_JURISDICTION")} {index + 1}
                     </div>
                     <Row label={t("HR_HIERARCHY_LABEL")} text={t(element?.hierarchy ? `EGOV_LOCATION_TENANTBOUNDARY_${element?.hierarchy}` : "NA")} textStyle={{ whiteSpace: "pre" }} />
+                    <Row label={t("HR_DISTRICT_LABEL")} text={t(element?.district!==null && element?.district!==undefined? element?.district:"NA")} textStyle={{ whiteSpace: "pre" }} />
+                    <Row label={t("HR_BLOCK_LABEL")} text={t(element?.block.length!==0 ? element?.block:"NA")} textStyle={{ whiteSpace: "pre" }} />
                     <Row label={t("HR_BOUNDARY_TYPE_LABEL")} text={t(Digit.Utils.locale.convertToLocale(element?.boundaryType, 'EGOV_LOCATION_BOUNDARYTYPE'))} textStyle={{ whiteSpace: "pre" }} />
                     <Row label={t("HR_BOUNDARY_LABEL")} text={t(element?.boundary)} />
                     <Row
                       label={t("HR_ROLE_LABEL")}
-                      text={data?.Employees?.[0]?.user.roles.filter((ele) => ele.tenantId == element?.boundary).map((ele) => t(`ACCESSCONTROL_ROLES_ROLES_` + ele?.code))}
+                      text={t(element.roles)}
                     />
                   </StatusTable>
                 );

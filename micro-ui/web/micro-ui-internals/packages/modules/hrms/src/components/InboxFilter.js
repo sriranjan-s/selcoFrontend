@@ -163,7 +163,7 @@ const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props 
           </div>
           <div>
             <div>
-              <div className="filter-label">{t("HR_ULB_LABEL")}</div>
+              <div className="filter-label">{t("HR_HEALTH_CARE_LABEL")}</div>
               <Dropdown
                 option={[...getCityThatUserhasAccess(tenantIds)?.sort((x, y) => x?.name?.localeCompare(y?.name)).map(city => { return { ...city, i18text: Digit.Utils.locale.getCityLocale(city.code) } })]}
                 selected={tenantId}

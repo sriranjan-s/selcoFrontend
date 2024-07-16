@@ -5,23 +5,50 @@ const useComplaintStatusCount = (complaints,tenant) => {
   const [complaintStatusWithCount, setcomplaintStatusWithCount] = useState([]);
   let complaintStatus = useComplaintStatus();
   let tenantId = Digit.ULBService.getCurrentTenantId();
-console.log("tenanttenanttenant",tenant)
-  const getCount = async (value) => {
-    console.log("tenanttenanttenanttenanttenant",tenant)
-    let response = await Digit.PGRService.count(tenant, { applicationStatus: value });
-    return response?.count || "";
-  };
-
+  const [statusCount, setStatusCount]=useState();
+  const inboxTotal=sessionStorage.getItem("inboxTotal");
+ const { data, isLoading, isFetching, isSuccess } = Digit.Hooks.useNewInboxGeneral({
+      tenantId: Digit.ULBService.getCurrentTenantId(),
+      ModuleCode: "Incident",
+      filters: { limit: inboxTotal, offset: 0, services: ["Incident"]},
+      config: {
+        select: (data) => {
+          return data;
+        },
+        enabled: Digit.Utils.pgrAccess(),
+      },  
+    });
+    useEffect(() => {
+      if (!isFetching && isSuccess && !isLoading) {
+        if(data!==undefined){
+          const counts=data.items.reduce((acc, item)=>{
+              const status=item.businessObject.incident.applicationStatus;
+              if(status){
+                acc[status]=(acc[status]|| 0)+1;
+              }
+              return acc; 
+            },{});
+            setStatusCount(counts);
+        }
+      };
+      // 
+    }, [isFetching, isSuccess,isLoading, data]);
+  
   useEffect(() => {
-    let getStatusWithCount = async () => {
-      let statusWithCount = complaintStatus.map(async (status) => ({
-        ...status,
-        count: await getCount(status.code),
-      }));
-      setcomplaintStatusWithCount(await Promise.all(statusWithCount));
+    const getStatusWithCount = async () => {
+        let statusWithCount = complaintStatus.map(async (status) => {
+          const count=statusCount[status.code]||0;
+          return{
+            ...status,
+            count: count,
+          }
+        });
+        setcomplaintStatusWithCount(await Promise.all(statusWithCount));
+      }
+    if(complaintStatus.length>0 && statusCount!==undefined){
+      getStatusWithCount();
     };
-    getStatusWithCount();
-  }, [complaints, complaintStatus]);
+  }, [complaints, complaintStatus, statusCount]);
   return complaintStatusWithCount;
 };
 
