@@ -37,7 +37,7 @@ const TopBarSideBar = ({
     history.push("/digit-ui/employee/user/profile");
   };
   const userOptions = [
-    { name: t("EDIT_PROFILE"), icon: <EditPencilIcon className="icon" />, func: userProfile },
+    { name: t("VIEW_PROFILE"), icon: <EditPencilIcon className="icon" />, func: userProfile },
     { name: t("CORE_COMMON_LOGOUT"), icon: <LogoutIcon className="icon" />, func: handleLogout },
   ];
   return (

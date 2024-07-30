@@ -109,30 +109,16 @@ if(Digit.SessionStorage.get("Employee.tenantId") !== "pg" ? Digit.SessionStorage
                   style={{ marginBottom: "8px" }}
                 ></TextInput>
               </span>
-              <span className="mobile-input">
-                <Label>{t("CS_COMMON_PHC_TYPE")}</Label>
-                <Dropdown
-                option={sortedPhcMenu}
-                  //name="mobileNumber"
-                  optionKey="name"
-                  id="healthCentre"
-                  selected={phcType}
-                  select={setPhcTypeFunction}
-                  // disable={true}
-                  inputRef={register({
-                    pattern: /^[6-9]\d{9}$/,
-                  })}
-                ></Dropdown>
-              </span>
+              
               {type === "desktop" && (
-                <div style={{display:'flex', alignItems:'center',marginTop: "5px"}}>
+                <div style={{display:'flex', marginTop: "32px", marginLeft:"50px"}}>
                 <SubmitBar
                   style={{ marginLeft: "10px" }}
                   label={t("ES_COMMON_SEARCH")}
                   submit={true}
                   disabled={Object.keys(errors).filter((i) => errors[i]).length}
                 />
-                <span className="clear-search" style={{color:"#7a2829", marginLeft:"15px", marginTop:"10px"}}>{clearAll()}</span>
+                <span className="clear-search" style={{color:"#7a2829", marginLeft:"15px", marginTop:"10px", marginLeft:"50px"}}>{clearAll()}</span>
                 </div>
               )}
              </div>
