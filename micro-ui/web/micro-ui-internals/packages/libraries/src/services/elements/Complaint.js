@@ -13,7 +13,6 @@ export const Complaint = {
     healthCareType,
     tenantId
   }) => {
-    console.log("tenantId",tenantId)
     const tenantIdNew = tenantId;
     let mobileNumber = JSON.parse(sessionStorage.getItem("Digit.User"))?.value?.info?.mobileNumber;
     var serviceDefs = await Digit.MDMSService.getServiceDefs(tenantIdNew, "Incident");
@@ -21,8 +20,6 @@ export const Complaint = {
     if(healthCareType?.centreType!==null){
       phcSubType=healthCareType?.centreType.replace(/\s+/g,'').toUpperCase();
     }
-    console.log("ffffffffffffff",  district,block,  healthcentre,
-    healthCareType,)
     const defaultData = {
       incident: {
         district: district?.codeNew || district?.key,
@@ -35,7 +32,8 @@ export const Complaint = {
        block:block?.codeKey || block?.key,
         additionalDetail: {
           fileStoreId: uploadedFile,
-          reopenreason:[]
+          reopenreason:[],
+          rejectReason:[],
         },
         source: Digit.Utils.browser.isWebview() ? "mobile" : "web",
        
@@ -75,11 +73,12 @@ export const Complaint = {
     return response;
   },
 
-  assign: async (complaintDetails, action, employeeData, comments, uploadedDocument, tenantId, selectedReopenReason) => {   
+  assign: async (complaintDetails, action, employeeData, comments, uploadedDocument, tenantId, selectedReopenReason, selectedRejectReason) => {   
     complaintDetails.workflow.action = action;
     complaintDetails.workflow.assignes = employeeData ? [employeeData.uuid] : null;
     complaintDetails.workflow.comments = comments;
     complaintDetails.workflow.reopenreason=selectedReopenReason;
+    complaintDetails.workflow.rejectReason=selectedRejectReason?.code;
     if(selectedReopenReason)
     {
       if(!complaintDetails.incident.additionalDetail.reopenreason)
@@ -91,6 +90,17 @@ export const Complaint = {
         complaintDetails.incident.additionalDetail.reopenreason.push(selectedReopenReason)
       }
       
+    }
+    else if(selectedRejectReason)
+    {
+      if(!complaintDetails.incident.additionalDetail.rejectReason)
+      {
+        complaintDetails.incident.additionalDetail.rejectReason=[]
+        complaintDetails.incident.additionalDetail.rejectReason.push(selectedRejectReason?.code)
+      }
+      else {
+        complaintDetails.incident.additionalDetail.rejectReason.push(selectedRejectReason?.code)
+      }    
     }
    
     uploadedDocument

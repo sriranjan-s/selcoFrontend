@@ -60,7 +60,6 @@ const CloseBtn = (props) => {
 };
 
 const TLCaption = ({ data, comments }) => {
-  console.log("datadata",data)
   const { t } = useTranslation()
   return (
     <div>
@@ -79,7 +78,6 @@ const TLCaption = ({ data, comments }) => {
 };
 
 const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup, selectedAction, onAssign, tenant, t }) => {
-  console.log("empcom", complaintDetails)
   
   // RAIN-5692 PGR : GRO is assigning complaint, Selecting employee and assign. Its not getting assigned.
   // Fix for next action  assignee dropdown issue
@@ -107,9 +105,10 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
   const [error, setError] = useState(null);
   const cityDetails = Digit.ULBService.getCurrentUlb();
   const [selectedReopenReason, setSelectedReopenReason] = useState(null);
-
-  
+  const [selectedRejectReason, setSelectedRejectReason] = useState(null);
+  const state = Digit.ULBService.getStateId();
   const reopenReasonMenu = [t(`CS_REOPEN_OPTION_ONE`), t(`CS_REOPEN_OPTION_TWO`), t(`CS_REOPEN_OPTION_THREE`), t(`CS_REOPEN_OPTION_FOUR`)];
+  const { isMdmsLoading, data: rejectReasons } = Digit.Hooks.pgr.useMDMS(state, "Incident", ["RejectReasons"]);
   // const uploadFile = useCallback( () => {
 
   //   }, [file]);
@@ -141,6 +140,9 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
   function onSelectReopenReason(reason) {
     setSelectedReopenReason(reason);
   }
+  function onSelectRejectReason(reason) {
+    setSelectedRejectReason(reason);
+  }
   const clearError=useCallback(()=>{
     setError("");
   },[])
@@ -154,7 +156,6 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
 
   }, [error, clearError]);
   function selectfile(e,newArr) {
-    console.log("selectfileselectfile",e,newArr)
     let file=[]
     if (e) {
       if(newArr.length >0)
@@ -175,9 +176,9 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
       // documentUid: "",
       // additionalDetails: {},
       // };
-      console.log("filefile",file)
+      
       let temp = [...uploadedFile, ...file];
-      console.log("temptemp",temp)
+      
       const filterFileStoreIds = newArr.map(item => item.fileStoreId.fileStoreId);
 
       // Use a Set to remove duplicates and filter the documents array
@@ -190,7 +191,7 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
         return false;
       });
 
-      console.log("filteredDocumentsfilteredDocuments",filteredDocuments);
+      
       setUploadedFile(filteredDocuments);
       e && setFile(e.file);
     }
@@ -199,11 +200,8 @@ const ComplaintDetailsModal = ({ workflowDetails, complaintDetails, close, popup
   const getData = (state) => {  
     let data = Object.fromEntries(state);
     let newArr = Object.values(data);
-    console.log("statestate",state,data,newArr)
     selectfile(newArr[newArr.length - 1],newArr);
   };
-  console.log("commmmmentsss", comments, comments.length)
-console.log("employeeData", employeeData)
   return (
     <Modal
       headerBarMain={
@@ -234,8 +232,8 @@ console.log("employeeData", employeeData)
       
       
       actionSaveOnSubmit={() => {
-        if((selectedAction==="REJECT") && !comments){
-          setError(t("CS_MANDATORY_COMMENTS"))
+        if((selectedAction==="REJECT") && selectedRejectReason===null){
+          setError(t("CS_REJECT_REASON_COMMENTS"))
         }
        else if((selectedAction==="SENDBACK") && !comments){
             setError(t("CS_MANDATORY_COMMENTS"));
@@ -250,14 +248,21 @@ console.log("employeeData", employeeData)
           setError(t("CS_MANDATORY_COMMENTS_AND_FILE_UPLOAD"));
         }
         else{
-          console.log("selectedEmployeeselectedEmployee",selectedEmployee, comments, uploadedFile, selectedReopenReason)
-        onAssign(selectedEmployee, comments, uploadedFile, selectedReopenReason);
+          
+        onAssign(selectedEmployee, comments, uploadedFile, selectedReopenReason, selectedRejectReason);
         }
       }}
       error={error}
       setError={setError}
     >
       <Card style={{paddingTop:"0px"}}>
+      {selectedAction === "REJECT" ? (
+          <React.Fragment>
+            <CardLabel>{t("CS_REJECT_COMPLAINT")}*</CardLabel>
+            <Dropdown selected={selectedRejectReason} option={rejectReasons?.Incident?.RejectReasons} optionKey={"code"} select={onSelectRejectReason} />
+          </React.Fragment>
+        ) : null}
+
         {selectedAction === "REJECT" || selectedAction === "RESOLVE" || selectedAction === "REOPEN" || selectedAction==="SENDBACK" ? null : (
           <React.Fragment>
             
@@ -428,8 +433,12 @@ export const ComplaintDetails = (props) => {
     setImageZoom(imageSource);
   }
   function zoomImageWrapper(imageSource, index){
-    console.log("imageSourceimageSourceimageSource",index)
-    zoomImage(imagesToShowBelowComplaintDetails?.fullImage[index]);
+      if(imageSource.includes("small")){
+        zoomImage(imagesToShowBelowComplaintDetails?.fullImage[index]);
+      }
+      else{
+        window.open(imagesToShowBelowComplaintDetails?.fullImage[index]);
+      }   
   }
   function onCloseImageZoom() {
     setImageZoom(null);
@@ -470,9 +479,9 @@ export const ComplaintDetails = (props) => {
     }
   }
 
-  async function onAssign(selectedEmployee, comments, uploadedFile, selectedReopenReason) {
+  async function onAssign(selectedEmployee, comments, uploadedFile, selectedReopenReason, selectedRejectReason) {
     setPopup(false);
-    const response = await Digit.Complaint.assign(complaintDetails, selectedAction, selectedEmployee, comments, uploadedFile, tenant, selectedReopenReason);
+    const response = await Digit.Complaint.assign(complaintDetails, selectedAction, selectedEmployee, comments, uploadedFile, tenant, selectedReopenReason, selectedRejectReason);
     setAssignResponse(response);
     setToast(true);
     setLoader(true);
@@ -493,8 +502,8 @@ export const ComplaintDetails = (props) => {
 
   const getTimelineCaptions = (checkpoint, index, arr) => {
 
-    console.log("checkpointcheckpoint",checkpoint)
     let reopenCount = 0;
+    let rejectCount = 0;
     let arrNew= arr.map((abc) => {
       if(abc.performedAction === "REOPEN")
       {
@@ -504,13 +513,21 @@ export const ComplaintDetails = (props) => {
         reopenCount +=1
         return obj
       }
+      else if(abc.performedAction === "REJECT")
+      {
+        let rejectreason=complaintDetails?.incident?.additionalDetail?.rejectReason
+        let obj ={...abc, rejectReason:rejectreason?.reverse()[rejectCount]}
+        rejectreason?.reverse()
+        rejectCount +=1
+        return obj
+      }
       else return abc
       
     })
     const arr1=arr
     const {wfComment: comment, thumbnailsToShow} = checkpoint;
     function zoomImageTimeLineWrapper(imageSource, index,thumbnailsToShow,arr){
-      console.log("imageSource, index,thumbnailsToShow,arr",imageSource, index,thumbnailsToShow,arr)
+      
       if(arr1[index]?.status == "RESOLVED")
       {
         window.open(arr1[index].thumbnailsToShow.fullImage[0], "_blank")
@@ -554,6 +571,12 @@ export const ComplaintDetails = (props) => {
               <h1>{arrNew[index]?.reopenreason}</h1>
             </div>
           ):null}
+          {checkpoint.status==="REJECT" ? (
+            <div className="TLComments">
+              <h3>{t("WF_REJECT_REASON")}</h3>
+              <h1>{arrNew[index]?.rejectReason}</h1>
+            </div>
+          ):null}
           {checkpoint.status !== "COMPLAINT_FILED" && thumbnailsToShow?.thumbs?.length > 0 ? <div className="TLComments">
             <h3>{t("CS_COMMON_ATTACHMENTS")}</h3>
             <DisplayPhotos srcs={thumbnailsToShow.thumbs} onClick={(src, index) => zoomImageTimeLineWrapper(src, index,thumbnailsToShow,arr)} />
@@ -564,7 +587,7 @@ export const ComplaintDetails = (props) => {
     }
    else if(checkpoint.status === "CLOSEDAFTERRESOLUTION")
     {      
-      console.log("checkpointcheckpointcheckpoint",checkpoint)
+      
     return <TLCaption data={""} comments={checkpoint?.wfComment}/>;
 
     }
@@ -580,11 +603,16 @@ export const ComplaintDetails = (props) => {
         <h3>{t("CS_COMMON_ATTACHMENTS")}</h3>
         <DisplayPhotos srcs={thumbnailsToShow.thumbs} onClick={(src, index) => zoomImageTimeLineWrapper(src, index,thumbnailsToShow,arr)} />
       </div> : null}
+      {checkpoint.status==="REJECTED" ? (
+        <div className="TLComments">
+           <h3>{t("WF_REJECT_REASON")}</h3>
+            <h1>{arrNew[index]?.rejectReason}</h1>
+        </div>
+      ):null}
       {captionForOtherCheckpointsInTL?.date ? <TLCaption data={captionForOtherCheckpointsInTL}/> : null}
       {(checkpoint.status == "CLOSEDAFTERRESOLUTION" && complaintDetails.workflow.action == "RATE" && index <= 1) && complaintDetails.audit.rating ? <StarRated text={t("CS_ADDCOMPLAINT_YOU_RATED")} rating={complaintDetails.audit.rating} />: null}
     </>
   }
-console.log("cdet", complaintDetails)
 return (
   <React.Fragment>
      <div style={{color:"#9e1b32", marginBottom:'10px', textAlign:"right", marginRight:"0px"}}>

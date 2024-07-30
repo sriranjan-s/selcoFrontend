@@ -28,6 +28,7 @@ export const filterFunctions = {
       workflowFilters.businessService = services;
     }
     searchFilters["tenantId"] = Digit.ULBService.getCurrentTenantId();
+    searchFilters["sortOrder"] = "DESC";
    // searchFilters["creationReason"] = ["CREATE", "MUTATION", "UPDATE"];
     workflowFilters["moduleName"] = "Incident";
     workflowFilters["tenantId"]=Digit.ULBService.getCurrentTenantId();

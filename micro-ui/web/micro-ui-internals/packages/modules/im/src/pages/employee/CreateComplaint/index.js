@@ -73,7 +73,7 @@ let  sortedMenu=[];
 const { isMdmsLoading, data: mdmsData } = Digit.Hooks.pgr.useMDMS(state, "Incident", ["District","Block"]);
 const {  data: phcMenu  } = Digit.Hooks.pgr.useMDMS(state, "tenant", ["tenants"]);
 let blockNew =mdmsData?.Incident?.Block
-console.log("44444444",blockNew)
+
 useEffect(()=>{
   const fetchDistrictMenu=async()=>{
     const response=phcMenu?.Incident?.District;
@@ -125,7 +125,7 @@ useEffect(async () => {
       codeNew: selectedTenantData.city.districtCode,
       name: t(selectedTenantData.city.districtCode.charAt(0).toUpperCase() + selectedTenantData.city.districtCode.slice(1).toLowerCase()),
     };
-    console.log("selectedTenantDataselectedTenantData",selectedTenantData,tenant)
+    
     const selectedBlock = {
       key: t(selectedTenantData.city.blockCode.split(".")[1].toUpperCase()),
       name: t(selectedTenantData.city.blockCode.split(".").pop().charAt(0).toUpperCase() + selectedTenantData.city.blockCode.split(".").pop().slice(1)),
@@ -198,12 +198,12 @@ useEffect(async () => {
     }
   }
   const handleDistrictChange = async (selectedDistrict) => {
-    console.log("selectedDistrict", selectedDistrict);
+   
     setDistrict(selectedDistrict);
     const response=mdmsData?.Incident?.Block;
     if(response){
       const blocks=response.filter((def)=>def.districtCode===selectedDistrict.key);
-      console.log("blocks", blocks)
+      
       blocks.sort((a,b)=>a.name.localeCompare(b.name))
       setBlockMenuNew(blocks)
       setBlockMenu(
@@ -220,7 +220,6 @@ useEffect(async () => {
     setSubType(value);
   }
   async function selectedHealthCentre(value){
-    console.log("valuevalue111",value)
     setHealthCentre(value);
     setPhcSubTypeMenu([value])
     setHealthCareType(value);
@@ -229,7 +228,6 @@ useEffect(async () => {
     setTenant(value?.city?.districtTenantCode)
     centerTypeRef.current.clearError()
     setShowToast(null);
-    console.log("setHealthCareType",phcSubTypeMenu,value)
    
   }
   const handleBlockChange= (selectedBlock)=>{
@@ -238,9 +236,9 @@ useEffect(async () => {
     setHealthCentre({})
     if (selectTenant && selectTenant !== "pg")
     {
-      console.log("selectedBlock?.codeNew.split",selectedBlock?.codeNew.split(".")[1].toUpperCase())
+      
       const block  = blockNew?.find(item => item?.name.toUpperCase() === selectedBlock?.codeNew.split(".")[1].toUpperCase())
-      console.log("blockblockblockblock",block)
+      
       const phcMenuType= phcMenu?.tenant?.tenants.filter(centre => centre?.city?.blockCode === block?.code)
       const translatedPhcMenu=phcMenuType?.map(item=>({
         ...item,
@@ -251,14 +249,11 @@ useEffect(async () => {
       }))
       setPhcMenu(translatedPhcMenu)
       setBlock(selectedBlock);
-      console.log("block",block, phcMenu)
-      console.log("selectedBlock",selectedBlock)
-      console.log("phcMenuType",phcMenuType)
-      console.log("translatedPhcMenu",translatedPhcMenu,blockNew)
+      
       let tenant = Digit.SessionStorage.get("Employee.tenantId")
-      console.log("phcMenuType",phcMenuType,tenant)
+      
       const filtereddata = phcMenuType?.filter((codeNew)=> codeNew.code == tenant)
-      console.log("filtereddata",filtereddata)
+      
       if(filtereddata)
       {
         selectedHealthCentre(filtereddata?.[0])
@@ -276,7 +271,7 @@ useEffect(async () => {
         centreType:t(item?.centreType)
       }))
       setPhcMenu(translatedPhcMenu)
-      console.log("phcMenuTypephcMenuTypephcMenuType",phcMenuType)
+      
       setBlock(selectedBlock);
 
     }
@@ -296,7 +291,7 @@ useEffect(async () => {
   }
   const handleUpload = (ids) => {
 
-    console.log("disbaleddisbaled",disbaled)
+    
     if(disbaled)
     {
       setShowToast({ key: true, label: "PLEASE_SELECT_PHC_TYPE"});
@@ -307,7 +302,7 @@ useEffect(async () => {
 
    const wrapperSubmit = (data) => {
     const abc = handleButtonClick()
-    console.log("vvvv",abc,!canSubmit)
+    
     if (!canSubmit) return;
     setSubmitted(true);
     !submitted && !abc && onSubmit(data);
@@ -316,7 +311,7 @@ useEffect(async () => {
     if (!canSubmit) return;
     const { key } = subType;
     //const complaintType = key;
-    console.log("ddddddd",uploadedFile)
+   
     let uploadImages=[]
     if(uploadedFile!==null){
      uploadImages = uploadedFile?.map((url) => ({
@@ -352,15 +347,15 @@ useEffect(async () => {
       return  item[1];
     })
     let newArr = Object.values(data);
-    console.log("statestate",state,data,newArr,mappedArray)
+    
     selectfile(newArr[newArr.length - 1],mappedArray);
   };
   const handleButtonClick = () => {
     const hasEmptyFields = fieldsToValidate.some(({ field }) => field === null || Object.keys(field).length === 0);
-    console.log("hasEmptyFields",hasEmptyFields)
+    
     if (hasEmptyFields) {
       fieldsToValidate.forEach(({ field, ref }) => {
-        console.log("field",field)
+        
         if (field === null || field === undefined || Object.keys(field).length === 0) {
           
           ref.current.validate();
@@ -374,12 +369,11 @@ useEffect(async () => {
    
   };
   function selectfile(arr,newArr) {
-    console.log("selectfileselectfile",arr,newArr)
     let file=[]
     if (arr) {
       if(newArr.length >0)
       {
-        console.log
+        
         file= newArr.map((e) =>{
           const newFile={
             documentType: e?.file?.type.includes(".sheet") ? ".xlsx": e?.file?.type.includes(".document")? ".docs": e?.file?.type,
@@ -396,9 +390,7 @@ useEffect(async () => {
       // documentUid: "",
       // additionalDetails: {},
       // };
-      console.log("filefile",file,uploadedFile)
 
-      console.log("temptemp",file)
       const filterFileStoreIds = file.map(item => item.fileStoreId);
 
       // Use a Set to remove duplicates and filter the documents array
@@ -411,7 +403,7 @@ useEffect(async () => {
         return false;
       });
 
-      console.log("filteredDocumentsfilteredDocuments",filteredDocuments);
+      
       setUploadedFile(filteredDocuments);
       //arr && setFile(arr.file);
     }
@@ -510,12 +502,12 @@ useEffect(async () => {
           module="Incident" 
           tenantId={tenantId} 
           getFormState={(e) => getData(e)}
-          allowedFileTypesRegex={/(jpg|jpeg|png|image)$/i}
+          allowedFileTypesRegex={/(jpg|jpeg|png|image|mp3|mp4|xlsx)$/i}
           allowedMaxSizeInMB={5}
           maxFilesAllowed={5}
           disabled={disbaledUpload}
           ulb={Digit.SessionStorage.get("Employee.tenantId") !== "pg" ? Digit.SessionStorage.get("Employee.tenantId"  ):healthcentre?.code}
-          acceptFiles= {".png, .image, .jpg, .jpeg"}
+          acceptFiles= {".png, .image, .jpg, .jpeg, .mp3, .mp4, .xlsx"}
           />
                {/* <ImageUploadHandler tenantId={tenant} uploadedImages={uploadedImages} onPhotoChange={handleUpload} disabled={disbaled}/> */}
           <div style={{marginLeft:'20px', marginTop:"10px", fontSize:'12px'}}>{t("CS_IMAGE_BASED_FILES_ARE_ACCEPTED")}</div>
