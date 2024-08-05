@@ -7,7 +7,10 @@
     "example",
     "packages/css",
     "packages/react-components",
-    "packages/modules/*"
+    "packages/modules/hrms",
+    "packages/modules/im",
+    "packages/modules/core",
+    "packages/modules/dss"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",
