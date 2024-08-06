@@ -13,7 +13,6 @@ const enabledModules = [
   "NDSS",
   "Utilities",
   "Engagement",
-  "Workbench",
   "IM"
 ];
 
