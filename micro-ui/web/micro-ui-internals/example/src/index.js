@@ -17,14 +17,7 @@ import { UICustomizations } from "./UICustomizations";
 
 var Digit = window.Digit || {};
 
-const enabledModules = ["IM", "DSS", "HRMS",
-"Workbench"
-,"PGR"
-//  "Engagement", "NDSS","QuickPayLinks", "Payment",
-  // "Utilities",
-//added to check fsm
-// "FSM"
-];
+const enabledModules = ["IM", "DSS", "HRMS","PGR"];
 
 const initTokens = (stateCode) => {
   const userType = window.sessionStorage.getItem("userType") || process.env.REACT_APP_USER_TYPE || "CITIZEN";
